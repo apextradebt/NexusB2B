@@ -47,6 +47,9 @@ export default function Reference() {
                 <div>
                   <div className="text-xs text-muted font-semibold uppercase tracking-wider">{r.brand} · {r.family} · {r.year}</div>
                   <div className="text-lg font-bold">{r.model}</div>
+                  <span className={`inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${r.verified === "platform" ? "bg-sand/20 text-warn" : "bg-lime/25 text-sell"}`}>
+                    {t(`reference.verified_${r.verified ?? "platform"}`)}
+                  </span>
                 </div>
                 {r.source && (
                   <a href={r.source} target="_blank" rel="noreferrer" className="text-xs font-semibold text-primary inline-flex items-center gap-1 hover:underline whitespace-nowrap">

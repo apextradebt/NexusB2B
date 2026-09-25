@@ -1,0 +1,2122 @@
+{
+ "note": "Phone models and storage options added for the B2B tool (no reference prices: the agents price them).",
+ "phones": [
+  {
+   "brand": "Apple",
+   "model": "iPhone 8",
+   "year": 2017,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 8 Plus",
+   "year": 2017,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone X",
+   "year": 2017,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 7",
+   "year": 2016,
+   "storage": [
+    "32GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 7 Plus",
+   "year": 2016,
+   "storage": [
+    "32GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone XR",
+   "year": 2018,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone XS",
+   "year": 2018,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone XS Max",
+   "year": 2018,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 11",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 11 Pro",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 11 Pro Max",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone SE (2020)",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 12",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 12 Mini",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 12 Pro",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 12 Pro Max",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 13",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 13 Mini",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 13 Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 13 Pro Max",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone SE (2022)",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 14",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 14 Plus",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 14 Pro",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 14 Pro Max",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 15",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 15 Plus",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 15 Pro",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 15 Pro Max",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16 Plus",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16e",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16 Pro",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16 Pro Max",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 17",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone Air",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 17 Pro",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 17 Pro Max",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S20",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S20+",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S20 Ultra",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S20 FE",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Note 20",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Note 20 Ultra",
+   "year": 2020,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Note 10",
+   "year": 2019,
+   "storage": [
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Note 10+",
+   "year": 2019,
+   "storage": [
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S21",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S21+",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S21 FE",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S21 Ultra",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S22",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S22+",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S22 Ultra",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S23",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S23+",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S23 Ultra",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S23 FE",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24+",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24 FE",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24 Ultra",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S25",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S25+",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S25 FE",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S25 Edge",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S25 Ultra",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 2",
+   "year": 2020,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 3",
+   "year": 2021,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Flip 3",
+   "year": 2021,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 4",
+   "year": 2022,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Flip 4",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 5",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Flip 5",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 6",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Flip 6",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Fold 7",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy Z Flip 7",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A12",
+   "year": 2021,
+   "storage": [
+    "32GB",
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A02s",
+   "year": 2021,
+   "storage": [
+    "32GB",
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A22",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A32",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A52",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A52s",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A72",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A21s",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A41",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A51",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A71",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A13",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A23",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A33",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A53",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A73",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A14",
+   "year": 2023,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A24",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A34",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A54",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A05s",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A15",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A25",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A35",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A55",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A16",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A26",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A36",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A56",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy XCover 5",
+   "year": 2021,
+   "storage": [
+    "64GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy XCover 6 Pro",
+   "year": 2022,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy XCover 7",
+   "year": 2024,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy XCover 7 Pro",
+   "year": 2025,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 4",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 4 XL",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 4a",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 5",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 5a",
+   "year": 2021,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 6",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 6 Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 6a",
+   "year": 2022,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 7",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 7 Pro",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 7a",
+   "year": 2023,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 8",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 8 Pro",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 8a",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 9",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 9a",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 9 Pro",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 9 Pro XL",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 10",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 10 Pro",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Google",
+   "model": "Pixel 10 Pro XL",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 10",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 10 Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 11T",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 11T Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 11 Lite 5G NE",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 11",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi 10",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 11 Pro",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 12",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 12T",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 12T Pro",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 12 Pro",
+   "year": 2022,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 12",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 12 Pro",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 12 Pro+",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi 12",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 13 Lite",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 13",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 13 Pro",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 13T",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 13T Pro",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 13",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 13 Pro",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 13 Pro+",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi 13",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 14",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 14 Ultra",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 14T",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 14T Pro",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 14",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 14 Pro",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 14 Pro+",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 15",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 15 Ultra",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 8",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 8 Pro",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 8T",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 9",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 9 Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord 2",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 10 Pro",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 10T",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord 2T",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord CE 2",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 11",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord 3",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord CE 3",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord CE 3 Lite",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 12",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 12R",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord 4",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus Nord CE 4",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 13",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "OnePlus",
+   "model": "OnePlus 13R",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G22",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G32",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G52",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G54",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G84",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 40",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 40 Neo",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G64",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G85",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 50 Fusion",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 50 Pro",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 50 Ultra",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Razr 50",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Motorola",
+   "model": "Razr 50 Ultra",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "brand": "Fairphone",
+   "model": "Fairphone 4",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Fairphone",
+   "model": "Fairphone 5",
+   "year": 2023,
+   "storage": [
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Core-X5",
+   "year": 2021,
+   "storage": [
+    "64GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Core-M5",
+   "year": 2021,
+   "storage": [
+    "64GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Core-Z5",
+   "year": 2023,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Stellar-X5",
+   "year": 2023,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Stellar-M6",
+   "year": 2023,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Core-X4",
+   "year": 2020,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "brand": "Crosscall",
+   "model": "Action-X5",
+   "year": 2020,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "brand": "Nokia",
+   "model": "Nokia G21",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Nokia",
+   "model": "Nokia X20",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Nokia",
+   "model": "Nokia G22",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Nokia",
+   "model": "Nokia XR20",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Nokia",
+   "model": "Nokia XR21",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "P40",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "P40 Pro",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "P40 Lite",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "Mate 40 Pro",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "P50",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "P50 Pro",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Huawei",
+   "model": "Nova 9",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Honor",
+   "model": "Honor 90",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Honor",
+   "model": "Honor 90 Lite",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Honor",
+   "model": "Magic 5 Pro",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Honor",
+   "model": "X7a",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Honor",
+   "model": "X8a",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Nothing",
+   "model": "Phone (3a)",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "brand": "Nothing",
+   "model": "Phone (3a) Pro",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  }
+ ]
+}

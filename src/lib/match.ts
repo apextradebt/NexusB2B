@@ -83,7 +83,11 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   const intel = cpuTxt.match(/\b(i[3579])[\s-]*(\d{4,5}[a-z]{1,2}\d?)\b/);
   const ryzen = cpuTxt.match(/ryzen\s*([3579])\s*(pro\s*)?(\d{4}[a-z]{1,2})\b/);
   const low = cpuTxt.match(/\b(celeron|pentium(?:\s+(?:silver|gold))?)\s*(n?\d{4}[a-z]?)\b/);
-  if (intel) specs.cpu = `${intel[1]}-${up(intel[2])}`;
+  const ultra = cpuTxt.match(/\bultra\s*([579])\s*(\d{3}[a-z])\b/);
+  const apple = cpuTxt.match(/\b(?:apple\s+)?m([1-4])(?:\s+(pro|max))?\b(?!\.\d)/);
+  if (ultra) specs.cpu = `Core Ultra ${ultra[1]} ${up(ultra[2])}`;
+  else if (apple && /apple|macbook|\bm[1-4]\b/.test(cpuTxt) && !/m\.2/.test(cpuTxt.slice(apple.index!, apple.index! + 4))) specs.cpu = `Apple M${apple[1]}${apple[2] ? " " + apple[2][0].toUpperCase() + apple[2].slice(1) : ""}`;
+  else if (intel) specs.cpu = `${intel[1]}-${up(intel[2])}`;
   else if (ryzen) specs.cpu = `Ryzen ${ryzen[1]} ${ryzen[2] ? "PRO " : ""}${up(ryzen[3])}`;
   else if (low) specs.cpu = `${low[1].replace(/\b\w/g, (c) => c.toUpperCase())} ${up(low[2])}`;
   const tier = cpuTxt.match(/\b(i[3579]|ryzen\s*[3579])\b/);
@@ -135,6 +139,8 @@ function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
   if (specs.cpu) {
     const hit = ref.cpu?.find((c) => eqCpu(c, specs.cpu!));
     if (hit) variant.cpu = hit;
+    // Option lists checked on the manufacturer sheet are authoritative; platform lists are only indicative.
+    else if (ref.verified === "platform") warnings.push(`CPU ${specs.cpu} absent de la liste indicative`);
     else warnings.push(`CPU ${specs.cpu} jamais proposé sur ${ref.model}`);
   } else if (specs.cpuTier) {
     const same = ref.cpu?.filter((c) => normalize(c).replace(/\s/g, "").startsWith(specs.cpuTier!.replace(/\s/g, "")));

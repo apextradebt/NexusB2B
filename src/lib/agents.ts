@@ -35,7 +35,7 @@ const nexusMarketAgent: Agent = {
       });
       if (!res.ok) return [{ agent: this.name, kind: "buyback", status: "error", offers: [], message: `HTTP ${res.status}` }];
       const responseBody = await res.json();
-      
+
       const devices = [...(responseBody.knownDevices || []), ...(responseBody.newlyScrapedDevices || [])];
       const data = devices.length > 0 ? devices[0].price : null;
 

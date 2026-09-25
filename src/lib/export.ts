@@ -5,8 +5,15 @@ import { totals } from "@/lib/pricing";
 const HEADERS = [
   "Catégorie", "Marque", "Modèle", "CPU", "RAM", "Stockage", "Grade", "Quantité",
   "Rachat marché (u.)", "Prix de revente (u.)", "Prix d'achat (u.)", "Marge (u.)",
-  "Total achat", "Total revente", "Base de calcul", "Statut", "Lignes source",
+  "Total achat", "Total revente", "Base de calcul", "Statut", "Lignes source", "Liens sources",
 ];
+
+/** Every source price behind a line, with its listing links. */
+function sourceRows(l: QuoteLine) {
+  return l.agentResults
+    .filter((r) => r.status === "ok" && r.kind !== "estimate")
+    .flatMap((r) => r.offers.map((o) => ({ kind: r.kind === "buyback" ? "Rachat" : "Revente", source: o.source, price: o.price, note: r.message ?? "", links: o.links?.length ? o.links : o.url ? [o.url] : [] })));
+}
 
 function rowOf(l: QuoteLine) {
   const margin = l.sellPrice !== undefined && l.buyPrice !== undefined ? l.sellPrice - l.buyPrice : undefined;
@@ -17,6 +24,7 @@ function rowOf(l: QuoteLine) {
     l.buyPrice !== undefined ? l.buyPrice * l.quantity : undefined,
     l.sellPrice !== undefined ? l.sellPrice * l.quantity : undefined,
     l.priceBasis ?? "", l.status, l.sourceRows.join(" "),
+    sourceRows(l).map((r) => `${r.kind} ${r.source} ${r.price} € ${r.links[0] ?? ""}`).join(" | "),
   ];
 }
 
@@ -53,9 +61,22 @@ export async function exportXlsx(lines: QuoteLine[], name: string, meta: { clien
     HEADERS.map((h) => ({ value: h, fontWeight: "bold" as const, backgroundColor: "#EAE2D3" })),
     ...lines.map((l) => rowOf(l).map((v) => (v === undefined ? null : v))),
   ];
-  await writeXlsxFile(data as never, {
-    columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 18, 16, 12, 14, 14, 44, 12, 18].map((width) => ({ width })),
-  }).toFile(`${name}.xlsx`);
+  // Second sheet: one row per source and side, with clickable links to the listings.
+  const sources = [
+    ["Marque", "Modèle", "Configuration", "Grade", "Côté", "Source", "Prix (EUR)", "Détail", "Lien 1", "Lien 2", "Lien 3"].map((h) => ({ value: h, fontWeight: "bold" as const, backgroundColor: "#EAE2D3" })),
+    ...lines.flatMap((l) =>
+      sourceRows(l).map((r) => [
+        l.brand, l.model, [l.variant.cpu, l.variant.ram, l.variant.storage].filter(Boolean).join(" / "), l.grade, r.kind, r.source, r.price, r.note,
+        ...[0, 1, 2].map((i) => (r.links[i] ? { value: `=HYPERLINK("${r.links[i].replace(/"/g, "%22")}","Voir l'offre")`, type: "Formula" as const } : null)),
+      ])
+    ),
+  ];
+  await writeXlsxFile(
+    [
+      { data: data as never, sheet: "Devis", columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 18, 16, 12, 14, 14, 44, 12, 18, 60].map((width) => ({ width })) },
+      { data: sources as never, sheet: "Sources", columns: [10, 26, 26, 7, 9, 22, 10, 40, 14, 14, 14].map((width) => ({ width })) },
+    ]
+  ).toFile(`${name}.xlsx`);
 }
 
 export function downloadTemplate() {

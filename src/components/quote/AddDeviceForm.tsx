@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Check, Laptop, Plus, Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Input, Select } from "@/components/ui";
-import { CATALOG, PHONE_STORAGE, getRef } from "@/lib/catalog";
+import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
 import { useStore } from "@/lib/store";
 import type { Category, Grade } from "@/types";
@@ -96,7 +96,7 @@ export default function AddDeviceForm({ onAdded }: { onAdded?: () => void }) {
         ) : (
           <label className={`${field} sm:col-span-2 lg:col-span-3`}>
             {t("add.capacity")}
-            <Select ariaLabel={t("add.capacity")} value={storage} onChange={setStorage} options={[...choose("—"), ...PHONE_STORAGE.map((x) => ({ value: x, label: x }))]} />
+            <Select ariaLabel={t("add.capacity")} value={storage} onChange={setStorage} options={[...choose("—"), ...phoneStorage(ref).map((x) => ({ value: x, label: x }))]} />
           </label>
         )}
 

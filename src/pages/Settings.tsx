@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RotateCcw } from "lucide-react";
 import { Button, Card, Input, PageHeader } from "@/components/ui";
@@ -6,11 +7,18 @@ import { DEFAULT_SETTINGS } from "@/lib/pricing";
 import type { Category, Grade } from "@/types";
 import { GRADES } from "@/types";
 
+const PRICE_API = import.meta.env.VITE_PRICE_API_URL || "http://localhost:8787";
+type SourceInfo = { id: string; name: string; country: string; site: string; kinds: string[]; categories: string[] };
+
 const num = (v: string) => (v === "" || isNaN(Number(v)) ? 0 : Number(v));
 
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { settings, setSettings } = useStore();
+  const [sources, setSources] = useState<SourceInfo[] | null | undefined>(undefined);
+  useEffect(() => {
+    fetch(`${PRICE_API}/api/sources`).then((r) => r.json()).then(setSources).catch(() => setSources(null));
+  }, []);
 
   const setRefurb = (c: Category, g: Grade, v: string) =>
     setSettings({ ...settings, refurbCost: { ...settings.refurbCost, [c]: { ...settings.refurbCost[c], [g]: num(v) } } });
@@ -80,7 +88,33 @@ export default function SettingsPage() {
       <Card className="p-8 flex flex-col gap-3">
         <h2 className="text-xl font-bold">{t("settings.agents")}</h2>
         <p className="text-sm text-muted font-medium">{t("settings.agents_desc")}</p>
-        <div className="font-mono text-xs bg-whisper/40 dark:bg-hunter/30 rounded-2xl p-4 break-all">{import.meta.env.VITE_API_URL || "http://localhost:3001"}</div>
+        <div className="font-mono text-xs bg-whisper/40 dark:bg-hunter/30 rounded-2xl p-4 break-all">{PRICE_API}</div>
+        {sources === null ? (
+          <p className="text-sm text-warn font-semibold">{t("settings.server_down")}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wider text-muted">
+                  <th className="p-2 font-semibold">{t("settings.source")}</th>
+                  <th className="p-2 font-semibold">{t("settings.country")}</th>
+                  <th className="p-2 font-semibold">{t("settings.sides")}</th>
+                  <th className="p-2 font-semibold">{t("settings.devices")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(sources ?? []).map((s) => (
+                  <tr key={s.id} className="border-t border-line">
+                    <td className="p-2 font-semibold"><a href={s.site} target="_blank" rel="noreferrer" className="hover:underline">{s.name}</a></td>
+                    <td className="p-2 text-muted">{s.country}</td>
+                    <td className="p-2">{s.kinds.map((k) => t(`pricing.kind_${k}`)).join(" + ")}</td>
+                    <td className="p-2">{s.categories.map((c) => t(`reference.${c}`)).join(", ")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Card>
     </div>
   );
