@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Palette (MP131):
+  Bright White #F6F2F1 · Whisper White #EAE2D3 · Lucious Lime #91A673
+  Dark Hunter Green #3A4A3F · Bokara Grey #2A2725 · Wet Sand #AE8F60
+  Wet Sand is 3.04:1 on white → only for fills / large text; small text uses the darker "-ink" tones.
+*/
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-lime: #91A673;
+  --color-sand: #AE8F60;
+  --color-hunter: #3A4A3F;
+  --color-bokara: #2A2725;
+  --color-whisper: #EAE2D3;
+  --color-bright: #F6F2F1;
+  --color-buy: var(--buy-ink);
+  --color-sell: var(--sell-ink);
+  --color-warn: var(--warn-ink);
+  --font-sans: 'Inter', 'Poppins', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+:root {
+  --bg: #F6F2F1;
+  --surface: #F6F2F1;
+  --ink: #2A2725;
+  --muted: #6B6560;
+  --line: #EAE2D3;
+  --primary: #3A4A3F;
+  --on-primary: #F6F2F1;
+  --buy-ink: #7A6238;
+  --sell-ink: #4F6339;
+  --warn-ink: #8A5A1E;
+  --shadow-dark: #DCD3CF;
+  --shadow-light: #FFFFFF;
+}
+
+.dark {
+  --bg: #2A2725;
+  --surface: #2A2725;
+  --ink: #F6F2F1;
+  --muted: #B9B0A6;
+  --line: #3A4A3F;
+  --primary: #91A673;
+  --on-primary: #2A2725;
+  --buy-ink: #D2B888;
+  --sell-ink: #B5C99A;
+  --warn-ink: #E3B77A;
+  --shadow-dark: #1D1B1A;
+  --shadow-light: #36322F;
+}
+
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Same soft-UI (neumorphism) utilities as the B2C app, on the new base colour. */
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  }
+  .shadow-soft-sm {
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+  }
+  .shadow-inner-soft {
+    box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+  }
+  .shadow-soft-hover {
+    box-shadow: 12px 12px 20px var(--shadow-dark), -12px -12px 20px var(--shadow-light);
+  }
+  .shadow-soft-active {
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  }
+}
+
+.hero-gradient {
+  background: radial-gradient(120% 140% at 100% 0%, #91A673 0%, #3A4A3F 45%, #2A2725 100%);
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+.animate-spin-reverse { animation: spin-reverse 1s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

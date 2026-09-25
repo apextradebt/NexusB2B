@@ -1,0 +1,1393 @@
+{
+ "generatedFrom": "Spec-verified laptop catalog (manufacturer spec sheets, 2026-09-24)",
+ "models": [
+  {
+   "id": "DELLATITUDE5420",
+   "brand": "Dell",
+   "model": "Latitude 5420",
+   "family": "Latitude 5000",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen (+ one 10th gen option)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1125G4",
+    "i5-10310U",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD 220nit",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD SafeScreen (privacy)"
+   ],
+   "source": "https://dl.dell.com/content/manual30148736-latitude-5420-setup-and-specifications.pdf?language=en-us"
+  },
+  {
+   "id": "HPELITEBOOK840G8",
+   "brand": "HP",
+   "model": "EliteBook 840 G8",
+   "family": "EliteBook 800",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://www.highend-computer.de/wp-content/uploads/2026/05/HP-EliteBook-840-G8-Notebook-PC_Quickspecs.pdf"
+  },
+  {
+   "id": "DELLATITUDE5430",
+   "brand": "Dell",
+   "model": "Latitude 5430",
+   "family": "Latitude 5000",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD 220nit",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD SafeScreen (privacy)"
+   ],
+   "source": "https://doi-product-assets.s3.amazonaws.com/pub/User-Manual/1073605101.pdf"
+  },
+  {
+   "id": "HPELITEBOOK830G8",
+   "brand": "HP",
+   "model": "EliteBook 830 G8",
+   "family": "EliteBook 800",
+   "year": 2021,
+   "screen": "13.3\"",
+   "platform": "Intel 11th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_830G8.pdf"
+  },
+  {
+   "id": "LENTHINKPADT14SGEN1",
+   "brand": "Lenovo",
+   "model": "ThinkPad T14s Gen 1",
+   "family": "ThinkPad T",
+   "year": 2020,
+   "screen": "14\"",
+   "platform": "Intel 10th gen OR AMD Ryzen 4000 (different machines)",
+   "machineTypes": "Intel 20T0/20T1 · AMD 20UH/20UJ",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD PrivacyGuard",
+    "4K UHD (Intel only)"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14s_Gen_1_Intel/ThinkPad_T14s_Gen_1_Intel_Spec.pdf"
+  },
+  {
+   "id": "LENTHINKPADT14GEN1",
+   "brand": "Lenovo",
+   "model": "ThinkPad T14 Gen 1",
+   "family": "ThinkPad T",
+   "year": 2020,
+   "screen": "14\"",
+   "platform": "Intel 10th gen OR AMD Ryzen 4000 (different machines)",
+   "machineTypes": "Intel 20S0/20S1 · AMD 20UD/20UE",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U",
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD 220nit",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD PrivacyGuard",
+    "4K UHD (Intel only)"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_1_Intel/ThinkPad_T14_Gen_1_Intel_Spec.pdf",
+   "ramAmd": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ]
+  },
+  {
+   "id": "HPELITEBOOK845G8",
+   "brand": "HP",
+   "model": "EliteBook 845 G8",
+   "family": "EliteBook 800",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "AMD Ryzen 5000 (PRO and non-PRO)",
+   "machineTypes": "",
+   "cpu": [
+    "Ryzen 3 5400U",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 5800U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://www.lap4worx.de/media/pdf/52/d2/17/HP-EliteBook-845-G8-QuickSpecs.pdf"
+  },
+  {
+   "id": "LENTHINKPADT14SGEN2",
+   "brand": "Lenovo",
+   "model": "ThinkPad T14s Gen 2",
+   "family": "ThinkPad T",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen OR AMD Ryzen 5000 (different machines)",
+   "machineTypes": "Intel 20WM/20WN · AMD 20XF/20XG",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 5800U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 300nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD PrivacyGuard",
+    "4K UHD"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14s_Gen_2_Intel/ThinkPad_T14s_Gen_2_Intel_Spec.pdf"
+  },
+  {
+   "id": "LENTHINKPADX1CARBONGEN10",
+   "brand": "Lenovo",
+   "model": "ThinkPad X1 Carbon Gen 10",
+   "family": "ThinkPad X1",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen U & P",
+   "machineTypes": "21CB/21CC",
+   "cpu": [
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U",
+    "i5-1240P",
+    "i5-1250P",
+    "i7-1260P",
+    "i7-1270P",
+    "i7-1280P"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "WUXGA 400nit",
+    "WUXGA Touch",
+    "WUXGA PrivacyGuard",
+    "2.2K",
+    "2.8K OLED",
+    "4K WQUXGA"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_Gen_10/ThinkPad_X1_Carbon_Gen_10_Spec.pdf"
+  },
+  {
+   "id": "HPPROBOOK430G7",
+   "brand": "HP",
+   "model": "ProBook 430 G7",
+   "family": "ProBook 400",
+   "year": 2020,
+   "screen": "13.3\"",
+   "platform": "Intel 10th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD 220nit",
+    "FHD 250nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_430G7.pdf"
+  },
+  {
+   "id": "HPELITEBOOK840G7",
+   "brand": "HP",
+   "model": "EliteBook 840 G7",
+   "family": "EliteBook 800",
+   "year": 2020,
+   "screen": "14\"",
+   "platform": "Intel 10th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_840G7.pdf"
+  },
+  {
+   "id": "HPPROBOOK640G8",
+   "brand": "HP",
+   "model": "ProBook 640 G8",
+   "family": "ProBook 600",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1115G4",
+    "i3-1125G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD 250nit",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_640G8.pdf"
+  },
+  {
+   "id": "LEN500ECHROMEBOOKGEN3",
+   "brand": "Lenovo",
+   "model": "500e Chromebook Gen 3",
+   "family": "Chromebook (education)",
+   "year": 2021,
+   "screen": "11.6\"",
+   "platform": "Intel Jasper Lake, ChromeOS",
+   "machineTypes": "82JB/82JC",
+   "cpu": [
+    "Celeron N4500",
+    "Celeron N5100"
+   ],
+   "ram": [
+    "4GB",
+    "8GB"
+   ],
+   "storage": [
+    "32GB eMMC",
+    "64GB eMMC"
+   ],
+   "display": [
+    "HD Touch (convertible)"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/Lenovo/Lenovo_500e_Chromebook_Gen_3_Intel/Lenovo_500e_Chromebook_Gen_3_Intel_Spec.pdf"
+  },
+  {
+   "id": "LENTHINKPADX13GEN1",
+   "brand": "Lenovo",
+   "model": "ThinkPad X13 Gen 1",
+   "family": "ThinkPad X",
+   "year": 2020,
+   "screen": "13.3\"",
+   "platform": "Intel 10th gen OR AMD Ryzen 4000 (different machines)",
+   "machineTypes": "Intel 20T2/20T3 · AMD 20UF/20UG",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U",
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD 250nit",
+    "FHD 300nit",
+    "FHD Touch",
+    "FHD PrivacyGuard 500nit"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X13_Gen_1_Intel/ThinkPad_X13_Gen_1_Intel_Spec.pdf"
+  },
+  {
+   "id": "LENTHINKPADT14GEN2",
+   "brand": "Lenovo",
+   "model": "ThinkPad T14 Gen 2",
+   "family": "ThinkPad T",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen OR AMD Ryzen 5000 (different machines)",
+   "machineTypes": "Intel 20W0/20W1 · AMD 20XK/20XL",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250/300nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD PrivacyGuard",
+    "4K UHD"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_2_Intel/ThinkPad_T14_Gen_2_Intel_Spec.pdf"
+  },
+  {
+   "id": "HPPROBOOK440G9",
+   "brand": "HP",
+   "model": "ProBook 440 G9",
+   "family": "ProBook 400",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen",
+   "machineTypes": "",
+   "cpu": [
+    "Celeron 7305",
+    "Pentium Gold 8505",
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i7-1255U",
+    "i7-1260P"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD 250nit",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch"
+   ],
+   "source": "https://www.tdsynnex.com/na/us/hpi/wp-content/uploads/sites/36/2023/03/HP-ProBook-440-14-inch-G9-Notebook-PC-Data-Sheet.pdf"
+  },
+  {
+   "id": "HPELITEBOOK850G8",
+   "brand": "HP",
+   "model": "EliteBook 850 G8",
+   "family": "EliteBook 800",
+   "year": 2021,
+   "screen": "15.6\"",
+   "platform": "Intel 11th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)",
+    "UHD 400nit"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_850G8.pdf"
+  },
+  {
+   "id": "DELLATITUDE3420",
+   "brand": "Dell",
+   "model": "Latitude 3420",
+   "family": "Latitude 3000",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen (+ 10th gen i3)",
+   "machineTypes": "",
+   "cpu": [
+    "Celeron 6305",
+    "i3-1005G1",
+    "i3-1115G4",
+    "i3-1125G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch"
+   ],
+   "source": "https://www.sos.state.co.us/pubs/elections/VotingSystems/DVS-DemocracySuite517/documentation/DellLatitude3420SetupandSpecification-en-us.pdf"
+  },
+  {
+   "id": "HPPROX360FORTIS11G9",
+   "brand": "HP",
+   "model": "Pro x360 Fortis 11 G9",
+   "family": "Pro Fortis (education)",
+   "year": 2022,
+   "screen": "11.6\"",
+   "platform": "Intel Jasper Lake, convertible",
+   "machineTypes": "",
+   "cpu": [
+    "Celeron N4500",
+    "Celeron N5100",
+    "Pentium Silver N6000"
+   ],
+   "ram": [
+    "4GB",
+    "8GB"
+   ],
+   "storage": [
+    "64GB eMMC",
+    "128GB",
+    "256GB"
+   ],
+   "display": [
+    "HD Touch (convertible)"
+   ],
+   "source": "https://media2store2.blob.core.windows.net/storage/item_spec/19/196362.pdf"
+  },
+  {
+   "id": "DELLATITUDE5530",
+   "brand": "Dell",
+   "model": "Latitude 5530",
+   "family": "Latitude 5000",
+   "year": 2022,
+   "screen": "15.6\"",
+   "platform": "Intel 12th gen U & P",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U",
+    "i5-1240P",
+    "i5-1250P",
+    "i7-1270P"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch",
+    "FHD SafeScreen (privacy)"
+   ],
+   "source": "https://dl.dell.com/content/manual33332152-latitude-5530-configuration-et-sp%C3%A9cifications.pdf?language=fr-fr"
+  },
+  {
+   "id": "HPELITEBOOK840G6",
+   "brand": "HP",
+   "model": "EliteBook 840 G6",
+   "family": "EliteBook 800",
+   "year": 2019,
+   "screen": "14\"",
+   "platform": "Intel 8th gen (Whiskey Lake)",
+   "machineTypes": "",
+   "cpu": [
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD",
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)",
+    "UHD 400nit"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_840G6.pdf"
+  },
+  {
+   "id": "DELLATITUDE5320",
+   "brand": "Dell",
+   "model": "Latitude 5320",
+   "family": "Latitude 5000",
+   "year": 2021,
+   "screen": "13.3\"",
+   "platform": "Intel 11th gen (also 2-in-1)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1125G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD",
+    "FHD Touch",
+    "FHD Touch (2-in-1)"
+   ],
+   "source": "https://dl.dell.com/content/manual40442222-latitude-5320-latitude-5320-2in1-setup-and-specifications-guide.pdf?language=en-us"
+  },
+  {
+   "id": "DELLATITUDE3310",
+   "brand": "Dell",
+   "model": "Latitude 3310",
+   "family": "Latitude 3000",
+   "year": 2019,
+   "screen": "13.3\"",
+   "platform": "Intel 8th gen (2-in-1 is a separate model)",
+   "machineTypes": "",
+   "cpu": [
+    "Celeron 4205U",
+    "Pentium Gold 5405U",
+    "i3-8145U",
+    "i5-8265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "display": [
+    "HD"
+   ],
+   "source": "https://dl.dell.com/content/manual21800025-dell-latitude-3310-setup-and-specifications.pdf?language=en-us"
+  },
+  {
+   "id": "LENTHINKPADT14GEN3",
+   "brand": "Lenovo",
+   "model": "ThinkPad T14 Gen 3",
+   "family": "ThinkPad T",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen OR AMD Ryzen 6000 (different machines)",
+   "machineTypes": "Intel 21AH/21AJ · AMD 21CF/21CG",
+   "cpu": [
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U",
+    "i5-1240P",
+    "i5-1250P",
+    "i7-1260P",
+    "i7-1270P",
+    "i7-1280P",
+    "Ryzen 5 PRO 6650U",
+    "Ryzen 7 PRO 6850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "WUXGA 300nit",
+    "WUXGA 400nit",
+    "WUXGA Touch",
+    "WUXGA PrivacyGuard",
+    "2.2K",
+    "4K WQUXGA"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_3_Intel/ThinkPad_T14_Gen_3_Intel_Spec.pdf",
+   "ramAmd": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ]
+  },
+  {
+   "id": "DELLATITUDE5520",
+   "brand": "Dell",
+   "model": "Latitude 5520",
+   "family": "Latitude 5000",
+   "year": 2021,
+   "screen": "15.6\"",
+   "platform": "Intel 11th gen (+ 10th gen options)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1125G4",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10610U",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch",
+    "4K UHD"
+   ],
+   "source": "https://dl.dell.com/content/manual44196431-latitude-5520-setup-and-specifications.pdf?language=en-us"
+  },
+  {
+   "id": "FUJLIFEBOOKE5410",
+   "brand": "Fujitsu",
+   "model": "LIFEBOOK E5410",
+   "family": "LIFEBOOK E",
+   "year": 2020,
+   "screen": "14\"",
+   "platform": "Intel 10th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB"
+   ],
+   "display": [
+    "HD",
+    "FHD"
+   ],
+   "source": "https://sp.ts.fujitsu.com/dmsp/Publications/public/ds-LIFEBOOK_E5410.pdf"
+  },
+  {
+   "id": "DELLATITUDE7430",
+   "brand": "Dell",
+   "model": "Latitude 7430",
+   "family": "Latitude 7000",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen U & P (also 2-in-1)",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U",
+    "i5-1240P",
+    "i5-1250P",
+    "i7-1270P"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "FHD",
+    "FHD Touch",
+    "FHD SafeScreen (privacy)",
+    "FHD Touch (2-in-1)"
+   ],
+   "source": "https://www.dell.com/support/manuals/en-us/latitude-14-7430-2-in-1-laptop/lat-7430_sg-specs/processor?guid=guid-e5c13638-3e43-453e-addc-3610066cb746&lang=en-us"
+  },
+  {
+   "id": "DELLATITUDE7420",
+   "brand": "Dell",
+   "model": "Latitude 7420",
+   "family": "Latitude 7000",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen (also 2-in-1)",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "FHD",
+    "FHD Touch",
+    "FHD SafeScreen (privacy)",
+    "4K UHD"
+   ],
+   "source": "https://dl.dell.com/content/manual43859724-latitude-7420-setup-and-specifications.pdf?language=en-us"
+  },
+  {
+   "id": "HPELITEBOOK840G5",
+   "brand": "HP",
+   "model": "EliteBook 840 G5",
+   "family": "EliteBook 800",
+   "year": 2018,
+   "screen": "14\"",
+   "platform": "Intel 8th gen (+ 7th gen options)",
+   "machineTypes": "",
+   "cpu": [
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch",
+    "FHD Sure View (privacy)",
+    "UHD"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_840G5.pdf"
+  },
+  {
+   "id": "HPELITEBOOK830G6",
+   "brand": "HP",
+   "model": "EliteBook 830 G6",
+   "family": "EliteBook 800",
+   "year": 2019,
+   "screen": "13.3\"",
+   "platform": "Intel 8th gen (Whiskey Lake)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_830G6.pdf"
+  },
+  {
+   "id": "DELLATITUDE5330",
+   "brand": "Dell",
+   "model": "Latitude 5330",
+   "family": "Latitude 5000",
+   "year": 2022,
+   "screen": "13.3\"",
+   "platform": "Intel 12th gen (also 2-in-1)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch 300nit",
+    "FHD Touch (2-in-1)",
+    "FHD SafeScreen (privacy)"
+   ],
+   "source": "https://dl.dell.com/content/manual30339142-latitude-5330-latitude-5330-2-en-1-configuration-et-caract%C3%A9ristiques.pdf?language=fr-fr"
+  },
+  {
+   "id": "HPELITEBOOK840G3",
+   "brand": "HP",
+   "model": "EliteBook 840 G3",
+   "family": "EliteBook 800",
+   "year": 2016,
+   "screen": "14\"",
+   "platform": "Intel 6th gen (Skylake)",
+   "machineTypes": "",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch",
+    "FHD Sure View (privacy)",
+    "QHD"
+   ],
+   "source": "https://bargainhardware.co.uk/media/quick-specs/laptops/HP-EliteBook-840-G3-Quick-Specs.pdf"
+  },
+  {
+   "id": "FUJLIFEBOOKU7411",
+   "brand": "Fujitsu",
+   "model": "LIFEBOOK U7411",
+   "family": "LIFEBOOK U",
+   "year": 2021,
+   "screen": "14\"",
+   "platform": "Intel 11th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i3-1125G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB"
+   ],
+   "display": [
+    "HD",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD ePrivacyFilter (privacy)"
+   ],
+   "source": "https://sp.ts.fujitsu.com/dmsp/Publications/public/ds-LIFEBOOK_U7411.pdf"
+  },
+  {
+   "id": "HPELITEBOOK830G7",
+   "brand": "HP",
+   "model": "EliteBook 830 G7",
+   "family": "EliteBook 800",
+   "year": 2020,
+   "screen": "13.3\"",
+   "platform": "Intel 10th gen",
+   "machineTypes": "",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "FHD 250nit",
+    "FHD 400nit",
+    "FHD Touch",
+    "FHD Sure View 1000nit (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_830G7.pdf"
+  },
+  {
+   "id": "LENTHINKPADX13GEN2",
+   "brand": "Lenovo",
+   "model": "ThinkPad X13 Gen 2",
+   "family": "ThinkPad X",
+   "year": 2021,
+   "screen": "13.3\"",
+   "platform": "Intel 11th gen OR AMD Ryzen 5000 (different machines)",
+   "machineTypes": "Intel 20WK/20WL · AMD 20XH/20XJ",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 5800U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "WUXGA 300nit",
+    "WUXGA Touch",
+    "WUXGA PrivacyGuard 500nit",
+    "WQXGA 400nit"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X13_Gen_2_Intel/ThinkPad_X13_Gen_2_Intel_Spec.pdf"
+  },
+  {
+   "id": "HPELITEBOOK840G9",
+   "brand": "HP",
+   "model": "EliteBook 840 G9",
+   "family": "EliteBook 800",
+   "year": 2022,
+   "screen": "14\"",
+   "platform": "Intel 12th gen U & P",
+   "machineTypes": "",
+   "cpu": [
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U",
+    "i5-1240P",
+    "i7-1260P",
+    "i7-1270P",
+    "i7-1280P"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "WUXGA 250nit",
+    "WUXGA 400nit",
+    "WUXGA Touch",
+    "WUXGA Sure View (privacy)"
+   ],
+   "source": "https://gc3.de/files/quickspecs/qs_840G9.pdf"
+  },
+  {
+   "id": "LENTHINKPADT490",
+   "brand": "Lenovo",
+   "model": "ThinkPad T490",
+   "family": "ThinkPad T",
+   "year": 2019,
+   "screen": "14\"",
+   "platform": "Intel 8th gen (+ 10th gen refresh)",
+   "machineTypes": "8th gen 20N2/20N3 · 10th gen 20RX/20RY",
+   "cpu": [
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U",
+    "i5-10210U",
+    "i7-10510U",
+    "i7-10710U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "display": [
+    "HD",
+    "FHD",
+    "FHD Touch",
+    "FHD PrivacyGuard",
+    "WQHD"
+   ],
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T490/ThinkPad_T490_Spec.pdf"
+  }
+ ]
+}
