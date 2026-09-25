@@ -109,7 +109,10 @@
     "excluded": "{{count}} appareils non reconnus exclus du devis",
     "new": "Nouveau devis",
     "save": "Enregistrer",
-    "saved": "Enregistré"
+    "saved": "Enregistré",
+    "source_counts": "{{buy}} rachat · {{sell}} revente",
+    "indicative": "indicatif",
+    "indicative_hint": "Aucune annonce avec ce processeur : prix basé sur le même modèle avec une autre configuration."
   },
   "quotes": {
     "title": "Devis",
@@ -134,7 +137,10 @@
     "brand": "Marque",
     "model": "Modèle",
     "base_price": "Prix de référence",
-    "none": "Aucun résultat."
+    "none": "Aucun résultat.",
+    "verified_spec": "Vérifié · fiche constructeur",
+    "verified_psref": "Vérifié · Lenovo PSREF",
+    "verified_platform": "Options indicatives"
   },
   "settings": {
     "title": "Paramètres",
@@ -149,7 +155,12 @@
     "grade_coef": "Coef. estimation",
     "grade_coef_desc": "Coefficient appliqué au prix de référence catalogue (téléphones) quand aucun agent ne trouve de prix de revente.",
     "agents": "Agents de prix",
-    "agents_desc": "Les agents interrogent le backend de scraping à cette adresse (variable VITE_API_URL) : /api/market/prices pour les téléphones, /api/market/laptop-prices pour les PC."
+    "agents_desc": "Les agents interrogent le serveur de prix (npm run server, variable VITE_PRICE_API_URL) : sources de rachat et de revente pour téléphones et PC, robots.txt respecté, une requête par seconde et par site, cache 6 h.",
+    "server_down": "Serveur de prix injoignable : lancez « npm run server » dans le dossier du projet.",
+    "source": "Source",
+    "country": "Pays",
+    "sides": "Prix",
+    "devices": "Appareils"
   },
   "add": {
     "title": "Ajouter un appareil",
@@ -162,5 +173,17 @@
     "submit": "Ajouter au devis",
     "added": "Ajouté",
     "remove": "Supprimer la ligne"
+  },
+  "sources": {
+    "buyback": "Rachat — ce que les sites paient",
+    "buyback_hint": "Prix de rachat proposés par les sites, du plus élevé au plus bas.",
+    "resale": "Revente — prix de vente constatés",
+    "resale_hint": "Prix affichés par les revendeurs, du moins cher au plus cher.",
+    "none": "Aucune offre trouvée.",
+    "listing": "Voir l'offre",
+    "listing_n": "Offre {{n}}",
+    "grade_used": "grade {{grade}}",
+    "missing_one": "{{count}} source sans résultat",
+    "missing_other": "{{count}} sources sans résultat"
   }
 }

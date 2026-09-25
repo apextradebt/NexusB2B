@@ -21,6 +21,8 @@ export type RefModel = {
   /** Phone reference price for a flawless device (shared with the B2C app). */
   basePrice?: number;
   source?: string;
+  /** How the option lists were checked: manufacturer spec sheet, Lenovo PSREF, or the platform's standard CPU list. */
+  verified?: "spec" | "psref" | "platform";
 };
 
 /** Specs pulled out of the raw text of a line. */
@@ -63,7 +65,15 @@ export type Match = {
   alternatives: { ref: RefModel; score: number }[];
 };
 
-export type AgentOffer = { source: string; price: number; url?: string };
+export type AgentOffer = {
+  source: string;
+  price: number;
+  url?: string;
+  /** All listings behind this price (the first is `url`). */
+  links?: string[];
+  /** Grade the source actually had, when different from the requested one. */
+  grade?: Grade;
+};
 
 export type AgentResult = {
   agent: string;

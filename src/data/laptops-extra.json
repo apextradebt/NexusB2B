@@ -1,0 +1,5949 @@
+{
+ "note": "Extended laptop reference. verified=psref: CPU list read from Lenovo PSREF; verified=platform: standard CPU list of the platform generation (not checked model by model).",
+ "models": [
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude E5470",
+   "year": 2016,
+   "screen": "14\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "DELLATITUDEE5470"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude E5570",
+   "year": 2016,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "DELLATITUDEE5570"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude E7270",
+   "year": 2016,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "DELLATITUDEE7270"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude E7470",
+   "year": 2016,
+   "screen": "14\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "DELLATITUDEE7470"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5280",
+   "year": 2017,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "DELLATITUDE5280"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5480",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "DELLATITUDE5480"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5580",
+   "year": 2017,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "DELLATITUDE5580"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7280",
+   "year": 2017,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "DELLATITUDE7280"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7480",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "DELLATITUDE7480"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5290",
+   "year": 2018,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE5290"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5490",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE5490"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5590",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE5590"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7290",
+   "year": 2018,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE7290"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7390",
+   "year": 2018,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE7390"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7490",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "DELLATITUDE7490"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5300",
+   "year": 2019,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE5300"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5400",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE5400"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5500",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE5500"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7300",
+   "year": 2019,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE7300"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7400",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE7400"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3400",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE3400"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3500",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELLATITUDE3500"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5310",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE5310"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5410",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE5410"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5510",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE5510"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7310",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE7310"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7410",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE7410"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3410",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE3410"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3510",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE3510"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3520",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELLATITUDE3520"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3320",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELLATITUDE3320"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3330",
+   "year": 2022,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELLATITUDE3330"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3430",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELLATITUDE3430"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3530",
+   "year": 2022,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELLATITUDE3530"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5340",
+   "year": 2023,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE5340"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5440",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE5440"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5540",
+   "year": 2023,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE5540"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7340",
+   "year": 2023,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE7340"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7440",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE7440"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3440",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE3440"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 3540",
+   "year": 2023,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "DELLATITUDE3540"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5450",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "platform",
+   "id": "DELLATITUDE5450"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 5550",
+   "year": 2024,
+   "screen": "15.6\"",
+   "cpu": [
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "platform",
+   "id": "DELLATITUDE5550"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 7450",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "platform",
+   "id": "DELLATITUDE7450"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 9410",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELLATITUDE9410"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 9420",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELLATITUDE9420"
+  },
+  {
+   "brand": "Dell",
+   "family": "Latitude",
+   "model": "Latitude 9430",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELLATITUDE9430"
+  },
+  {
+   "brand": "Dell",
+   "family": "XPS",
+   "model": "XPS 13 9300",
+   "year": 2020,
+   "screen": "13.4\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELXPS139300"
+  },
+  {
+   "brand": "Dell",
+   "family": "XPS",
+   "model": "XPS 13 9310",
+   "year": 2020,
+   "screen": "13.4\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELXPS139310"
+  },
+  {
+   "brand": "Dell",
+   "family": "XPS",
+   "model": "XPS 13 9315",
+   "year": 2022,
+   "screen": "13.4\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELXPS139315"
+  },
+  {
+   "brand": "Dell",
+   "family": "XPS",
+   "model": "XPS 15 9500",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELXPS159500"
+  },
+  {
+   "brand": "Dell",
+   "family": "XPS",
+   "model": "XPS 15 9510",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELXPS159510"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 3540",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "DELPRECISION3540"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 3550",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELPRECISION3550"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 3560",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELPRECISION3560"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 3570",
+   "year": 2022,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "DELPRECISION3570"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 5550",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "DELPRECISION5550"
+  },
+  {
+   "brand": "Dell",
+   "family": "Precision",
+   "model": "Precision 5560",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "DELPRECISION5560"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 820 G3",
+   "year": 2016,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "HPELITEBOOK820G3"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 850 G3",
+   "year": 2016,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "platform",
+   "id": "HPELITEBOOK850G3"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 820 G4",
+   "year": 2017,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "HPELITEBOOK820G4"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 840 G4",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "HPELITEBOOK840G4"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 850 G4",
+   "year": 2017,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "HPELITEBOOK850G4"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 830 G5",
+   "year": 2018,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPELITEBOOK830G5"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 850 G5",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPELITEBOOK850G5"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 850 G6",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPELITEBOOK850G6"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 850 G7",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPELITEBOOK850G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 830 G9",
+   "year": 2022,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPELITEBOOK830G9"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 860 G9",
+   "year": 2022,
+   "screen": "16\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPELITEBOOK860G9"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 840 G10",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "HPELITEBOOK840G10"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 860 G10",
+   "year": 2023,
+   "screen": "16\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "HPELITEBOOK860G10"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 840 G11",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "platform",
+   "id": "HPELITEBOOK840G11"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook x360 830 G7",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPELITEBOOKX360830G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook x360 830 G8",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPELITEBOOKX360830G8"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook x360 1030 G7",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPELITEBOOKX3601030G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook x360 1040 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPELITEBOOKX3601040G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook x360 1040 G8",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPELITEBOOKX3601040G8"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 1040 G9",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPELITEBOOK1040G9"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "Elite Dragonfly G2",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPELITEDRAGONFLYG2"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "Elite Dragonfly G3",
+   "year": 2022,
+   "screen": "13.5\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPELITEDRAGONFLYG3"
+  },
+  {
+   "brand": "HP",
+   "family": "ZBook",
+   "model": "ZBook Firefly 14 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPZBOOKFIREFLY14G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ZBook",
+   "model": "ZBook Firefly 14 G8",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPZBOOKFIREFLY14G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ZBook",
+   "model": "ZBook Firefly 15 G7",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPZBOOKFIREFLY15G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ZBook",
+   "model": "ZBook Firefly 15 G8",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPZBOOKFIREFLY15G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ZBook",
+   "model": "ZBook 15u G6",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPZBOOK15UG6"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 835 G7",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r4000",
+   "verified": "platform",
+   "id": "HPELITEBOOK835G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 845 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r4000",
+   "verified": "platform",
+   "id": "HPELITEBOOK845G7"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 835 G8",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r5000",
+   "verified": "platform",
+   "id": "HPELITEBOOK835G8"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 845 G9",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 5 PRO 6650U",
+    "Ryzen 7 PRO 6850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r6000",
+   "verified": "platform",
+   "id": "HPELITEBOOK845G9"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 845 G10",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 5 PRO 7540U",
+    "Ryzen 7 PRO 7840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r7040",
+   "verified": "platform",
+   "id": "HPELITEBOOK845G10"
+  },
+  {
+   "brand": "HP",
+   "family": "EliteBook",
+   "model": "EliteBook 845 G6",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 3 PRO 3300U",
+    "Ryzen 5 PRO 3500U",
+    "Ryzen 7 PRO 3700U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r3000",
+   "verified": "platform",
+   "id": "HPELITEBOOK845G6"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 430 G5",
+   "year": 2018,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPPROBOOK430G5"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 440 G5",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPPROBOOK440G5"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G5",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPPROBOOK450G5"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 430 G6",
+   "year": 2019,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPPROBOOK430G6"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 440 G6",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPPROBOOK440G6"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G6",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPPROBOOK450G6"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 440 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPPROBOOK440G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G7",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPPROBOOK450G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 430 G8",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPPROBOOK430G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 440 G8",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPPROBOOK440G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G8",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPPROBOOK450G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G9",
+   "year": 2022,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPPROBOOK450G9"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 440 G10",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "HPPROBOOK440G10"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 450 G10",
+   "year": 2023,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1365U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "platform",
+   "id": "HPPROBOOK450G10"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 640 G4",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPPROBOOK640G4"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 650 G4",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "HPPROBOOK650G4"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 640 G5",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPPROBOOK640G5"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 650 G5",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "HPPROBOOK650G5"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 640 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "HPPROBOOK640G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 650 G8",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "HPPROBOOK650G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 640 G9",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "HPPROBOOK640G9"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook x360 435 G7",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r4000",
+   "verified": "platform",
+   "id": "HPPROBOOKX360435G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook x360 435 G8",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r5000",
+   "verified": "platform",
+   "id": "HPPROBOOKX360435G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 445 G7",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r4000",
+   "verified": "platform",
+   "id": "HPPROBOOK445G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 445 G8",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r5000",
+   "verified": "platform",
+   "id": "HPPROBOOK445G8"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 455 G7",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r4000",
+   "verified": "platform",
+   "id": "HPPROBOOK455G7"
+  },
+  {
+   "brand": "HP",
+   "family": "ProBook",
+   "model": "ProBook 455 G8",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r5000",
+   "verified": "platform",
+   "id": "HPPROBOOK455G8"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T460",
+   "year": 2016,
+   "screen": "14\"",
+   "cpu": [
+    "i3-6100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i7-6500U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T460/ThinkPad_T460_Spec.pdf",
+   "id": "LENTHINKPADT460"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T460s",
+   "year": 2016,
+   "screen": "14\"",
+   "cpu": [
+    "i5-6200U",
+    "i7-6600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "skl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T460s/ThinkPad_T460s_Spec.pdf",
+   "id": "LENTHINKPADT460S"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T470",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-6500U",
+    "i7-6600U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T470/ThinkPad_T470_Spec.pdf",
+   "id": "LENTHINKPADT470"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T470s",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i5-6200U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-6600U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T470s/ThinkPad_T470s_Spec.pdf",
+   "id": "LENTHINKPADT470S"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T480",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-7200U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T480/ThinkPad_T480_Spec.pdf",
+   "id": "LENTHINKPADT480"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T480s",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i5-7200U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T480s/ThinkPad_T480s_Spec.pdf",
+   "id": "LENTHINKPADT480S"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T580",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-7200U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T580/ThinkPad_T580_Spec.pdf",
+   "id": "LENTHINKPADT580"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T490s",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T490s/ThinkPad_T490s_Spec.pdf",
+   "id": "LENTHINKPADT490S"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T495",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 3 PRO 3300U",
+    "Ryzen 5 PRO 3500U",
+    "Ryzen 7 PRO 3700U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r3000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T495/ThinkPad_T495_Spec.pdf",
+   "id": "LENTHINKPADT495"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T495s",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "Ryzen 5 PRO 3500U",
+    "Ryzen 7 PRO 3700U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r3000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T495s/ThinkPad_T495s_Spec.pdf",
+   "id": "LENTHINKPADT495S"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T590",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T590/ThinkPad_T590_Spec.pdf",
+   "id": "LENTHINKPADT590"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T15 Gen 1",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T15_Gen_1/ThinkPad_T15_Gen_1_Spec.pdf",
+   "id": "LENTHINKPADT15GEN1"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T15 Gen 2",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T15_Gen_2/ThinkPad_T15_Gen_2_Spec.pdf",
+   "id": "LENTHINKPADT15GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T14s Gen 3",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i5-1250P",
+    "i7-1255U",
+    "i7-1260P",
+    "i7-1265U",
+    "i7-1270P",
+    "i7-1280P",
+    "Ryzen 5 PRO 6650U",
+    "Ryzen 7 PRO 6850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r6000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14s_Gen_3_Intel/ThinkPad_T14s_Gen_3_Intel_Spec.pdf",
+   "id": "LENTHINKPADT14SGEN3"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T14 Gen 4",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i5-1350P",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P",
+    "Ryzen 5 PRO 7540U",
+    "Ryzen 7 PRO 7840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7040",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_4_Intel/ThinkPad_T14_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADT14GEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T14s Gen 4",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P",
+    "Ryzen 5 PRO 7540U",
+    "Ryzen 7 PRO 7840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7040",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14s_Gen_4_Intel/ThinkPad_T14s_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADT14SGEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T16 Gen 1",
+   "year": 2022,
+   "screen": "16\"",
+   "cpu": [
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i5-1250P",
+    "i7-1255U",
+    "i7-1260P",
+    "i7-1265U",
+    "i7-1270P",
+    "i7-1280P",
+    "Ryzen 5 PRO 6650U",
+    "Ryzen 7 PRO 6850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r6000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T16_Gen_1_Intel/ThinkPad_T16_Gen_1_Intel_Spec.pdf",
+   "id": "LENTHINKPADT16GEN1"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T16 Gen 2",
+   "year": 2023,
+   "screen": "16\"",
+   "cpu": [
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i5-1350P",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P",
+    "Ryzen 5 PRO 7540U",
+    "Ryzen 5 PRO 7545U",
+    "Ryzen 7 PRO 7840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7040",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T16_Gen_2_Intel/ThinkPad_T16_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADT16GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad T14 Gen 5",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "Core Ultra 5 125H",
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135H",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155H",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165H",
+    "Core Ultra 7 165U",
+    "Ryzen 5 PRO 8540U",
+    "Ryzen 7 PRO 8840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_5_Intel/ThinkPad_T14_Gen_5_Intel_Spec.pdf",
+   "id": "LENTHINKPADT14GEN5"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X270",
+   "year": 2017,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-6006U",
+    "i3-6100U",
+    "i3-7100U",
+    "i5-6200U",
+    "i5-6300U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-6500U",
+    "i7-6600U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X270/ThinkPad_X270_Spec.pdf",
+   "id": "LENTHINKPADX270"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X280",
+   "year": 2018,
+   "screen": "12.5\"",
+   "cpu": [
+    "i3-7020U",
+    "i3-7130U",
+    "i3-8130U",
+    "i5-7200U",
+    "i5-7300U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X280/ThinkPad_X280_Spec.pdf",
+   "id": "LENTHINKPADX280"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X390",
+   "year": 2019,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-10210U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-10510U",
+    "i7-10710U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X390/ThinkPad_X390_Spec.pdf",
+   "id": "LENTHINKPADX390"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X395",
+   "year": 2019,
+   "screen": "13.3\"",
+   "cpu": [
+    "Ryzen 3 PRO 3300U",
+    "Ryzen 5 PRO 3500U",
+    "Ryzen 7 PRO 3700U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "r3000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X395/ThinkPad_X395_Spec.pdf",
+   "id": "LENTHINKPADX395"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X13 Gen 3",
+   "year": 2022,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i5-1250P",
+    "i7-1255U",
+    "i7-1260P",
+    "i7-1265U",
+    "i7-1270P",
+    "i7-1280P",
+    "i7-1280U",
+    "Ryzen 5 PRO 6650U",
+    "Ryzen 7 PRO 6850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r6000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X13_Gen_3_Intel/ThinkPad_X13_Gen_3_Intel_Spec.pdf",
+   "id": "LENTHINKPADX13GEN3"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X13 Gen 4",
+   "year": 2023,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i5-1350P",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P",
+    "Ryzen 5 PRO 7540U",
+    "Ryzen 5 PRO 7545U",
+    "Ryzen 7 PRO 7840U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7040",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X13_Gen_4_Intel/ThinkPad_X13_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADX13GEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X13 Yoga Gen 2",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "LENTHINKPADX13YOGAGEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 5",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i5-6200U",
+    "i5-6300U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-6500U",
+    "i7-6600U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_5th_Gen/ThinkPad_X1_Carbon_5th_Gen_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN5"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 6",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i5-7300U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_6th_Gen/ThinkPad_X1_Carbon_6th_Gen_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN6"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 7",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i5-10210U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-10510U",
+    "i7-10710U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_7th_Gen/ThinkPad_X1_Carbon_7th_Gen_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN7"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 8",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_Gen_8/ThinkPad_X1_Carbon_Gen_8_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN8"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 9",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_Gen_9/ThinkPad_X1_Carbon_Gen_9_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN9"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 11",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i5-1350P",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_Gen_11/ThinkPad_X1_Carbon_Gen_11_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN11"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Carbon Gen 12",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "Core Ultra 5 125H",
+    "Core Ultra 5 125U",
+    "Core Ultra 5 135U",
+    "Core Ultra 7 155H",
+    "Core Ultra 7 155U",
+    "Core Ultra 7 165H",
+    "Core Ultra 7 165U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "mtl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Carbon_Gen_12/ThinkPad_X1_Carbon_Gen_12_Spec.pdf",
+   "id": "LENTHINKPADX1CARBONGEN12"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Yoga Gen 5",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "i7-10710U",
+    "i7-10810U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Yoga_Gen_5/ThinkPad_X1_Yoga_Gen_5_Spec.pdf",
+   "id": "LENTHINKPADX1YOGAGEN5"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Yoga Gen 6",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Yoga_Gen_6/ThinkPad_X1_Yoga_Gen_6_Spec.pdf",
+   "id": "LENTHINKPADX1YOGAGEN6"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad X1 Yoga Gen 7",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i5-1250P",
+    "i7-1255U",
+    "i7-1260P",
+    "i7-1265U",
+    "i7-1270P",
+    "i7-1280P"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_X1_Yoga_Gen_7/ThinkPad_X1_Yoga_Gen_7_Spec.pdf",
+   "id": "LENTHINKPADX1YOGAGEN7"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L480",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7020U",
+    "i3-7130U",
+    "i3-8130U",
+    "i5-7200U",
+    "i5-7300U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L480/ThinkPad_L480_Spec.pdf",
+   "id": "LENTHINKPADL480"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L490",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L490/ThinkPad_L490_Spec.pdf",
+   "id": "LENTHINKPADL490"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L580",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-7020U",
+    "i3-7130U",
+    "i3-8130U",
+    "i5-7200U",
+    "i5-7300U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L580/ThinkPad_L580_Spec.pdf",
+   "id": "LENTHINKPADL580"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L590",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L590/ThinkPad_L590_Spec.pdf",
+   "id": "LENTHINKPADL590"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L13 Gen 1",
+   "year": 2020,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L13/ThinkPad_L13_Spec.pdf",
+   "id": "LENTHINKPADL13GEN1"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L13 Gen 2",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 5400U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L13_Gen_2_Intel/ThinkPad_L13_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADL13GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L14 Gen 1",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "Ryzen 3 4300U",
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml+r4000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L14_Gen_1_Intel/ThinkPad_L14_Gen_1_Intel_Spec.pdf",
+   "id": "LENTHINKPADL14GEN1"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L14 Gen 2",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 5400U",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L14_Gen_2_Intel/ThinkPad_L14_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADL14GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L14 Gen 3",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i5-1250P",
+    "i7-1255U",
+    "i7-1260P",
+    "i7-1265U",
+    "Ryzen 3 5425U",
+    "Ryzen 3 PRO 5475U",
+    "Ryzen 5 5625U",
+    "Ryzen 5 PRO 5675U",
+    "Ryzen 7 5825U",
+    "Ryzen 7 PRO 5875U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L14_Gen_3_Intel/ThinkPad_L14_Gen_3_Intel_Spec.pdf",
+   "id": "LENTHINKPADL14GEN3"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L14 Gen 4",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1340P",
+    "i5-1345U",
+    "i5-1350P",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-1365U",
+    "i7-1370P",
+    "Ryzen 3 PRO 7330U",
+    "Ryzen 5 PRO 7530U",
+    "Ryzen 7 PRO 7730U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7040",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L14_Gen_4_Intel/ThinkPad_L14_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADL14GEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L15 Gen 1",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U",
+    "Ryzen 3 4300U",
+    "Ryzen 3 PRO 4450U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 PRO 4750U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L15_Gen_1_Intel/ThinkPad_L15_Gen_1_Intel_Spec.pdf",
+   "id": "LENTHINKPADL15GEN1"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad L15 Gen 2",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 3 5400U",
+    "Ryzen 3 PRO 5450U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_L15_Gen_2_Intel/ThinkPad_L15_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADL15GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad E14 Gen 2",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i7-1165G7",
+    "Ryzen 3 4300U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 4600U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 4700U",
+    "Ryzen 7 4800U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_E14_Gen_2_Intel/ThinkPad_E14_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADE14GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad E14 Gen 4",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1260P",
+    "Ryzen 3 5425U",
+    "Ryzen 5 5625U",
+    "Ryzen 5 PRO 5675U",
+    "Ryzen 7 5825U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_E14_Gen_4_Intel/ThinkPad_E14_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADE14GEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad E15 Gen 2",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i7-1165G7",
+    "Ryzen 3 4300U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 4600U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 4700U",
+    "Ryzen 7 4800U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_E15_Gen_2_Intel/ThinkPad_E15_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADE15GEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad E15 Gen 4",
+   "year": 2022,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i7-1255U",
+    "i7-1260P",
+    "Ryzen 3 5425U",
+    "Ryzen 5 5625U",
+    "Ryzen 7 5825U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_E15_Gen_4_Intel/ThinkPad_E15_Gen_4_Intel_Spec.pdf",
+   "id": "LENTHINKPADE15GEN4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad P14s Gen 2",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 PRO 5850U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_P14s_Gen_2_Intel/ThinkPad_P14s_Gen_2_Intel_Spec.pdf",
+   "id": "LENTHINKPADP14SGEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad P15s Gen 2",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "LENTHINKPADP15SGEN2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad P52",
+   "year": 2018,
+   "screen": "15.6\"",
+   "cpu": [
+    "i7-8750H",
+    "i9-8950HK"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_P52/ThinkPad_P52_Spec.pdf",
+   "id": "LENTHINKPADP52"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkPad",
+   "model": "ThinkPad P53",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-9400H",
+    "i7-9750H",
+    "i7-9850H",
+    "i9-9880H"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_P53/ThinkPad_P53_Spec.pdf",
+   "id": "LENTHINKPADP53"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E548",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE548"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E549",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE549"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E5510",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE5510"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E5411",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE5411"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E5511",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE5511"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK E5412",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKE5412"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U747",
+   "year": 2017,
+   "screen": "14\"",
+   "cpu": [
+    "i3-7100U",
+    "i5-7200U",
+    "i5-7300U",
+    "i7-7500U",
+    "i7-7600U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kbl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU747"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U748",
+   "year": 2018,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8130U",
+    "i5-8250U",
+    "i5-8350U",
+    "i7-8550U",
+    "i7-8650U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "500GB HDD"
+   ],
+   "platform": "kblr",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU748"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U749",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-8145U",
+    "i5-8265U",
+    "i5-8365U",
+    "i7-8565U",
+    "i7-8665U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "whl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU749"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U7410",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU7410"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U7510",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU7510"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U7311",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU7311"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U7511",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU7511"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U7412",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU7412"
+  },
+  {
+   "brand": "Fujitsu",
+   "family": "LIFEBOOK",
+   "model": "LIFEBOOK U9311",
+   "year": 2021,
+   "screen": "13.3\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "FUJLIFEBOOKU9311"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air M1 2020",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "Apple M1"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIRM12020"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air M2 2022",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "Apple M2"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIRM22022"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 13 M3 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M3"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR13M32024"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 15 M2 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M2"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR15M22023"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 15 M3 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M3"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR15M32024"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 13 M4 2025",
+   "year": 2025,
+   "screen": "",
+   "cpu": [
+    "Apple M4"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR13M42025"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 13 M1 2020",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "Apple M1"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO13M12020"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 13 M2 2022",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "Apple M2"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO13M22022"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 14 2021",
+   "year": 2021,
+   "screen": "",
+   "cpu": [
+    "Apple M1 Pro",
+    "Apple M1 Max"
+   ],
+   "ram": [
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO142021"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 16 2021",
+   "year": 2021,
+   "screen": "",
+   "cpu": [
+    "Apple M1 Pro",
+    "Apple M1 Max"
+   ],
+   "ram": [
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO162021"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 14 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M2 Pro",
+    "Apple M2 Max",
+    "Apple M3",
+    "Apple M3 Pro",
+    "Apple M3 Max"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "18GB",
+    "32GB",
+    "36GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO142023"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 13 2020 Intel",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "i5-8257U",
+    "i5-1038NG7",
+    "i7-1068NG7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO132020INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 2020 Intel",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "i3-1000NG4",
+    "i5-1030NG7",
+    "i7-1060NG7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR2020INTEL"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Laptop 3",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "MICSURFACELAPTOP3"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Laptop 4",
+   "year": 2021,
+   "screen": "",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "MICSURFACELAPTOP4"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Laptop 5",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "MICSURFACELAPTOP5"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Pro 7",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i3-10110U",
+    "i5-10210U",
+    "i5-10310U",
+    "i7-10510U",
+    "i7-10610U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "cml",
+   "verified": "platform",
+   "id": "MICSURFACEPRO7"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Pro 8",
+   "year": 2021,
+   "screen": "",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "MICSURFACEPRO8"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Pro 9",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1245U",
+    "i7-1255U",
+    "i7-1265U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl",
+   "verified": "platform",
+   "id": "MICSURFACEPRO9"
+  },
+  {
+   "brand": "Microsoft",
+   "family": "Surface",
+   "model": "Surface Laptop Go 2",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "i7-1185G7"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl",
+   "verified": "platform",
+   "id": "MICSURFACELAPTOPGO2"
+  }
+ ]
+}

@@ -1,7 +1,8 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check } from "lucide-react";
+import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Chip, Stat } from "@/components/ui";
+import SourcesPanel from "@/components/quote/SourcesPanel";
 import { agentsFor, pool, runAgents } from "@/lib/agents";
 import { eur, priceLine, totals } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
@@ -131,6 +132,25 @@ export default function PricingStep() {
                     <td className="p-3 text-right tabular-nums font-semibold text-sell">
                       {l.priceState === "done" ? eur(l.sellPrice) : <Loader2 className={`w-4 h-4 inline ${l.priceState === "running" ? "animate-spin" : "opacity-30"}`} />}
                       {l.priceBasis?.startsWith("Estimation") && <div className="text-[10px] font-bold uppercase tracking-wider text-warn">{t("pricing.kind_estimate")}</div>}
+                      {(() => {
+                        const resale = l.agentResults.filter((r) => r.kind === "resale" && r.status === "ok");
+                        return resale.length > 0 && resale.every((r) => /indicatif/.test(r.message ?? "")) ? (
+                          <div className="text-[10px] font-bold uppercase tracking-wider text-warn" title={t("pricing.indicative_hint")}>{t("pricing.indicative")}</div>
+                        ) : null;
+                      })()}
+                      {l.priceState === "done" && (
+                        <button
+                          onClick={() => setOpen(isOpen ? null : l.key)}
+                          aria-expanded={isOpen}
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary hover:underline whitespace-nowrap"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          {t("pricing.source_counts", {
+                            buy: l.agentResults.filter((r) => r.kind === "buyback" && r.status === "ok").length,
+                            sell: l.agentResults.filter((r) => r.kind === "resale" && r.status === "ok").length,
+                          })}
+                        </button>
+                      )}
                     </td>
                     <td className="p-3 text-right">
                       <input
@@ -156,24 +176,7 @@ export default function PricingStep() {
                   {isOpen && (
                     <tr>
                       <td colSpan={9} className="px-3 pb-5">
-                        <div className="rounded-2xl shadow-inner-soft p-5 flex flex-col gap-3 text-xs">
-                          <div className="font-semibold text-sm">{l.priceBasis ?? t("pricing.no_basis")}</div>
-                          {l.agentResults.length === 0 && <div className="text-muted">{t("pricing.no_results")}</div>}
-                          {l.agentResults.map((r, i) => (
-                            <div key={i} className="flex flex-wrap items-center gap-2">
-                              <span className="font-bold w-40">{r.agent}</span>
-                              <Chip>{t(`pricing.kind_${r.kind}`)}</Chip>
-                              <span className={r.status === "ok" ? "text-sell font-semibold" : "text-muted"}>{t(`pricing.status_${r.status}`)}</span>
-                              {r.message && <span className="text-muted">· {r.message}</span>}
-                              {r.offers.map((o, j) => (
-                                <a key={j} href={o.url} target="_blank" rel="noreferrer" className={`font-mono ${o.url ? "underline" : "pointer-events-none"}`}>
-                                  {o.source} {eur(o.price)}
-                                </a>
-                              ))}
-                            </div>
-                          ))}
-                          <div className="text-muted">{t("pricing.source_rows")} {l.sourceRows.slice(0, 30).join(", ")}{l.sourceRows.length > 30 ? "…" : ""}</div>
-                        </div>
+                        <SourcesPanel line={l} />
                       </td>
                     </tr>
                   )}

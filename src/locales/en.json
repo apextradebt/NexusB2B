@@ -109,7 +109,10 @@
     "excluded": "{{count}} unrecognised devices left out of the quote",
     "new": "New quote",
     "save": "Save",
-    "saved": "Saved"
+    "saved": "Saved",
+    "source_counts": "{{buy}} buyback · {{sell}} resale",
+    "indicative": "indicative",
+    "indicative_hint": "No listing with this processor: price based on the same model with another configuration."
   },
   "quotes": {
     "title": "Quotes",
@@ -134,7 +137,10 @@
     "brand": "Brand",
     "model": "Model",
     "base_price": "Reference price",
-    "none": "No results."
+    "none": "No results.",
+    "verified_spec": "Checked · spec sheet",
+    "verified_psref": "Checked · Lenovo PSREF",
+    "verified_platform": "Indicative options"
   },
   "settings": {
     "title": "Settings",
@@ -149,7 +155,12 @@
     "grade_coef": "Estimate coef.",
     "grade_coef_desc": "Coefficient applied to the catalog reference price (phones) when no agent finds a resale price.",
     "agents": "Price agents",
-    "agents_desc": "The agents call the scraping backend at this address (VITE_API_URL): /api/market/prices for phones, /api/market/laptop-prices for laptops."
+    "agents_desc": "The agents call the price server (npm run server, VITE_PRICE_API_URL): buyback and resale sources for phones and laptops, robots.txt respected, one request per second per site, 6 h cache.",
+    "server_down": "Price server unreachable: run \"npm run server\" in the project folder.",
+    "source": "Source",
+    "country": "Country",
+    "sides": "Prices",
+    "devices": "Devices"
   },
   "add": {
     "title": "Add a device",
@@ -162,5 +173,17 @@
     "submit": "Add to quote",
     "added": "Added",
     "remove": "Remove line"
+  },
+  "sources": {
+    "buyback": "Buyback — what the sites pay",
+    "buyback_hint": "Buyback prices offered by the sites, highest first.",
+    "resale": "Resale — observed selling prices",
+    "resale_hint": "Prices listed by resellers, cheapest first.",
+    "none": "No offer found.",
+    "listing": "View listing",
+    "listing_n": "Listing {{n}}",
+    "grade_used": "grade {{grade}}",
+    "missing_one": "{{count}} source without a result",
+    "missing_other": "{{count}} sources without a result"
   }
 }

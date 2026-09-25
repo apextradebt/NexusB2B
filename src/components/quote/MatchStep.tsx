@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, AlertTriangle, Plus, Trash2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Select, StatusBadge } from "@/components/ui";
-import { CATALOG, PHONE_STORAGE, getRef } from "@/lib/catalog";
+import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
 import { matchAgainst } from "@/lib/match";
 import { mergeDuplicates } from "@/lib/group";
@@ -130,7 +130,7 @@ export default function MatchStep() {
                       </div>
                     ) : ref?.category === "phone" ? (
                       <Select ariaLabel="Capacité" value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)}
-                        options={opt(PHONE_STORAGE)} className={!l.variant.storage ? "text-warn" : ""} />
+                        options={opt(phoneStorage(ref))} className={!l.variant.storage ? "text-warn" : ""} />
                     ) : (
                       <span className="text-muted text-xs">{t("match.not_priced")}</span>
                     )}
