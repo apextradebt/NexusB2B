@@ -12,7 +12,7 @@ const navigation = [
   { key: "sidebar.settings", href: "/parametres", icon: Settings },
 ];
 
-const logo = `${import.meta.env.BASE_URL}NexusLogo.svg`;
+const logo = `${import.meta.env.BASE_URL}NexusLogo.png`;
 
 export default function Sidebar() {
   const { pathname } = useLocation();
