@@ -1,0 +1,9 @@
+Serial;Brand;Description;CPU;Memory;Disk;Condition;Qty
+;Dell;Latitude 5420;i5-1145G7;16GB;256GB SSD;Grade B;10
+;Dell;Latitude 5420;i5-1145G7;16GB;256GB SSD;Grade C;4
+;HP;EliteBook 840 G8;i5-1135G7;16GB;512GB;A;6
+;Lenovo;ThinkPad T14 Gen 2;i5-1135G7;16GB;512GB;B;5
+;Apple;iPhone 13 128GB;;;;B;20
+;Apple;iPhone 14 128GB;;;;C;8
+;Samsung;Galaxy S21 128GB;;;;D;3
+;Dell;Latitude 7490;i5-8350U;8GB;256GB;C;7

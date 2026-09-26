@@ -8,7 +8,8 @@
     "dark": "Mode sombre",
     "light": "Mode clair",
     "local_user": "Utilisateur local",
-    "local_mode": "Mode local"
+    "local_mode": "Mode local",
+    "prices": "Mes prix"
   },
   "steps": {
     "import": "Import",
@@ -56,7 +57,8 @@
     "grade": "Grade",
     "quantity": "Quantité",
     "serial": "N° de série",
-    "ignore": "Ignorer"
+    "ignore": "Ignorer",
+    "price": "Prix"
   },
   "match": {
     "all": "Tout",
@@ -112,7 +114,13 @@
     "saved": "Enregistré",
     "source_counts": "{{buy}} rachat · {{sell}} revente",
     "indicative": "indicatif",
-    "indicative_hint": "Aucune annonce avec ce processeur : prix basé sur le même modèle avec une autre configuration."
+    "indicative_hint": "Aucune annonce avec ce processeur : prix basé sur le même modèle avec une autre configuration.",
+    "on_list": "{{count}} ligne(s) sur {{total}} au prix de votre grille",
+    "your_price": "Votre prix",
+    "your_price_is": "Votre prix {{price}}",
+    "market": "Marché {{price}}",
+    "gap_hint": "Votre prix s'écarte de plus de 15 % du marché : vérifiez qu'il est toujours d'actualité.",
+    "low_margin": "Marge sous l'objectif de {{target}} %"
   },
   "quotes": {
     "title": "Devis",
@@ -173,7 +181,11 @@
     "source": "Source",
     "country": "Pays",
     "sides": "Prix",
-    "devices": "Appareils"
+    "devices": "Appareils",
+    "list_mode": "Prix de revente de référence",
+    "list_mode_mine": "Mon prix de vente (grille « Mes prix ») quand il existe",
+    "list_mode_prudent": "Prudent : le plus bas entre mon prix et le marché",
+    "list_mode_desc": "Le prix d'achat proposé est calculé à partir de ce prix de revente. Le mode prudent protège la marge quand le marché est passé sous votre grille."
   },
   "add": {
     "title": "Ajouter un appareil",
@@ -198,5 +210,50 @@
     "grade_used": "grade {{grade}}",
     "missing_one": "{{count}} source sans résultat",
     "missing_other": "{{count}} sources sans résultat"
+  },
+  "prices": {
+    "title": "Mes prix de vente",
+    "desc": "Vos propres prix de revente par modèle, configuration et grade. Ils servent de référence sur chaque devis : le prix d'achat proposé garde votre marge cible sur le prix auquel vous revendez vraiment.",
+    "import": "Importer une grille",
+    "add": "Ajouter un prix",
+    "add_title": "Ajouter un prix de vente",
+    "add_submit": "Enregistrer le prix",
+    "any_grade": "Tous grades",
+    "any": "Toutes",
+    "price": "Prix de vente",
+    "your_price": "Votre prix",
+    "partial_hint": "Laissez une option vide pour que le prix s'applique à toutes les configurations.",
+    "import_title": "Importez votre grille tarifaire",
+    "import_desc": "Excel ou CSV, n'importe quelle mise en forme : une ligne par modèle avec une colonne prix, une colonne de prix par grade, ou du texte libre (« iPhone 13 128 Go grade A – 520 € »). Les modèles sont reconnus comme pour les devis.",
+    "paste_placeholder": "Collez votre grille ici (depuis Excel, un e-mail ou un PDF)…",
+    "pivot": "Un prix par grade détecté · {{grades}}",
+    "other_file": "Autre fichier",
+    "grade_col": "Prix grade {{grade}}",
+    "need_price": "Aucune colonne de prix détectée : choisissez « Prix » pour la colonne qui contient vos prix.",
+    "ready_one": "{{count}} ligne prête",
+    "ready_other": "{{count}} lignes prêtes",
+    "no_model_one": "{{count}} modèle non reconnu",
+    "no_model_other": "{{count}} modèles non reconnus",
+    "no_price_one": "{{count}} ligne sans prix",
+    "no_price_other": "{{count}} lignes sans prix",
+    "currency_one": "{{count}} prix hors euro ignoré",
+    "currency_other": "{{count}} prix hors euro ignorés",
+    "include": "Importer cette ligne",
+    "not_recognised": "Modèle non reconnu",
+    "not_eur": "Hors euro",
+    "read_from": "Ligne lue",
+    "import_submit_one": "Importer {{count}} prix",
+    "import_submit_other": "Importer {{count}} prix",
+    "imported_one": "{{count}} prix importé.",
+    "imported_other": "{{count}} prix importés (les prix existants pour le même appareil ont été mis à jour).",
+    "template": "Modèle de grille CSV",
+    "empty": "Aucun prix enregistré",
+    "empty_hint": "Importez votre grille tarifaire ou ajoutez vos prix un par un : ils apparaîtront sur vos devis et serviront à calculer le prix d'achat.",
+    "updated": "Mis à jour",
+    "source_manual": "saisie",
+    "source_import": "import",
+    "confirm_clear": "Supprimer les {{count}} prix enregistrés ?",
+    "clear": "Tout supprimer",
+    "export": "Exporter (CSV)"
   }
 }

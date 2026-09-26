@@ -1,10 +1,10 @@
 import writeXlsxFile from "write-excel-file/browser";
-import type { QuoteLine } from "@/types";
+import type { PriceListEntry, QuoteLine } from "@/types";
 import { totals } from "@/lib/pricing";
 
 const HEADERS = [
   "Catégorie", "Marque", "Modèle", "CPU", "RAM", "Stockage", "Grade", "Quantité",
-  "Rachat marché (u.)", "Prix de revente (u.)", "Prix d'achat (u.)", "Marge (u.)",
+  "Rachat marché (u.)", "Revente marché (u.)", "Votre prix de vente (u.)", "Prix de revente retenu (u.)", "Prix d'achat (u.)", "Marge (u.)",
   "Total achat", "Total revente", "Base de calcul", "Statut", "Lignes source", "Liens sources",
 ];
 
@@ -20,7 +20,7 @@ function rowOf(l: QuoteLine) {
   return [
     l.category === "laptop" ? "PC portable" : l.category === "phone" ? "Téléphone" : "Non reconnu",
     l.brand, l.model, l.variant.cpu ?? "", l.variant.ram ?? "", l.variant.storage ?? "", l.grade, l.quantity,
-    l.marketBuy, l.sellPrice, l.buyPrice, margin,
+    l.marketBuy, l.marketSell, l.listPrice, l.sellPrice, l.buyPrice, margin,
     l.buyPrice !== undefined ? l.buyPrice * l.quantity : undefined,
     l.sellPrice !== undefined ? l.sellPrice * l.quantity : undefined,
     l.priceBasis ?? "", l.status, l.sourceRows.join(" "),
@@ -73,10 +73,34 @@ export async function exportXlsx(lines: QuoteLine[], name: string, meta: { clien
   ];
   await writeXlsxFile(
     [
-      { data: data as never, sheet: "Devis", columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 18, 16, 12, 14, 14, 44, 12, 18, 60].map((width) => ({ width })) },
+      { data: data as never, sheet: "Devis", columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 16, 18, 20, 16, 12, 14, 14, 44, 12, 18, 60].map((width) => ({ width })) },
       { data: sources as never, sheet: "Sources", columns: [10, 26, 26, 7, 9, 22, 10, 40, 14, 14, 14].map((width) => ({ width })) },
     ]
   ).toFile(`${name}.xlsx`);
+}
+
+/** The customer's price list as a CSV that re-imports as is (edit in Excel, import again). */
+export function exportPriceList(list: PriceListEntry[]) {
+  const rows = [
+    ["Catégorie", "Marque", "Modèle", "Processeur", "RAM", "Stockage", "Grade", "Prix de vente (EUR)", "Mis à jour"],
+    ...list.map((e) => [
+      e.category === "laptop" ? "PC portable" : "Téléphone", e.brand, e.model, e.variant.cpu ?? "", e.variant.ram ?? "", e.variant.storage ?? "",
+      e.grade ?? "", e.price, e.updatedAt.slice(0, 10),
+    ]),
+  ];
+  const esc = (v: unknown) => (/[";\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+  download(new Blob(["﻿" + rows.map((r) => r.map(esc).join(";")).join("\n")], { type: "text/csv;charset=utf-8" }), `mes-prix-${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+export function downloadPriceTemplate() {
+  const csv = [
+    "Marque;Modèle;Processeur;RAM;Stockage;Grade;Prix de vente",
+    "Dell;Latitude 5420;i5-1145G7;16GB;256GB;A;449",
+    "Dell;Latitude 5420;i5-1145G7;16GB;256GB;B;399",
+    "HP;EliteBook 840 G8;;;;;420",
+    "Apple;iPhone 13;;;128GB;A;519",
+  ].join("\n");
+  download(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }), "modele-prix-de-vente.csv");
 }
 
 export function downloadTemplate() {

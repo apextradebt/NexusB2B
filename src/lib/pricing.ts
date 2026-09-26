@@ -1,4 +1,5 @@
-import type { AgentResult, PricingSettings, QuoteLine } from "@/types";
+import type { AgentResult, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
+import { findListPrice } from "@/lib/priceList";
 
 export const DEFAULT_SETTINGS: PricingSettings = {
   targetMarginPct: 25,
@@ -10,6 +11,7 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   gradeCoef: { A: 1, B: 0.85, C: 0.7, D: 0.5, E: 0.3 },
   defaultGrade: "C",
   agentConcurrency: 3,
+  listPriceMode: "mine",
 };
 
 const median = (xs: number[]) => {
@@ -23,23 +25,33 @@ const offersOf = (results: AgentResult[], kind: AgentResult["kind"]) =>
   results.filter((r) => r.kind === kind && r.status === "ok").flatMap((r) => r.offers.map((o) => o.price)).filter((p) => p > 0);
 
 /**
- * Turn agent results into unit prices.
- * - Sell price: median of resale offers found by the agents, else the catalog estimate.
+ * Turn agent results and the customer's price list into unit prices.
+ * - Sell price: the customer's own selling price when the price list has one ("prudent" mode: the
+ *   lower of it and the market), else the median of resale offers, else the catalog estimate.
  * - Buy price (our offer): sell × (1 − target margin) − refurbishment cost; if we only know
  *   competitors' buyback prices, we align on their median. A manual override always wins.
  */
-export function priceLine(line: QuoteLine, s: PricingSettings): QuoteLine {
+export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEntry[] = []): QuoteLine {
   const marketBuy = median(offersOf(line.agentResults, "buyback"));
   const resale = median(offersOf(line.agentResults, "resale"));
   const estimate = median(offersOf(line.agentResults, "estimate"));
-  const sellPrice = resale ?? estimate;
+  const mine = findListPrice(line, list, s.gradeCoef);
+  const market = resale ?? estimate;
+
+  let sellPrice = market;
+  let basis = resale !== undefined ? "Revente marché" : "Estimation catalogue";
+  if (mine) {
+    const prudent = s.listPriceMode === "prudent" && market !== undefined && market < mine.price;
+    sellPrice = prudent ? market : mine.price;
+    basis = prudent ? `${basis} (inférieur à votre prix)` : "Votre prix de vente";
+  }
 
   let buyPrice: number | undefined;
   let priceBasis: string | undefined;
   if (sellPrice !== undefined && line.category) {
     const refurb = s.refurbCost[line.category][line.grade];
     buyPrice = Math.max(0, Math.round(sellPrice * (1 - s.targetMarginPct / 100) - refurb));
-    priceBasis = resale !== undefined ? "Revente marché − marge − reconditionnement" : "Estimation catalogue − marge − reconditionnement";
+    priceBasis = `${basis} − marge − reconditionnement`;
   } else if (marketBuy !== undefined) {
     buyPrice = marketBuy;
     priceBasis = "Aligné sur le rachat concurrent (pas de prix de revente trouvé)";
@@ -48,7 +60,19 @@ export function priceLine(line: QuoteLine, s: PricingSettings): QuoteLine {
     buyPrice = line.buyOverride;
     priceBasis = "Prix saisi manuellement";
   }
-  return { ...line, marketBuy, sellPrice, buyPrice, priceBasis };
+  return { ...line, marketBuy, sellPrice, buyPrice, priceBasis, listPrice: mine?.price, listPriceNote: mine?.note, marketSell: market };
+}
+
+/** Gap between the customer's price and the market, when both are known (e.g. +0.18 = 18 % above market). */
+export function marketGap(l: QuoteLine): number | undefined {
+  if (l.listPrice === undefined || l.marketSell === undefined || l.marketSell === 0) return undefined;
+  return (l.listPrice - l.marketSell) / l.marketSell;
+}
+
+/** Gross margin on the sell price, as a share (0.25 = 25 %). */
+export function marginRate(l: QuoteLine): number | undefined {
+  if (l.sellPrice === undefined || l.buyPrice === undefined || l.sellPrice === 0) return undefined;
+  return (l.sellPrice - l.buyPrice) / l.sellPrice;
 }
 
 export function totals(lines: QuoteLine[]) {

@@ -6,6 +6,7 @@ import NewQuote from "@/pages/NewQuote";
 import Quotes from "@/pages/Quotes";
 import Reference from "@/pages/Reference";
 import SettingsPage from "@/pages/Settings";
+import PriceList from "@/pages/PriceList";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<NewQuote />} />
                 <Route path="/devis" element={<Quotes />} />
+                <Route path="/prix" element={<PriceList />} />
                 <Route path="/referentiel" element={<Reference />} />
                 <Route path="/parametres" element={<SettingsPage />} />
               </Routes>

@@ -8,7 +8,8 @@
     "dark": "Dark mode",
     "light": "Light mode",
     "local_user": "Local user",
-    "local_mode": "Local mode"
+    "local_mode": "Local mode",
+    "prices": "My prices"
   },
   "steps": {
     "import": "Import",
@@ -56,7 +57,8 @@
     "grade": "Grade",
     "quantity": "Quantity",
     "serial": "Serial no.",
-    "ignore": "Ignore"
+    "ignore": "Ignore",
+    "price": "Price"
   },
   "match": {
     "all": "All",
@@ -112,7 +114,13 @@
     "saved": "Saved",
     "source_counts": "{{buy}} buyback · {{sell}} resale",
     "indicative": "indicative",
-    "indicative_hint": "No listing with this processor: price based on the same model with another configuration."
+    "indicative_hint": "No listing with this processor: price based on the same model with another configuration.",
+    "on_list": "{{count}} of {{total}} line(s) at your list price",
+    "your_price": "Your price",
+    "your_price_is": "Your price {{price}}",
+    "market": "Market {{price}}",
+    "gap_hint": "Your price is more than 15% away from the market: check it is still current.",
+    "low_margin": "Margin below the {{target}}% target"
   },
   "quotes": {
     "title": "Quotes",
@@ -173,7 +181,11 @@
     "source": "Source",
     "country": "Country",
     "sides": "Prices",
-    "devices": "Devices"
+    "devices": "Devices",
+    "list_mode": "Reference resale price",
+    "list_mode_mine": "My selling price (\"My prices\" list) when there is one",
+    "list_mode_prudent": "Prudent: the lower of my price and the market",
+    "list_mode_desc": "The buy offer is computed from this resale price. Prudent mode protects the margin when the market has dropped below your list."
   },
   "add": {
     "title": "Add a device",
@@ -198,5 +210,50 @@
     "grade_used": "grade {{grade}}",
     "missing_one": "{{count}} source without a result",
     "missing_other": "{{count}} sources without a result"
+  },
+  "prices": {
+    "title": "My selling prices",
+    "desc": "Your own resale prices by model, configuration and grade. They are the reference on every quote: the buy offer keeps your target margin on the price you actually sell at.",
+    "import": "Import a price list",
+    "add": "Add a price",
+    "add_title": "Add a selling price",
+    "add_submit": "Save price",
+    "any_grade": "Any grade",
+    "any": "Any",
+    "price": "Selling price",
+    "your_price": "Your price",
+    "partial_hint": "Leave an option empty for the price to apply to every configuration.",
+    "import_title": "Import your price list",
+    "import_desc": "Excel or CSV, any layout: one row per model with a price column, one price column per grade, or free text (\"iPhone 13 128GB grade A – 520 €\"). Models are recognised the same way as in quotes.",
+    "paste_placeholder": "Paste your price list here (from Excel, an email or a PDF)…",
+    "pivot": "One price per grade detected · {{grades}}",
+    "other_file": "Another file",
+    "grade_col": "Grade {{grade}} price",
+    "need_price": "No price column detected: set the column holding your prices to \"Price\".",
+    "ready_one": "{{count}} row ready",
+    "ready_other": "{{count}} rows ready",
+    "no_model_one": "{{count}} model not recognised",
+    "no_model_other": "{{count}} models not recognised",
+    "no_price_one": "{{count}} row without a price",
+    "no_price_other": "{{count}} rows without a price",
+    "currency_one": "{{count}} non-euro price skipped",
+    "currency_other": "{{count}} non-euro prices skipped",
+    "include": "Import this row",
+    "not_recognised": "Model not recognised",
+    "not_eur": "Not in euro",
+    "read_from": "Row read",
+    "import_submit_one": "Import {{count}} price",
+    "import_submit_other": "Import {{count}} prices",
+    "imported_one": "{{count}} price imported.",
+    "imported_other": "{{count}} prices imported (existing prices for the same device were updated).",
+    "template": "Price list CSV template",
+    "empty": "No prices saved",
+    "empty_hint": "Import your price list or add prices one by one: they show on your quotes and drive the buy price.",
+    "updated": "Updated",
+    "source_manual": "entered",
+    "source_import": "imported",
+    "confirm_clear": "Delete all {{count}} saved prices?",
+    "clear": "Delete all",
+    "export": "Export (CSV)"
   }
 }

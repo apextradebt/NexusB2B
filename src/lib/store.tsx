@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { PricingSettings, QuoteLine, QuoteStatus, SavedQuote } from "@/types";
+import type { PriceListEntry, PricingSettings, QuoteLine, QuoteStatus, SavedQuote } from "@/types";
 import type { Layout, Table } from "@/lib/parse";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
+import { upsertEntries } from "@/lib/priceList";
 
 // Browser storage can be unavailable (private mode, blocked site data): never let that break the app.
 function load<T>(key: string, fallback: T): T {
@@ -54,6 +55,12 @@ type Store = {
   resetDraft: () => void;
   theme: "light" | "dark";
   toggleTheme: () => void;
+  /** The customer's own selling prices. */
+  priceList: PriceListEntry[];
+  addPrices: (entries: PriceListEntry[]) => void;
+  updatePrice: (id: string, patch: Partial<PriceListEntry>) => void;
+  deletePrice: (id: string) => void;
+  clearPrices: () => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -111,9 +118,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return next;
     });
 
+  const [priceList, setPriceList] = useState<PriceListEntry[]>(() => loadList("b2b-price-list"));
+  const editPrices = (fn: (prev: PriceListEntry[]) => PriceListEntry[]) =>
+    setPriceList((prev) => {
+      const next = fn(prev);
+      save("b2b-price-list", next);
+      return next;
+    });
+  const addPrices = (entries: PriceListEntry[]) => editPrices((prev) => upsertEntries(prev, entries));
+  const updatePrice = (id: string, patch: Partial<PriceListEntry>) =>
+    editPrices((prev) => {
+      const edited = prev.find((e) => e.id === id);
+      if (!edited) return prev;
+      // Changing the model, configuration or grade can make it a duplicate of another entry: merge them.
+      return upsertEntries(prev.filter((e) => e.id !== id), [{ ...edited, ...patch, updatedAt: new Date().toISOString() }]);
+    });
+  const deletePrice = (id: string) => editPrices((prev) => prev.filter((e) => e.id !== id));
+  const clearPrices = () => editPrices(() => []);
+
   return (
     <Ctx.Provider
       value={{
+        priceList, addPrices, updatePrice, deletePrice, clearPrices,
         settings, setSettings, quotes, saveQuote, deleteQuote, setQuoteStatus, draft, setDraft,
         resetDraft: () => setDraft(EMPTY_DRAFT),
         theme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")),

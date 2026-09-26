@@ -29,7 +29,7 @@ function statusSince(q: SavedQuote) {
 
 export default function Quotes() {
   const { t } = useTranslation();
-  const { quotes, deleteQuote, setQuoteStatus, setDraft, resetDraft, settings } = useStore();
+  const { quotes, deleteQuote, setQuoteStatus, setDraft, resetDraft, settings, priceList } = useStore();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<QuoteStatus | "all">("all");
 
@@ -133,7 +133,7 @@ export default function Quotes() {
                   }}>
                     <FolderOpen className="w-4 h-4" /> {t("quotes.open")}
                   </Button>
-                  <Button variant="ghost" onClick={() => exportXlsx(q.lines.map((l) => priceLine(l, settings)), q.id, q)}>
+                  <Button variant="ghost" onClick={() => exportXlsx(q.lines.map((l) => priceLine(l, settings, priceList)), q.id, q)}>
                     <Download className="w-4 h-4" /> Excel
                   </Button>
                   <Button variant="ghost" className="ml-auto" onClick={() => { if (confirm(t("quotes.confirm_delete"))) deleteQuote(q.id); }}>

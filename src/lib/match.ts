@@ -43,6 +43,15 @@ const INDEX: Indexed[] = CATALOG.map((ref) => ({
   brand: normalize(ref.brand),
 }));
 
+// Words that name a maker: its brand, or a product line only that maker sells.
+const TEXT_BRANDS = new Map<string, string>(([
+  ...INDEX.map((ix) => [ix.brand, ix.brand]),
+  ...["acer", "toshiba", "dynabook", "msi", "razer", "lg", "alcatel", "zte", "vivo", "realme", "tcl", "wiko", "blackberry", "panasonic", "getac"].map((b) => [b, b]),
+  ["iphone", "apple"], ["macbook", "apple"], ["ipad", "apple"], ["galaxy", "samsung"], ["thinkpad", "lenovo"], ["thinkbook", "lenovo"],
+  ["latitude", "dell"], ["precision", "dell"], ["xps", "dell"], ["elitebook", "hp"], ["probook", "hp"], ["zbook", "hp"],
+  ["pixel", "google"], ["lifebook", "fujitsu"], ["surface", "microsoft"], ["redmi", "xiaomi"],
+] as [string, string][]).filter(([w]) => w.length > 1));
+
 /** Score one catalog model against a line's tokens (0–1). */
 function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   let total = 0;
@@ -73,6 +82,10 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   if (brandHint) {
     const b = normalize(brandHint);
     if (b && !ix.brand.includes(b) && !b.includes(ix.brand)) score -= 0.3;
+  } else {
+    // A brand named in the text itself ("Nokia 3310") rules out other brands' models ("Latitude 3310").
+    const named = [...input].map((t) => TEXT_BRANDS.get(t)).filter(Boolean);
+    if (named.length && !named.includes(ix.brand)) score -= 0.4;
   }
   return Math.max(0, score);
 }
@@ -87,7 +100,8 @@ const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].in
 export function stripSpecs(text: string): string {
   return ` ${text} `
     .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
-    .replace(/\b\d{1,4}\s?(?:gb|go|g|tb|to|t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")
+    // A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names.
+    .replace(/\b(?:\d{1,4}\s?(?:gb|go|g|tb|to)|[124]\s?t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")
     .replace(/\b(?:intel\s*)?(?:core\s*)?i[3579][\s-]*\d{4,5}[a-z]{0,2}\d?\b/gi, " ")
     .replace(/\b(?:intel\s*)?core\s*ultra\s*[579]\s*\d{3}[a-z]\b/gi, " ")
     .replace(/\b(?:amd\s*)?ryzen\s*[3579]\s*(?:pro\s*)?\d{4}[a-z]{1,2}\b/gi, " ")
@@ -149,7 +163,7 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
     } else {
       // A lone capacity ("iPhone 13 128GB") or two ("i5 16GB 256GB"): the large one is storage, the small one RAM.
       // "4G" / "5G" are the mobile network, not a capacity.
-      const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5));
+      const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5) && !(x[2] === "t" && ![1, 2, 4].includes(Number(x[1]))));
       const cap = caps.find((x) => (/^t/i.test(x[2]) && Number(x[1]) <= 8) || Number(x[1]) >= 32);
       if (cap) {
         specs.storage = gb(cap[1], cap[2]);
@@ -207,7 +221,10 @@ export function matchLine(line: RawLine): Match {
   };
   const ranked = INDEX.map((ix) => {
     const base = scoreRef(ix, input, line.brand);
-    return { ref: ix.ref, score: base > 0.3 ? Math.min(1, Math.max(0, base + cpuFit(ix.ref))) : base };
+    // Model words present in the text, and whether all of them are (brand words don't count).
+    const words = ix.toks.filter((t) => TEXT_BRANDS.get(t) !== ix.brand);
+    const found = words.filter((t) => input.has(t)).length;
+    return { ref: ix.ref, score: base > 0.3 ? Math.min(1, Math.max(0, base + cpuFit(ix.ref))) : base, found, full: found === words.length };
   })
     .filter((r) => r.score > 0.3)
     // Ties go to the more specific model ("iPhone 15 Pro Max" over "iPhone 15").
@@ -218,7 +235,10 @@ export function matchLine(line: RawLine): Match {
   if (!best) return { score: 0, status: "unmatched", specs, variant: {}, warnings: ["Aucun modèle du référentiel ne correspond"], alternatives: [] };
 
   const runnerUp = ranked[1];
-  const close = !!runnerUp && runnerUp.score >= 0.5 && best.score - runnerUp.score < 0.1;
+  // Not a close call when the text spells out every word of the best model and more of them than the
+  // runner-up's ("Galaxy S25 Edge" vs "Galaxy S25", "Pixel 9 Pro XL" vs "Pixel 9 Pro").
+  const spelledOut = !!runnerUp && best.full && (!runnerUp.full || best.found > runnerUp.found);
+  const close = !!runnerUp && runnerUp.score >= 0.5 && best.score - runnerUp.score < 0.1 && !spelledOut;
   const variant = resolveVariant(best.ref, specs, warnings);
   const specConflict = warnings.some((w) => w.includes("jamais proposé"));
 
