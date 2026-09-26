@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { PriceListEntry, PricingSettings, QuoteLine, QuoteStatus, SavedQuote } from "@/types";
+import type { Grade, PriceListEntry, PricingSettings, QuoteLine, QuoteStatus, RefModel, SavedQuote } from "@/types";
 import type { Layout, Table } from "@/lib/parse";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
-import { upsertEntries } from "@/lib/priceList";
+import { entryKey, newEntryId, upsertEntries } from "@/lib/priceList";
 
 // Browser storage can be unavailable (private mode, blocked site data): never let that break the app.
 function load<T>(key: string, fallback: T): T {
@@ -60,6 +60,7 @@ type Store = {
   addPrices: (entries: PriceListEntry[]) => void;
   updatePrice: (id: string, patch: Partial<PriceListEntry>) => void;
   deletePrice: (id: string) => void;
+  setPrice: (ref: RefModel, variant: PriceListEntry["variant"], grade: Grade | undefined, price: number | undefined) => void;
   clearPrices: () => void;
 };
 
@@ -134,12 +135,25 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return upsertEntries(prev.filter((e) => e.id !== id), [{ ...edited, ...patch, updatedAt: new Date().toISOString() }]);
     });
   const deletePrice = (id: string) => editPrices((prev) => prev.filter((e) => e.id !== id));
+  /** Set (or with `price` undefined, remove) the price of one exact model + configuration + grade. */
+  const setPrice = (ref: RefModel, variant: PriceListEntry["variant"], grade: Grade | undefined, price: number | undefined) =>
+    editPrices((prev) => {
+      const clean = Object.fromEntries(Object.entries(variant).filter(([, v]) => v)) as PriceListEntry["variant"];
+      const key = entryKey({ refId: ref.id, variant: clean, grade });
+      const old = prev.find((e) => entryKey(e) === key);
+      const rest = prev.filter((e) => entryKey(e) !== key);
+      if (price === undefined) return rest;
+      return [...rest, {
+        id: old?.id ?? newEntryId(), refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model,
+        variant: clean, grade, price: Math.round(price), updatedAt: new Date().toISOString(), source: "manual",
+      }];
+    });
   const clearPrices = () => editPrices(() => []);
 
   return (
     <Ctx.Provider
       value={{
-        priceList, addPrices, updatePrice, deletePrice, clearPrices,
+        priceList, addPrices, updatePrice, deletePrice, setPrice, clearPrices,
         settings, setSettings, quotes, saveQuote, deleteQuote, setQuoteStatus, draft, setDraft,
         resetDraft: () => setDraft(EMPTY_DRAFT),
         theme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")),
