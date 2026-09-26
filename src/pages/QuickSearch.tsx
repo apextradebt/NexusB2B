@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, Bot, Check, FilePlus2, History, Laptop, Loader2, RefreshCw, Search, Smartphone, Tag, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { AlertTriangle, Bot, Check, FilePlus2, History, Laptop, LineChart, Loader2, RefreshCw, Search, Smartphone, Tag, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, Chip, Input, PageHeader, Select, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
+import TradeInChart from "@/components/TradeInChart";
 import { agentsFor, runAgents } from "@/lib/agents";
 import { useAuth } from "@/lib/auth";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
@@ -13,6 +14,7 @@ import { suggest, type Suggestion } from "@/lib/suggest";
 import { extractInline, parseGrade, parsePrice } from "@/lib/parse";
 import { eur, marginRate, marketGap, priceLine } from "@/lib/pricing";
 import { useStore } from "@/lib/store";
+import { tradeInKey, useTradeIn } from "@/lib/tradein";
 import type { Grade, QuoteLine, RefModel } from "@/types";
 import { GRADES } from "@/types";
 
@@ -81,6 +83,7 @@ export default function QuickSearch() {
   const suggestions = useMemo(() => suggest(text, 10), [text]);
 
   const ref = getRef(refId);
+  const tradeIn = useTradeIn();
   const priced = useMemo(() => (line ? priceLine(line, settings, priceList) : null), [line, settings, priceList]);
 
   const search = async (r: RefModel, v: Variant, g: Grade, label: string) => {
@@ -315,6 +318,16 @@ export default function QuickSearch() {
           {!running && (
             <Card className="p-6">
               <SourcesPanel line={priced} />
+            </Card>
+          )}
+
+          {tradeIn?.models[tradeInKey(line.brand, line.model)] && (
+            <Card className="p-6 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-bold flex items-center gap-2"><LineChart className="w-4 h-4" /> {t("history.chart_title")}</h3>
+                <Link to={`/historique?m=${encodeURIComponent(tradeInKey(line.brand, line.model))}`} className="text-xs font-semibold text-primary hover:underline">{t("history.view")}</Link>
+              </div>
+              <TradeInChart model={tradeIn.models[tradeInKey(line.brand, line.model)]} />
             </Card>
           )}
         </>

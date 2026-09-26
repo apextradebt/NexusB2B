@@ -8,6 +8,7 @@ import Reference from "@/pages/Reference";
 import SettingsPage from "@/pages/Settings";
 import PriceList from "@/pages/PriceList";
 import QuickSearch from "@/pages/QuickSearch";
+import TradeInHistory from "@/pages/TradeInHistory";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
                 <Route path="/recherche" element={<QuickSearch />} />
                 <Route path="/devis" element={<Quotes />} />
                 <Route path="/prix" element={<PriceList />} />
+                <Route path="/historique" element={<TradeInHistory />} />
                 <Route path="/referentiel" element={<Reference />} />
                 <Route path="/parametres" element={<SettingsPage />} />
               </Routes>

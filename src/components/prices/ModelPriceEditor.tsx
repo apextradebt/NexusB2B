@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { LineChart, Plus, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button, Select } from "@/components/ui";
 import { phoneStorage } from "@/lib/catalog";
 import { parsePrice } from "@/lib/parse";
 import { entryKey, findListPrice } from "@/lib/priceList";
 import { useStore } from "@/lib/store";
+import { money, latestByStorage, monthLabel, tradeInKey, useTradeIn } from "@/lib/tradein";
 import type { Grade, PriceListEntry, RefModel } from "@/types";
 import { GRADES } from "@/types";
 
@@ -23,6 +25,9 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
   const { t } = useTranslation();
   const { priceList, setPrice, settings } = useStore();
   const entries = useMemo(() => priceList.filter((e) => e.refId === model.id), [priceList, model.id]);
+  // Reference only, never written to the price list: UK trade-in (GBP), what buyers pay, not a selling price.
+  const tradeIn = useTradeIn()?.models[tradeInKey(model.brand, model.model)];
+  const tradeInLatest = useMemo(() => (tradeIn ? latestByStorage(tradeIn) : undefined), [tradeIn]);
   const [extra, setExtra] = useState<Variant[]>([]);
   const [cpu, setCpu] = useState("");
   const [ram, setRam] = useState("");
@@ -58,6 +63,7 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
             <tr className="text-left text-[11px] uppercase tracking-wider text-muted">
               <th className="p-1.5 font-semibold min-w-44">{model.category === "phone" ? t("add.capacity") : t("prices.configuration")}</th>
               {COLS.map((g) => <th key={g ?? "any"} className="p-1.5 font-semibold text-center">{g ?? t("prices.any_grade")}</th>)}
+              {tradeInLatest && <th className="p-1.5 font-semibold text-right whitespace-nowrap border-l border-line">{t("prices.tradein_ref")}</th>}
               <th className="p-1.5 w-8" />
             </tr>
           </thead>
@@ -77,6 +83,14 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
                       />
                     </td>
                   ))}
+                  {tradeInLatest && (() => {
+                    const ref = any ? tradeInLatest.lowest : v.storage ? tradeInLatest.byStorage.get(v.storage) : undefined;
+                    return (
+                      <td className="p-1.5 text-right text-xs tabular-nums text-muted border-l border-line whitespace-nowrap" title={ref ? t("prices.tradein_hint", { month: monthLabel(ref.month, "long") }) : undefined}>
+                        {ref ? money(ref.price) : "—"}
+                      </td>
+                    );
+                  })()}
                   <td className="p-1 text-right">
                     {model.category === "laptop" && !any && (
                       <button onClick={() => removeRow(v)} aria-label={t("prices.remove_config")} className="p-1 rounded-full text-muted hover:text-warn"><Trash2 className="w-3.5 h-3.5" /></button>
@@ -98,6 +112,14 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
         </div>
       )}
       <p className="text-[11px] text-muted">{t("prices.grid_hint")}</p>
+      {tradeInLatest && (
+        <p className="text-[11px] text-muted flex flex-wrap items-center gap-x-2">
+          <span>{t("prices.tradein_hint", { month: monthLabel([...tradeInLatest.byStorage.values()].reduce((a, b) => (b.month > a ? b.month : a), ""), "long") })}</span>
+          <Link to={`/historique?m=${encodeURIComponent(tradeInKey(model.brand, model.model))}`} className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">
+            <LineChart className="w-3.5 h-3.5" /> {t("history.view")}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
