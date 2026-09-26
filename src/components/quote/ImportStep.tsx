@@ -81,7 +81,7 @@ export default function ImportStep() {
           <p className="text-lg font-bold">{t("import.drop_title")}</p>
           <p className="text-sm text-muted font-medium mt-1">{t("import.drop_desc")}</p>
         </div>
-        <input ref={inputRef} type="file" accept=".csv,.txt,.tsv,.xlsx" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
+        <input ref={inputRef} type="file" accept=".csv,.txt,.tsv,.xlsx,.xlsm" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
         <div className="flex flex-wrap justify-center gap-3">
           <Button onClick={() => inputRef.current?.click()} disabled={busy}>
             <Upload className="w-4 h-4" /> {t("import.choose")}

@@ -30,8 +30,10 @@ const LINE_WORDS = new Set(["iphone", "galaxy", "pixel", "thinkpad", "elitebook"
 // Words that turn one model into its sibling ("15 Pro" vs "15 Pro Max").
 const SIBLING_WORDS = new Set(["pro", "max", "plus", "ultra", "mini", "lite", "fe", "carbon", "fortis"]);
 
-const isKey = (t: string) => /\d/.test(t);
-const weight = (t: string) => (isKey(t) ? 3 : LINE_WORDS.has(t) ? 0.5 : 1);
+const isYear = (t: string) => /^20[0-3]\d$/.test(t);
+// Tokens with a digit identify the model ("5420", "g8", "s23"); a release year only helps tell siblings apart.
+const isKey = (t: string) => /\d/.test(t) && !isYear(t);
+const weight = (t: string) => (isKey(t) ? 3 : isYear(t) ? 1 : LINE_WORDS.has(t) ? 0.5 : 1);
 
 type Indexed = { ref: RefModel; toks: string[]; brand: string };
 const INDEX: Indexed[] = CATALOG.map((ref) => ({
@@ -64,6 +66,9 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   // Sibling words or a generation in the input that this model does not have mean a different model.
   const extra = [...input].filter((t) => (SIBLING_WORDS.has(t) || /^g\d+$/.test(t)) && !ix.toks.includes(t));
   score -= 0.15 * extra.length;
+  // A year that is not this model's year ("MacBook Pro 14 2023" vs the 2021 one).
+  const refYears = ix.toks.filter(isYear);
+  if (refYears.length && [...input].some((t) => isYear(t) && !refYears.includes(t))) score -= 0.2;
 
   if (brandHint) {
     const b = normalize(brandHint);
@@ -73,6 +78,24 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
 }
 
 const up = (s: string) => s.toUpperCase();
+const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].includes(n);
+
+/**
+ * Remove configuration fragments (CPU, RAM, storage, "16/512") so their numbers do not
+ * pass for model numbers ("MacBook Air M1 8/256" is not an iPhone 8).
+ */
+export function stripSpecs(text: string): string {
+  return ` ${text} `
+    .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
+    .replace(/\b\d{1,4}\s?(?:gb|go|g|tb|to|t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")
+    .replace(/\b(?:intel\s*)?(?:core\s*)?i[3579][\s-]*\d{4,5}[a-z]{0,2}\d?\b/gi, " ")
+    .replace(/\b(?:intel\s*)?core\s*ultra\s*[579]\s*\d{3}[a-z]\b/gi, " ")
+    .replace(/\b(?:amd\s*)?ryzen\s*[3579]\s*(?:pro\s*)?\d{4}[a-z]{1,2}\b/gi, " ")
+    .replace(/\b(?:celeron|pentium(?:\s+(?:silver|gold))?)\s*n?\d{4}[a-z]?\b/gi, " ")
+    .replace(/\b(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|intel|amd|core|win(?:dows)?\s*1[01](?:\s*pro)?|azerty|qwerty|qwertz|french|fr|uk|us|de)\b/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 /** Pull CPU / RAM / storage out of free text. Explicit spec columns are tried first by the caller. */
 export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage">): ParsedSpecs {
@@ -94,34 +117,45 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   if (tier) specs.cpuTier = tier[1].replace(/\s+/, " ");
 
   const gb = (n: string, unit: string) => (/^t/i.test(unit) ? `${n}TB` : `${n}GB`);
+  // "16/512", "8GB/256GB", "i5/16/256": RAM then storage.
+  const slash = txt.match(/\b(\d{1,2})\s?(?:gb|go|g)?\s*\/\s*(\d{2,4}|[12])\s?(gb|go|g|tb|to|t)?\b/);
+  if (slash && RAM_OK(Number(slash[1])) && (slash[3] ? true : Number(slash[2]) >= 64 || Number(slash[2]) <= 2)) {
+    if (!line.ram) specs.ram = `${slash[1]}GB`;
+    if (!line.storage) specs.storage = gb(slash[2], slash[3] || (Number(slash[2]) <= 2 ? "tb" : "gb"));
+  }
   if (line.ram) {
     const m = line.ram.match(/(\d{1,2})/);
     if (m) specs.ram = `${m[1]}GB`;
-  } else {
-    const m = txt.match(/\b(\d{1,2})\s?(?:gb|go)\s*(?:de\s*)?(?:ram|ddr\d?|lpddr\d?x?|memory|memoire|mémoire)\b/) || txt.match(/\b(?:ram|memory|memoire|mémoire)\s*:?\s*(\d{1,2})\s?(?:gb|go)\b/);
+  } else if (!specs.ram) {
+    const m = txt.match(/\b(\d{1,2})\s?(?:gb|go|g)\s*(?:de\s*)?(?:ram|ddr\d?|lpddr\d?x?|memory|memoire|mémoire)\b/) || txt.match(/\b(?:ram|memory|memoire|mémoire)\s*:?\s*(\d{1,2})\s?(?:gb|go|g)\b/);
     if (m) specs.ram = `${m[1]}GB`;
   }
 
   if (line.storage) {
     const m = line.storage.match(/(\d{1,4})\s?(gb|go|tb|to)?/i);
     if (m) specs.storage = gb(m[1], m[2] || (Number(m[1]) <= 4 ? "tb" : "gb"));
-  } else {
+  } else if (!specs.storage) {
     const m =
-      txt.match(/\b(\d{1,4})\s?(gb|go|tb|to)\s*(?:de\s*)?(?:ssd|nvme|emmc|hdd|m\.2|pcie|storage|stockage)\b/) ||
-      txt.match(/\b(?:ssd|nvme|hdd|storage|stockage)\s*:?\s*(\d{1,4})\s?(gb|go|tb|to)\b/);
+      txt.match(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\s*(?:de\s*)?(?:ssd|nvme|emmc|hdd|m\.2|pcie|storage|stockage)\b/) ||
+      txt.match(/\b(?:ssd|nvme|hdd|storage|stockage)\s*:?\s*(\d{1,4})\s?(gb|go|g|tb|to|t)\b/);
     if (m) {
       specs.storage = gb(m[1], m[2]);
       // "i5 16GB 256GB SSD": storage is marked, so the remaining small capacity is the RAM.
       if (!specs.ram) {
         const rest = txt.replace(m[0], " ");
-        const ram = [...rest.matchAll(/\b(\d{1,2})\s?(?:gb|go)\b/g)].map((x) => Number(x[1])).find((n) => n >= 4 && n <= 64);
+        const ram = [...rest.matchAll(/\b(\d{1,2})\s?(?:gb|go|g)\b/g)].map((x) => Number(x[1])).find((n) => n >= 4 && n <= 64);
         if (ram) specs.ram = `${ram}GB`;
       }
     } else {
-      // Phones: a lone capacity ("iPhone 13 128GB") that is not the RAM.
-      const caps = [...txt.matchAll(/\b(\d{2,4}|1|2)\s?(gb|go|tb|to)\b/g)].filter((x) => `${x[1]}GB` !== specs.ram);
-      const cap = caps.find((x) => /^t/i.test(x[2]) || Number(x[1]) >= 32);
-      if (cap) specs.storage = gb(cap[1], cap[2]);
+      // A lone capacity ("iPhone 13 128GB") or two ("i5 16GB 256GB"): the large one is storage, the small one RAM.
+      // "4G" / "5G" are the mobile network, not a capacity.
+      const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5));
+      const cap = caps.find((x) => (/^t/i.test(x[2]) && Number(x[1]) <= 8) || Number(x[1]) >= 32);
+      if (cap) {
+        specs.storage = gb(cap[1], cap[2]);
+        const ram = caps.find((x) => x !== cap && !/^t/i.test(x[2]) && RAM_OK(Number(x[1])) && Number(x[1]) < Number(cap[1]));
+        if (ram && !specs.ram && !line.ram) specs.ram = `${ram[1]}GB`;
+      }
     }
   }
   return specs;
@@ -164,7 +198,7 @@ function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
 }
 
 export function matchLine(line: RawLine): Match {
-  const input = new Set(tokens(line.text).filter((t) => !NOISE.has(t)));
+  const input = new Set(tokens(stripSpecs(line.text)).filter((t) => !NOISE.has(t)));
   const specs = parseSpecs(line);
   // The CPU pins down the generation when the name does not ("EliteBook 840" + i5-8265U → G6 only).
   const cpuFit = (ref: RefModel) => {

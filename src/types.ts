@@ -120,6 +120,10 @@ export type PricingSettings = {
   agentConcurrency: number;
 };
 
+/** Lifecycle of a quote once saved, in order. */
+export type QuoteStatus = "created" | "approved" | "shipped" | "arrived" | "in_progress" | "completed" | "paid";
+export const QUOTE_STATUSES: QuoteStatus[] = ["created", "approved", "shipped", "arrived", "in_progress", "completed", "paid"];
+
 export type SavedQuote = {
   id: string;
   client: string;
@@ -128,4 +132,7 @@ export type SavedQuote = {
   fileName: string;
   lines: QuoteLine[];
   totals: { units: number; buy: number; sell: number; margin: number };
+  /** Missing on quotes saved before statuses existed: read as "created". */
+  status?: QuoteStatus;
+  statusHistory?: { status: QuoteStatus; at: string }[];
 };
