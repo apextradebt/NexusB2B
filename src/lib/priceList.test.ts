@@ -132,6 +132,12 @@ describe("findListPrice", () => {
     expect(found.note).toMatch(/grade B/);
   });
 
+  it("prefers the same configuration at another grade over a price for any configuration", () => {
+    const list = [entry({ price: 300 }), entry({ variant: cfg, grade: "B", price: 399 })];
+    expect(findListPrice({ refId: lat.id, variant: cfg, grade: "C" }, list, coef)?.price).toBe(Math.round((399 * coef.C) / coef.B));
+    expect(findListPrice({ refId: lat.id, variant: { ...cfg, storage: "512GB" }, grade: "C" }, list, coef)?.price).toBe(300);
+  });
+
   it("flags an entry more specific than the quote line", () => {
     const found = findListPrice({ refId: lat.id, variant: { cpu: "i5-1145G7" }, grade: "B" }, [entry({ variant: cfg, grade: "B", price: 399 })], coef)!;
     expect(found.price).toBe(399);

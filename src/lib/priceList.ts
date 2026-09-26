@@ -37,7 +37,7 @@ export function findListPrice(
   let best: { score: number; entry: PriceListEntry; partial: boolean } | undefined;
   for (const entry of list) {
     if (entry.refId !== line.refId) continue;
-    let score = 0;
+    let config = 0;
     let partial = false;
     let reject = false;
     for (const f of FIELDS) {
@@ -46,13 +46,14 @@ export function findListPrice(
       const have = line.variant[f];
       if (!have) partial = true;
       else if (have !== want) reject = true;
-      else score += 2;
+      else config += 2;
     }
     if (reject) continue;
-    if (partial) score -= 1;
-    if (entry.grade === line.grade) score += 4;
-    else if (!entry.grade) score += 2;
-    else score -= Math.abs("ABCDE".indexOf(entry.grade) - "ABCDE".indexOf(line.grade));
+    if (partial) config -= 1;
+    // The configuration decides first, the grade second: "128GB grade B" scaled to D or E beats a price
+    // set for every capacity, so prices of one configuration always fall with the grade.
+    const gradeFit = entry.grade === line.grade ? 10 : !entry.grade ? 9 : 8 - Math.abs("ABCDE".indexOf(entry.grade) - "ABCDE".indexOf(line.grade));
+    const score = config * 100 + gradeFit;
     if (!best || score > best.score) best = { score, entry, partial };
   }
   if (!best) return undefined;

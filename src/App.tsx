@@ -7,6 +7,7 @@ import Quotes from "@/pages/Quotes";
 import Reference from "@/pages/Reference";
 import SettingsPage from "@/pages/Settings";
 import PriceList from "@/pages/PriceList";
+import QuickSearch from "@/pages/QuickSearch";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-10 overflow-y-auto">
               <Routes>
                 <Route path="/" element={<NewQuote />} />
+                <Route path="/recherche" element={<QuickSearch />} />
                 <Route path="/devis" element={<Quotes />} />
                 <Route path="/prix" element={<PriceList />} />
                 <Route path="/referentiel" element={<Reference />} />
