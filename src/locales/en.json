@@ -310,6 +310,7 @@
     "clear_recent": "Clear",
     "above_market": "Your price is {{pct}}% above the market ({{market}}).",
     "above_buyback": "The suggested buy price ({{offer}}) is above what buyback sites pay ({{buyback}}).",
-    "prudent_tip": "Check your price, or switch to \"Prudent\" mode in Settings to work from the lower price."
+    "prudent_tip": "Check your price, or switch to \"Prudent\" mode in Settings to work from the lower price.",
+    "suggestions": "Matching devices"
   }
 }

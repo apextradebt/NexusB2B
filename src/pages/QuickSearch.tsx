@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, Bot, Check, FilePlus2, History, Loader2, RefreshCw, Search, Tag, X } from "lucide-react";
+import { AlertTriangle, Bot, Check, FilePlus2, History, Laptop, Loader2, RefreshCw, Search, Smartphone, Tag, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Chip, Input, PageHeader, Select, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
@@ -8,7 +8,8 @@ import { agentsFor, runAgents } from "@/lib/agents";
 import { useAuth } from "@/lib/auth";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
-import { matchLine } from "@/lib/match";
+import { matchAgainst, matchLine } from "@/lib/match";
+import { suggest, type Suggestion } from "@/lib/suggest";
 import { extractInline, parseGrade, parsePrice } from "@/lib/parse";
 import { eur, marginRate, marketGap, priceLine } from "@/lib/pricing";
 import { useStore } from "@/lib/store";
@@ -32,18 +33,25 @@ function loadHistory(): Recent[] {
   }
 }
 
+/** The grade written in the query ("grade B", "Class C", or a lone trailing "B"), and the rest of the text. */
+function gradeIn(text: string): { grade?: Grade; rest: string } {
+  const inline = extractInline(text);
+  const grade = parseGrade(inline.grade);
+  const trailing = inline.text.match(/\s([A-E])\+?$/);
+  if (!grade && trailing) return { grade: trailing[1] as Grade, rest: inline.text.slice(0, trailing.index) };
+  return { grade, rest: inline.text };
+}
+
 /** Read "iPhone 13 128 Go grade B" / "Latitude 5420 i5-1145G7 16/256 B": device, configuration, grade. */
 function understand(text: string, fallback: Grade) {
-  const inline = extractInline(text);
-  let rest = inline.text;
-  let grade = parseGrade(inline.grade);
-  const trailing = rest.match(/\s([A-E])\+?$/);
-  if (!grade && trailing) {
-    grade = trailing[1] as Grade;
-    rest = rest.slice(0, trailing.index);
-  }
-  const m = matchLine({ row: 0, text: rest, quantity: 1 });
-  return { match: m, grade: grade ?? fallback };
+  const { grade, rest } = gradeIn(text);
+  return { match: matchLine({ row: 0, text: rest, quantity: 1 }), grade: grade ?? fallback };
+}
+
+/** Configuration typed in the query, resolved against the chosen model's factory options. */
+function variantFor(r: RefModel, text: string): Variant {
+  const m = matchAgainst({ row: 0, text: gradeIn(text).rest, quantity: 1 }, r);
+  return r.category === "phone" ? (m.variant.storage ? { storage: m.variant.storage } : {}) : m.variant;
 }
 
 /**
@@ -67,7 +75,10 @@ export default function QuickSearch() {
   const [qty, setQty] = useState("1");
   const [myPrice, setMyPrice] = useState("");
   const [done, setDone] = useState<"quote" | "price" | null>(null);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
   const run = useRef(0);
+  const suggestions = useMemo(() => suggest(text, 10), [text]);
 
   const ref = getRef(refId);
   const priced = useMemo(() => (line ? priceLine(line, settings, priceList) : null), [line, settings, priceList]);
@@ -101,9 +112,23 @@ export default function QuickSearch() {
     setNotFound(false);
   };
 
+  /** A suggestion was picked: its capacity (phones), else the configuration typed; the grade typed. */
+  const choose = ({ ref: r, variant: sv }: Suggestion) => {
+    const v = sv.storage ? { ...variantFor(r, text), ...sv } : variantFor(r, text);
+    const g = gradeIn(text).grade ?? grade;
+    pick(r, v, g);
+    setOpen(false);
+    setActive(-1);
+    search(r, v, g, text.trim() || `${r.brand} ${r.model}`);
+  };
+
   const submitText = () => {
     if (!text.trim()) return;
+    if (open && active >= 0 && suggestions[active]) return choose(suggestions[active]);
+    setOpen(false);
     const { match, grade: g } = understand(text, settings.defaultGrade);
+    // Nothing certain from the full reading: take the first suggestion, as a search box would.
+    if ((!match.ref || match.status === "unmatched") && suggestions[0]) return choose(suggestions[0]);
     if (!match.ref) {
       setNotFound(true);
       setAlternatives([]);
@@ -136,8 +161,54 @@ export default function QuickSearch() {
       <Card className="p-6 sm:p-8 flex flex-col gap-5">
         <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => { e.preventDefault(); submitText(); }}>
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-muted absolute left-4 top-1/2 -translate-y-1/2" />
-            <Input autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder={t("quick.placeholder")} aria-label={t("quick.placeholder")} className="w-full pl-10 rounded-full py-3" />
+            <Search className="w-4 h-4 text-muted absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+            <Input
+              autoFocus
+              role="combobox"
+              aria-expanded={open && suggestions.length > 0}
+              aria-controls="quick-suggestions"
+              aria-autocomplete="list"
+              aria-activedescendant={active >= 0 ? `quick-s-${active}` : undefined}
+              autoComplete="off"
+              value={text}
+              onChange={(e) => { setText(e.target.value); setOpen(true); setActive(-1); setNotFound(false); }}
+              onFocus={() => setOpen(true)}
+              onBlur={() => setTimeout(() => setOpen(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowDown" && suggestions.length) { e.preventDefault(); setOpen(true); setActive((a) => (a + 1) % suggestions.length); }
+                else if (e.key === "ArrowUp" && suggestions.length) { e.preventDefault(); setActive((a) => (a <= 0 ? suggestions.length - 1 : a - 1)); }
+                else if (e.key === "Escape") { setOpen(false); setActive(-1); }
+              }}
+              placeholder={t("quick.placeholder")}
+              aria-label={t("quick.placeholder")}
+              className="w-full pl-10 rounded-full py-3"
+            />
+            {open && suggestions.length > 0 && (
+              <ul id="quick-suggestions" role="listbox" aria-label={t("quick.suggestions")}
+                className="absolute z-30 left-0 right-0 mt-2 bg-surface rounded-2xl shadow-soft p-2 max-h-96 overflow-y-auto">
+                {suggestions.map((s, i) => {
+                  const r = s.ref;
+                  const v = variantFor(r, text);
+                  const g = gradeIn(text).grade;
+                  // Phones show their capacity in the name; laptops the configuration typed.
+                  const chips = [...(r.category === "laptop" ? [v.cpu, v.ram, v.storage] : []), g && `Grade ${g}`].filter(Boolean);
+                  return (
+                    <li key={`${r.id}-${s.variant.storage ?? ""}`} id={`quick-s-${i}`} role="option" aria-selected={i === active}
+                      onMouseDown={(e) => { e.preventDefault(); choose(s); }}
+                      onMouseEnter={() => setActive(i)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer ${i === active ? "bg-lime/20" : "hover:bg-line/40"}`}>
+                      {r.category === "laptop" ? <Laptop className="w-4 h-4 text-muted shrink-0" /> : <Smartphone className="w-4 h-4 text-muted shrink-0" />}
+                      <span className="min-w-0 flex-1 truncate">
+                        <span className="text-muted">{r.brand} </span><span className="font-semibold">{r.model}</span>
+                        {s.variant.storage && <span className="font-bold text-primary ml-2 tabular-nums">{s.variant.storage}</span>}
+                        {r.year && <span className="text-xs text-muted ml-2">{r.year}</span>}
+                      </span>
+                      {chips.length > 0 && <span className="hidden sm:flex gap-1">{chips.map((c) => <Chip key={c}>{c}</Chip>)}</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
           <Button type="submit" disabled={!text.trim() || running}>{running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />} {t("quick.search")}</Button>
         </form>
