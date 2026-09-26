@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { PricingSettings, QuoteLine, SavedQuote } from "@/types";
+import type { PricingSettings, QuoteLine, QuoteStatus, SavedQuote } from "@/types";
 import type { Layout, Table } from "@/lib/parse";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
 
@@ -48,6 +48,7 @@ type Store = {
   quotes: SavedQuote[];
   saveQuote: (q: SavedQuote) => void;
   deleteQuote: (id: string) => void;
+  setQuoteStatus: (id: string, status: QuoteStatus) => void;
   draft: Draft;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
   resetDraft: () => void;
@@ -78,9 +79,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setSettingsState(s);
     save("b2b-pricing-settings", s);
   };
+  // Re-saving from the Prices step replaces lines and totals but keeps the creation date and the status trail.
   const saveQuote = (q: SavedQuote) =>
     setQuotes((prev) => {
-      const next = [q, ...prev.filter((p) => p.id !== q.id)];
+      const old = prev.find((p) => p.id === q.id);
+      const merged: SavedQuote = old
+        ? { ...q, createdAt: old.createdAt, status: old.status, statusHistory: old.statusHistory }
+        : { ...q, status: "created", statusHistory: [{ status: "created", at: q.createdAt }] };
+      const next = [merged, ...prev.filter((p) => p.id !== q.id)];
+      save("b2b-quotes", next);
+      return next;
+    });
+  const setQuoteStatus = (id: string, status: QuoteStatus) =>
+    setQuotes((prev) => {
+      const next = prev.map((p) =>
+        p.id !== id || (p.status ?? "created") === status
+          ? p
+          : {
+              ...p,
+              status,
+              statusHistory: [...(p.statusHistory ?? [{ status: "created", at: p.createdAt }]), { status, at: new Date().toISOString() }],
+            },
+      );
       save("b2b-quotes", next);
       return next;
     });
@@ -94,7 +114,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   return (
     <Ctx.Provider
       value={{
-        settings, setSettings, quotes, saveQuote, deleteQuote, draft, setDraft,
+        settings, setSettings, quotes, saveQuote, deleteQuote, setQuoteStatus, draft, setDraft,
         resetDraft: () => setDraft(EMPTY_DRAFT),
         theme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")),
       }}

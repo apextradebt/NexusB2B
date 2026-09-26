@@ -187,3 +187,81 @@ describe("priceLine", () => {
     expect(priceLine({ ...base, buyOverride: 99 }, DEFAULT_SETTINGS).buyPrice).toBe(99);
   });
 });
+
+describe("messy imports", () => {
+  const run = (csv: string) => {
+    const table = parseText(csv);
+    const layout = detectLayout(table);
+    const lines = buildLines(table, layout);
+    return { layout, lines, matches: lines.map(matchLine) };
+  };
+
+  it("reads a file with no header row", () => {
+    const { lines, matches } = run("Dell Latitude 5420 i5-1145G7 16GB 256GB;B;3\niPhone 13 128GB;A;10");
+    expect(lines).toHaveLength(2);
+    expect(lines.map((l) => [l.quantity, l.gradeRaw])).toEqual([[3, "B"], [10, "A"]]);
+    expect(matches.map((m) => m.ref?.model)).toEqual(["Latitude 5420", "iPhone 13"]);
+    expect(matches[0].variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+  });
+
+  it("understands German and Spanish headers", () => {
+    expect(run("Hersteller;Modell;Prozessor;Arbeitsspeicher;Festplatte;Zustand;Menge\nDell;Latitude 7420;i7-1185G7;16 GB;512 GB SSD;A;5").lines[0].quantity).toBe(5);
+    const es = run("Marca,Modelo,Procesador,Memoria,Almacenamiento,Estado,Cantidad\nLenovo,ThinkPad T14 Gen 2,i5-1135G7,16GB,256GB,B,7");
+    expect(es.matches[0].ref?.model).toBe("ThinkPad T14 Gen 2");
+    expect(es.lines[0]).toMatchObject({ quantity: 7, gradeRaw: "B" });
+  });
+
+  it("maps columns by content when headers say nothing", () => {
+    const { layout, lines, matches } = run("Col1;Col2;Col3;Col4\nApple;iPhone 11;64GB;12\nSamsung;Galaxy S21;128GB;3");
+    expect(layout.mapping).toMatchObject({ Col1: "brand", Col2: "model", Col3: "storage", Col4: "quantity" });
+    expect(lines.map((l) => l.quantity)).toEqual([12, 3]);
+    expect(matches.map((m) => m.ref?.model)).toEqual(["iPhone 11", "Galaxy S21"]);
+  });
+
+  it("keeps identifiers (SKU, part number, item codes, IMEI) out of the matching", () => {
+    const odd = run("SKU,Item,Hardware Spec,Cosmetic Grade,Avail\nX1,Latitude 5420,i5-1145G7 / 16GB / 256GB SSD,B,4\nX2,iPhone 12 64GB,,A,12");
+    expect(odd.layout.mapping).toMatchObject({ SKU: "ignore", Item: "model", "Hardware Spec": "description", Avail: "quantity" });
+    expect(odd.matches[0].variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+    const fr = run("Article;Libellé;État;Qté\n1001;Apple iPhone 12 Pro 128Go;Très bon état;3\n1002;Samsung Galaxy S21 5G 128 Go;Bon état;2\n1003;Lenovo ThinkPad L14 Gen 1 i5-10210U 8Go 256Go SSD;Grade B;5");
+    expect(fr.layout.mapping).toMatchObject({ Article: "ignore", "Libellé": "model", "Qté": "quantity" });
+    expect(fr.lines.map((l) => l.quantity)).toEqual([3, 2, 5]);
+    const pn = run("Part Number;Type;Qty;Condition\n20W0S0H400;Lenovo ThinkPad T14 Gen 2 i5 16/512;3;B");
+    expect(pn.matches[0].ref?.model).toBe("ThinkPad T14 Gen 2");
+    const imei = run("356789101112131,Apple iPhone 12 128GB,B\n356789101112132,Apple iPhone 12 128GB,A");
+    expect(imei.layout.mapping["Colonne 1"]).toBe("serial");
+    expect(imei.lines).toHaveLength(2);
+  });
+
+  it("reads quantity and grade written inside the description", () => {
+    const { lines, matches } = run("Description\n3x Dell Latitude 5420 i5-1145G7 16GB 256GB Grade B\niPhone 13 Pro 256GB grade A x 5\nSamsung Galaxy S22 128GB - Class C - qty 2");
+    expect(lines.map((l) => [l.quantity, l.gradeRaw])).toEqual([[3, "B"], [5, "A"], [2, "C"]]);
+    expect(matches.map((m) => m.status)).toEqual(["matched", "matched", "matched"]);
+  });
+
+  it("skips section titles and totals, parses counts like '12 pcs' and '1 234'", () => {
+    const { lines } = run("Model;Qty;Grade\nLAPTOPS;;\nLatitude 5420;2;B\nPHONES;;\niPhone XR 64GB;12 pcs;A\niPhone 13;1 234;A\nTotal;1248;");
+    expect(lines.map((l) => l.quantity)).toEqual([2, 12, 1234]);
+  });
+
+  it("reads '16/512', '8G 256G' configs without taking them for model numbers", () => {
+    const { matches } = run("Model;Config;Grade;Qty\nLatitude 5420;i5-1145G7/16/256;B;2\nEliteBook 840 G7;i5-10310U 8G 256G;A;1\nMacBook Air M1;8/256;A;3");
+    expect(matches.map((m) => m.ref?.model)).toEqual(["Latitude 5420", "EliteBook 840 G7", "MacBook Air M1 2020"]);
+    expect(matches[1].variant).toEqual({ cpu: "i5-10310U", ram: "8GB", storage: "256GB" });
+    expect(matches[2].variant).toMatchObject({ ram: "8GB", storage: "256GB" });
+  });
+
+  it("finds the header below title rows and splits fixed-width text", () => {
+    const titled = run("Stock list - September 2026\nSupplier: ACME Refurb\n\nBrand,Model,CPU,RAM,SSD,Grade,Qty\nDell,Latitude 5520,i5-1145G7,16,512,A,4");
+    expect(titled.lines[0]).toMatchObject({ quantity: 4, gradeRaw: "A" });
+    expect(titled.matches[0].variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "512GB" });
+    const fixed = run("iPhone 12 mini 64GB      B     4\nGalaxy S20 FE 128GB      C     2");
+    expect(fixed.lines.map((l) => l.quantity)).toEqual([4, 2]);
+    expect(fixed.matches.map((m) => m.ref?.model)).toEqual(["iPhone 12 Mini", "Galaxy S20 FE"]);
+  });
+
+  it("decodes Windows-1252 and UTF-16 exports from Excel", async () => {
+    const { decode } = await import("@/lib/parse");
+    expect(decode(new Uint8Array([0x4d, 0x6f, 0x64, 0xe8, 0x6c, 0x65]).buffer)).toBe("Modèle");
+    expect(decode(new Uint8Array([0xff, 0xfe, 0x51, 0x00, 0x74, 0x00, 0xe9, 0x00]).buffer)).toBe("Qté");
+  });
+});

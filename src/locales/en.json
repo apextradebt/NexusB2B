@@ -24,13 +24,13 @@
     "client": "Client",
     "reference": "Lot reference",
     "drop_title": "Drop your file here",
-    "drop_desc": "Excel (.xlsx) or CSV: one row per device, or a pivot table of models × grades.",
+    "drop_desc": "Excel (.xlsx) or CSV / TXT, any layout: with or without headers, one row per device, a pivot of models × grades, or a single description column.",
     "choose": "Choose a file",
     "paste": "Paste rows",
-    "paste_placeholder": "Paste rows copied from Excel here (with the header row)…",
+    "paste_placeholder": "Paste rows copied from Excel, an email or a PDF here, with or without the header row…",
     "analyse_paste": "Analyse",
     "pasted": "Pasted rows",
-    "formats": "Columns detected automatically: model, brand, processor, RAM, storage, grade, quantity, serial number. Grades as columns (Class A, B, C…) are detected.",
+    "formats": "Columns are recognised from their name (FR, EN, DE, ES, IT, NL) or from what they contain. Quantity and grade written in the description (\"3x…\", \"Grade B\") and configs like \"i5/16/512\" are read too. You can correct any column on the next step.",
     "template": "CSV template",
     "sample": "Try with a sample",
     "empty": "No rows found in this file.",
@@ -123,7 +123,20 @@
     "units": "devices",
     "open": "Open",
     "delete": "Delete",
-    "confirm_delete": "Delete this quote?"
+    "confirm_delete": "Delete this quote?",
+    "all": "All",
+    "next": "Mark as {{status}}",
+    "since": "since {{date}}",
+    "status_label": "Status",
+    "status": {
+      "created": "Quote issued",
+      "approved": "Accepted",
+      "shipped": "In transit",
+      "arrived": "Received",
+      "in_progress": "Processing",
+      "completed": "Processing complete",
+      "paid": "Payment received"
+    }
   },
   "reference": {
     "title": "Reference",

@@ -24,13 +24,13 @@
     "client": "Client",
     "reference": "Référence du lot",
     "drop_title": "Déposez votre fichier ici",
-    "drop_desc": "Excel (.xlsx) ou CSV : une ligne par appareil, ou un tableau croisé modèles × grades.",
+    "drop_desc": "Excel (.xlsx) ou CSV / TXT, quelle que soit la mise en forme : avec ou sans en-têtes, une ligne par appareil, un tableau croisé modèles × grades ou une seule colonne de description.",
     "choose": "Choisir un fichier",
     "paste": "Coller des lignes",
-    "paste_placeholder": "Collez ici des lignes copiées depuis Excel (avec la ligne d'en-têtes)…",
+    "paste_placeholder": "Collez ici des lignes copiées depuis Excel, un e-mail ou un PDF, avec ou sans ligne d’en-têtes…",
     "analyse_paste": "Analyser",
     "pasted": "Lignes collées",
-    "formats": "Colonnes reconnues automatiquement : modèle, marque, processeur, RAM, stockage, grade, quantité, n° de série. Les grades en colonnes (Class A, B, C…) sont détectés.",
+    "formats": "Les colonnes sont reconnues par leur nom (FR, EN, DE, ES, IT, NL) ou par leur contenu. La quantité et le grade écrits dans la description (« 3x… », « Grade B ») et les configurations comme « i5/16/512 » sont lus aussi. Chaque colonne reste modifiable à l'étape suivante.",
     "template": "Modèle CSV",
     "sample": "Essayer avec un exemple",
     "empty": "Aucune ligne trouvée dans ce fichier.",
@@ -123,7 +123,20 @@
     "units": "appareils",
     "open": "Ouvrir",
     "delete": "Supprimer",
-    "confirm_delete": "Supprimer ce devis ?"
+    "confirm_delete": "Supprimer ce devis ?",
+    "all": "Tous",
+    "next": "Passer à « {{status}} »",
+    "since": "depuis le {{date}}",
+    "status_label": "Statut",
+    "status": {
+      "created": "Devis émis",
+      "approved": "Accepté",
+      "shipped": "En transit",
+      "arrived": "Réceptionné",
+      "in_progress": "En traitement",
+      "completed": "Traitement terminé",
+      "paid": "Paiement reçu"
+    }
   },
   "reference": {
     "title": "Référentiel",
