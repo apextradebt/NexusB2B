@@ -34,7 +34,7 @@ export type ParsedSpecs = {
 };
 
 /** Semantic fields an uploaded column can be mapped to. */
-export type Field = "model" | "brand" | "quantity" | "grade" | "cpu" | "ram" | "storage" | "serial" | "description" | "ignore";
+export type Field = "model" | "brand" | "quantity" | "grade" | "cpu" | "ram" | "storage" | "serial" | "price" | "description" | "ignore";
 
 export type ColumnMapping = Record<string, Field>;
 
@@ -50,6 +50,8 @@ export type RawLine = {
   cpu?: string;
   ram?: string;
   storage?: string;
+  /** Raw price cell (price lists), parsed with parsePrice. */
+  price?: string;
 };
 
 export type MatchStatus = "matched" | "review" | "unmatched";
@@ -109,6 +111,27 @@ export type QuoteLine = {
   buyPrice?: number;
   buyOverride?: number;
   priceBasis?: string;
+  /** The customer's own selling price for this device (price list), after grade adjustment. */
+  listPrice?: number;
+  /** How the list price was found ("Grade B ajusté depuis A", "configuration partielle"…). */
+  listPriceNote?: string;
+  /** Median market resale found by the agents, kept for comparison when the list price is used. */
+  marketSell?: number;
+};
+
+/** One of the customer's own selling prices. Empty variant fields / grade = applies to any. */
+export type PriceListEntry = {
+  id: string;
+  refId: string;
+  category: Category;
+  brand: string;
+  model: string;
+  variant: { cpu?: string; ram?: string; storage?: string };
+  grade?: Grade;
+  /** Unit selling price, EUR. */
+  price: number;
+  updatedAt: string;
+  source: "manual" | "import";
 };
 
 export type PricingSettings = {
@@ -118,6 +141,8 @@ export type PricingSettings = {
   gradeCoef: Record<Grade, number>;
   defaultGrade: Grade;
   agentConcurrency: number;
+  /** "mine": the customer's price list is the resale price; "prudent": the lower of it and the market. */
+  listPriceMode: "mine" | "prudent";
 };
 
 /** Lifecycle of a quote once saved, in order. */

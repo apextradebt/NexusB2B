@@ -15,6 +15,7 @@ export const normHeader = (s: string) =>
 // Header synonyms (FR, EN, DE, ES, IT, NL, PT). Order matters: first match wins.
 const SYNONYMS: [Field, string[]][] = [
   ["serial", ["serial", "serial number", "serial no", "sn", "s n", "imei", "imei1", "imei 1", "numero de serie", "n de serie", "no de serie", "service tag", "asset", "asset tag", "seriennummer", "numero de serie", "numero serie", "serienummer", "matricola"]],
+  ["price", ["price", "prices", "prix", "prix de vente", "prix vente", "prix de revente", "prix revente", "selling price", "sell price", "sale price", "sales price", "resale", "resale price", "revente", "pv", "pvp", "pvc", "tarif", "tarifs", "preis", "verkaufspreis", "vk preis", "vk", "precio", "precio de venta", "precio venta", "prezzo", "prezzo di vendita", "prijs", "verkoopprijs", "preco", "unit price", "prix unitaire", "pu", "amount", "montant", "cost", "cout", "value", "valeur", "eur", "euro", "euros"]],
   ["quantity", ["qty", "qte", "qt", "quantity", "quantite", "nb", "nbr", "nombre", "count", "units", "unites", "pcs", "pieces", "stock", "available", "avail", "dispo", "disponible", "menge", "anzahl", "stuck", "cantidad", "uds", "unidades", "quantita", "aantal", "quantidade", "volume", "total qty", "total quantity"]],
   ["grade", ["grade", "grading", "class", "classe", "condition", "etat", "cosmetic", "cosmetique", "cosmetic grade", "zustand", "klasse", "estado", "grado", "condizione", "staat", "conditie", "categorie"]],
   ["brand", ["brand", "marque", "manufacturer", "fabricant", "make", "constructeur", "oem", "vendor", "hersteller", "marke", "marca", "fabricante", "produttore", "merk", "fabrikant"]],
@@ -26,7 +27,7 @@ const SYNONYMS: [Field, string[]][] = [
 ];
 
 // Identifier columns (SKU, part number, EAN…): recognised as headers, left out of the matching.
-const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "price", "prix", "unit price", "cost", "total price", "amount", "montant", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse"];
+const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "total price", "prix total", "line total", "total", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse"];
 
 // Headers that name nothing ("Column 3", "Col1", "Field 2"): still a header row, never data.
 const GENERIC_HEADER = /^(col|column|colonne|columna|spalte|field|champ|campo|f)\s*\d{1,3}$/;
@@ -64,6 +65,35 @@ export function parseGrade(raw?: string): Grade | undefined {
   return letter && GRADES.includes(letter[1].toUpperCase() as Grade) ? (letter[1].toUpperCase() as Grade) : undefined;
 }
 
+/**
+ * "349", "349,99 €", "€1,299.00", "1 299,00 EUR HT", "1.299,00", "$ 899" → amount and currency.
+ * The last separator followed by 1–2 digits is the decimal mark; groups of 3 are thousands.
+ */
+export function parsePrice(raw?: string): { value: number; currency: "EUR" | "USD" | "GBP" } | undefined {
+  if (!raw) return undefined;
+  let s = raw.trim();
+  const currency = /\$|usd/i.test(s) ? "USD" : /£|gbp/i.test(s) ? "GBP" : "EUR";
+  s = s
+    .replace(/[€$£]|\b(?:eur(?:os?)?|usd|gbp|ht|ttc|hors taxes?|excl\.?\s*vat|incl\.?\s*vat|vat|tva)\b/gi, "")
+    .replace(/[\s  ']/g, "");
+  if (!/^\d[\d.,]*$/.test(s)) return undefined;
+  const dot = s.lastIndexOf(".");
+  const comma = s.lastIndexOf(",");
+  if (dot >= 0 && comma >= 0) {
+    const dec = dot > comma ? "." : ",";
+    s = s.split(dec === "." ? "," : ".").join("").replace(dec, ".");
+  } else if (dot >= 0 || comma >= 0) {
+    const parts = s.split(dot >= 0 ? "." : ",");
+    s = parts.length > 2 || parts[parts.length - 1].length === 3 ? parts.join("") : parts.join(".");
+  }
+  const n = Number(s);
+  return Number.isFinite(n) && n > 0 ? { value: Math.round(n * 100) / 100, currency } : undefined;
+}
+
+// A price cell: an amount with a currency, or with cents ("349,99").
+const PRICE_CELL = /^[€$£]?\s*\d[\d\s.,'  ]*\s*(?:€|eur|euros?|\$|usd|£|gbp)?\s*(?:ht|ttc)?$/i;
+const isPriceCell = (s: string) => PRICE_CELL.test(s) && (/[€$£]|eur|usd|gbp/i.test(s) || /\d[.,]\d{2}\s*(?:€|eur|\$|usd|£|gbp)?\s*(?:ht|ttc)?$/i.test(s)) && !!parsePrice(s);
+
 /** "12", "12 pcs", "1 234", "1.234", "x3", "3.0" → integer; undefined when the cell is not a count. */
 export function parseQuantity(raw?: string): number | undefined {
   if (!raw) return undefined;
@@ -95,7 +125,7 @@ const IMEI_RX = /^\d{14,16}$/;
 // Serials / part numbers: one token of 6–20 letters and digits mixed, no spaces.
 const CODE_RX = /^(?=.*\d)(?=.*[a-z])[a-z0-9-]{6,20}$/i;
 
-export type Kind = "serial" | "quantity" | "grade" | "ram" | "storage" | "cpu" | "brand" | "specs" | "model" | "text" | "number";
+export type Kind = "serial" | "price" | "quantity" | "grade" | "ram" | "storage" | "cpu" | "brand" | "specs" | "model" | "text" | "number";
 
 function capacity(v: string): { n: number; unit?: string } | undefined {
   const m = v.toLowerCase().replace(/\s+/g, " ").match(/^(\d{1,4})\s?(gb|go|g|tb|to|t)?\b\s*(ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie|flash)?$/);
@@ -115,6 +145,7 @@ export function classifyCell(v: string): Kind | undefined {
     if (/ssd|hdd|nvme|emmc|m\.2|pcie|flash/i.test(s)) return "storage";
     return RAM_SIZES.has(cap.n) && cap.n <= 48 ? "ram" : "storage";
   }
+  if (isPriceCell(s)) return "price";
   if (parseQuantity(s) !== undefined && /^[\dx .,'pcsuniteé]+$/i.test(s)) return "number";
   if (gradeFromLabel(s) || (s.length <= 24 && parseGrade(s) && !/\d/.test(s))) return "grade";
   if (isBrand(s)) return "brand";
@@ -165,7 +196,7 @@ function findHeaderRow(rows: string[][]): number {
   return best;
 }
 
-function toTable(matrix: string[][]): Table {
+export function toTable(matrix: string[][]): Table {
   const rows = matrix.map((r) => r.map(clean)).filter((r) => r.some(Boolean));
   if (rows.length === 0) return { headers: [], rows: [] };
   const h = findHeaderRow(rows);
@@ -212,6 +243,16 @@ export async function readFile(file: File): Promise<Table> {
 export function parseText(text: string): Table {
   const res = Papa.parse<string[]>(text.replace(/^﻿/, "").trim(), { skipEmptyLines: true, delimiter: "", delimitersToGuess: [";", ",", "\t", "|"] });
   let data = res.data;
+  // A free-text list where only some lines hold a comma ("899,90 €") is not comma-separated:
+  // a real CSV has the same number of fields on (almost) every line.
+  // (Title lines above the table are single fields too, so only multi-field lines are compared.)
+  if (res.meta.delimiter === ",") {
+    const multi = data.map((r) => r.length).filter((w) => w > 1);
+    const common = multi.filter((w) => w === multi[multi.length - 1]).length;
+    if (multi.length < data.length / 2 || common < multi.length * 0.8) {
+      data = text.replace(/^﻿/, "").trim().split(/\r?\n/).filter((l) => l.trim()).map((l) => [l]);
+    }
+  }
   // A single column with runs of 2+ spaces is a fixed-width / copied-from-PDF list.
   if (data.every((r) => r.length === 1) && data.filter((r) => / {2,}/.test(r[0])).length > data.length / 2) {
     data = data.map((r) => r[0].split(/ {2,}/));
@@ -222,7 +263,9 @@ export function parseText(text: string): Table {
 // ---------------------------------------------------------------------------------------------
 // Column roles
 
-export type Layout = { mapping: ColumnMapping; gradeColumns: Record<string, Grade> };
+/** What the file is: a supplier lot to quote, or the customer's own price list. */
+export type Expect = "quote" | "prices";
+export type Layout = { mapping: ColumnMapping; gradeColumns: Record<string, Grade>; expect?: Expect };
 
 type Profile = { share: Partial<Record<Kind, number>>; model: number; unique: number; filled: number };
 
@@ -242,9 +285,10 @@ function profileColumn(values: string[]): Profile {
 }
 
 /** Field a column's content points to, when it is unambiguous enough. */
-function fieldFromContent(p: Profile, values: string[]): Field | undefined {
+function fieldFromContent(p: Profile, values: string[], expect: Expect): Field | undefined {
   const s = p.share;
   const top = (k: Kind, min: number) => (s[k] ?? 0) >= min;
+  if (top("price", 0.6) || (expect === "prices" && (s.price ?? 0) + (s.number ?? 0) >= 0.8 && (s.price ?? 0) > 0)) return "price";
   if (top("serial", 0.7) && p.unique > 0.8) return "serial";
   if (top("model", 0.5)) return "model";
   if (top("cpu", 0.6)) return "cpu";
@@ -259,7 +303,8 @@ function fieldFromContent(p: Profile, values: string[]): Field | undefined {
     if (nums.length >= 2 && nums.every((n) => [4, 8, 16, 32, 64].includes(n)) && new Set(nums).size > 1) return "ram";
     // Row numbers / item codes (1001, 1002, 1003…) count nothing.
     if (nums.length >= 3 && nums.every((n, k) => k === 0 || n === nums[k - 1] + 1)) return undefined;
-    return "quantity";
+    // In a price list, a column of plain amounts is the price.
+    return expect === "prices" ? "price" : "quantity";
   }
   if (top("specs", 0.5) || (s.specs ?? 0) + (s.cpu ?? 0) + (s.ram ?? 0) + (s.storage ?? 0) >= 0.6) return "description";
   if ((s.model ?? 0) >= 0.2) return "description";
@@ -271,6 +316,7 @@ function compatible(header: Field, content: Field | undefined, p: Profile): bool
   if (!content || header === content) return true;
   if (header === "model" || header === "description") return content !== "serial" && content !== "quantity" || p.model >= 0.3;
   if (header === "quantity") return content === "quantity" || content === "ram" || content === "storage";
+  if (header === "price") return content === "price" || content === "quantity" || content === "storage" || content === "ram";
   if (header === "serial") return content === "serial" || content === "quantity";
   if (header === "storage" || header === "ram" || header === "cpu") return content === "description" || content === "quantity" || content === "storage" || content === "ram";
   if (header === "grade") return content === "grade" || content === "description";
@@ -280,9 +326,9 @@ function compatible(header: Field, content: Field | undefined, p: Profile): bool
 /**
  * Auto-detect column roles from the header name AND what the column holds, so unknown or missing
  * headers, other languages and misleading names ("Reference" holding serials) still land right.
- * Pivot layouts (one count column per grade) are detected too.
+ * Pivot layouts (one count column per grade — or one price column per grade in a price list) are detected too.
  */
-export function detectLayout(table: Table): Layout {
+export function detectLayout(table: Table, expect: Expect = "quote"): Layout {
   const mapping: ColumnMapping = {};
   const gradeColumns: Record<string, Grade> = {};
   const colValues = (i: number) => table.rows.map((r) => r[i] ?? "");
@@ -290,8 +336,8 @@ export function detectLayout(table: Table): Layout {
 
   table.headers.forEach((header, i) => {
     const values = colValues(i);
-    const g = gradeFromLabel(header);
-    const numeric = values.slice(0, 50).every((v) => !v || parseQuantity(v) !== undefined);
+    const g = gradeFromLabel(header) ?? (expect === "prices" ? gradeFromPriceHeader(header) : null);
+    const numeric = values.slice(0, 50).every((v) => !v || parseQuantity(v) !== undefined || (expect === "prices" && !!parsePrice(v)));
     if (g && numeric) {
       gradeColumns[header] = g;
       mapping[header] = "ignore";
@@ -302,7 +348,7 @@ export function detectLayout(table: Table): Layout {
       mapping[header] = "ignore";
       return;
     }
-    const byContent = fieldFromContent(profiles[i], values);
+    const byContent = fieldFromContent(profiles[i], values, expect);
     mapping[header] = byHeader !== "ignore" && compatible(byHeader, byContent, profiles[i]) ? byHeader : byContent ?? (byHeader === "ignore" ? "ignore" : byHeader);
   });
 
@@ -327,7 +373,7 @@ export function detectLayout(table: Table): Layout {
   order.forEach((h) => {
     const f = mapping[h];
     if (f === "ignore" || f === "description" || gradeColumns[h]) return;
-    if (used.has(f)) mapping[h] = f === "serial" || f === "quantity" || f === "grade" ? "ignore" : "description";
+    if (used.has(f)) mapping[h] = f === "serial" || f === "quantity" || f === "grade" || f === "price" ? "ignore" : "description";
     else used.add(f);
   });
 
@@ -339,7 +385,13 @@ export function detectLayout(table: Table): Layout {
       .sort((a, b) => b.t - a.t)[0];
     if (text) mapping[text.h] = "model";
   }
-  return { mapping, gradeColumns };
+  return { mapping, gradeColumns, expect };
+}
+
+/** Price-list pivots label their columns "Prix A", "Price grade B", "A (€)"… */
+function gradeFromPriceHeader(header: string): Grade | null {
+  const h = normHeader(header).replace(/\b(prix|price|preis|precio|prezzo|prijs|pv|tarif|eur|euro|euros|ht|ttc)\b/g, " ").replace(/\s+/g, " ").trim();
+  return h ? gradeFromLabel(h) : null;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -350,11 +402,38 @@ const SKIP = /^(grand total|total|totals|sum|somme|\(blank\)|\(vide\)|-+|—|sou
 // Quantity and grade written into the text itself: "3x Latitude 5420", "iPhone 13 x 5", "qty: 2", "Grade B".
 const QTY_IN_TEXT = [
   /^\s*(\d{1,5})\s*[x×*]\s+/i,
-  /\s[x×*]\s*(\d{1,5})\s*$/i,
+  // "… x 5" or "… ×5", never "x5" glued: that is a model name ("Nokia X20", "Xperia X10").
+  /\s(?:x\s+|[×*]\s*)(\d{1,5})\s*$/i,
   /\b(?:qty|qte|quantit[eé]|quantity|nb|menge|cantidad)\s*[:=]?\s*(\d{1,5})\b/i,
   /\b(\d{1,5})\s*(?:pcs|pc|pieces|pièces|units|unités|unites|stk|uds)\b\.?/i,
 ];
-const GRADE_IN_TEXT = /\b(?:grade|class|classe|cat|klasse|grado)\s*[:=]?\s*([a-e])\+?(?![a-z0-9])/i;
+// An amount next to a currency: "520 €", "529€", "899,90 €", "1.189 EUR", "€ 1,049.00", "289 EUR HT".
+const PRICE_IN_TEXT = /(?:[€$£]\s*(\d[\d.,]*\d|\d)|(?<![\d.,/])(\d[\d.,]*\d|\d)\s*(?:€|eur(?:os?)?\b|\$|usd\b|£|gbp\b))(?:\s*(?:ht|ttc)\b)?/gi;
+
+/**
+ * The price written in a line of text: the last amount with a currency. A lone 1–3 digit group just
+ * before it joins as thousands ("1 189 €") unless it belongs to the configuration ("8/256 289 €",
+ * "16 512 420 €").
+ */
+export function priceInText(text: string): { price: string; rest: string } | undefined {
+  const all = [...text.matchAll(PRICE_IN_TEXT)];
+  const m = all[all.length - 1];
+  if (!m || m.index === undefined) return undefined;
+  let start = m.index;
+  let price = m[0].trim();
+  const amount = m[1] ?? m[2];
+  if (/^\d{3}(?:[.,]\d{1,2})?$/.test(amount)) {
+    const before = text.slice(0, start).match(/(^|[^\d.,/\s]\s*|\s)(\d{1,3}) $/);
+    const prevToken = text.slice(0, start).trimEnd().split(/\s+/).slice(-2, -1)[0] ?? "";
+    if (before && !/^[\d.,/]+$|\d$/.test(prevToken)) {
+      start -= before[2].length + 1;
+      price = `${before[2]} ${price}`;
+    }
+  }
+  const rest = (text.slice(0, start) + " " + text.slice(m.index + m[0].length)).replace(/\s*[-–:|]\s*$/, "").replace(/\s+/g, " ").trim();
+  return { price, rest };
+}
+const GRADE_IN_TEXT =/\b(?:grade|class|classe|cat|klasse|grado)\s*[:=]?\s*([a-e])\+?(?![a-z0-9])/i;
 
 /** Pull a quantity and a grade out of free text, returning the text without them. */
 export function extractInline(text: string): { text: string; quantity?: number; grade?: string } {
@@ -396,6 +475,15 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
     if (structured && filled === 1 && !/\d/.test(model || description || "") && matchLine({ row: 0, text: model || description!, quantity: 1 }).status === "unmatched") return;
 
     const inline = extractInline([model, description].filter(Boolean).join(" "));
+    // A price written in the text ("iPhone 13 128GB - 420 €") when there is no price column.
+    let price = get(row, "price");
+    if (!price && layout.expect === "prices") {
+      const found = priceInText(inline.text);
+      if (found) {
+        price = found.price;
+        inline.text = found.rest;
+      }
+    }
     const base = {
       row: i + 1,
       brand: get(row, "brand"),
@@ -404,14 +492,20 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
       ram: get(row, "ram"),
       storage: get(row, "storage"),
       serial: get(row, "serial"),
+      price,
     };
     const brandInText = base.brand && normHeader(inline.text).includes(normHeader(base.brand));
     const text = [brandInText ? undefined : base.brand, inline.text, base.cpu, base.ram, base.storage].filter(Boolean).join(" ");
 
     if (gradeCols.length > 0) {
-      // Pivot layout: one line per non-empty grade cell.
+      // Pivot layout: one line per non-empty grade cell — a count, or in a price list, the price for that grade.
       for (const [header, grade] of gradeCols) {
-        const n = parseQuantity(row[idx.get(header)!]);
+        const cell = row[idx.get(header)!];
+        if (layout.expect === "prices") {
+          if (parsePrice(cell)) lines.push({ ...base, text, quantity: 1, gradeRaw: grade, price: cell });
+          continue;
+        }
+        const n = parseQuantity(cell);
         if (n) lines.push({ ...base, text, quantity: n, gradeRaw: grade });
       }
       return;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RotateCcw } from "lucide-react";
-import { Button, Card, Input, PageHeader } from "@/components/ui";
+import { Button, Card, Input, PageHeader, Select } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
-import type { Category, Grade } from "@/types";
+import type { Category, Grade, PricingSettings } from "@/types";
 import { GRADES } from "@/types";
 
 const PRICE_API = import.meta.env.VITE_PRICE_API_URL || "http://localhost:8787";
@@ -42,6 +42,15 @@ export default function SettingsPage() {
           <label className="flex flex-col gap-2 text-sm font-semibold">
             {t("settings.concurrency")}
             <Input type="number" min={1} max={10} value={settings.agentConcurrency} onChange={(e) => setSettings({ ...settings, agentConcurrency: Math.max(1, num(e.target.value)) })} />
+          </label>
+          <label className="flex flex-col gap-2 text-sm font-semibold sm:col-span-2">
+            {t("settings.list_mode")}
+            <Select
+              value={settings.listPriceMode ?? "mine"}
+              onChange={(v) => setSettings({ ...settings, listPriceMode: v as PricingSettings["listPriceMode"] })}
+              options={[{ value: "mine", label: t("settings.list_mode_mine") }, { value: "prudent", label: t("settings.list_mode_prudent") }]}
+            />
+            <span className="text-xs text-muted font-medium">{t("settings.list_mode_desc")}</span>
           </label>
         </div>
       </Card>

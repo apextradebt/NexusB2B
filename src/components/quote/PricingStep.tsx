@@ -1,10 +1,10 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check, ExternalLink } from "lucide-react";
+import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check, ExternalLink, Tag, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Chip, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
 import { agentsFor, pool, runAgents } from "@/lib/agents";
-import { eur, priceLine, totals } from "@/lib/pricing";
+import { eur, marginRate, marketGap, priceLine, totals } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
 import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
@@ -14,14 +14,14 @@ const priceable = (l: QuoteLine) => l.status !== "unmatched" && !!l.refId;
 
 export default function PricingStep() {
   const { t } = useTranslation();
-  const { draft, setDraft, settings, saveQuote, resetDraft } = useStore();
+  const { draft, setDraft, settings, saveQuote, resetDraft, priceList } = useStore();
   const { getToken } = useAuth();
   const [open, setOpen] = useState<string | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
   const abort = useRef<AbortController | null>(null);
 
   // Prices are derived at render time so changing margin/refurb settings updates the quote instantly.
-  const lines = useMemo(() => draft.lines.map((l) => priceLine(l, settings)), [draft.lines, settings]);
+  const lines = useMemo(() => draft.lines.map((l) => priceLine(l, settings, priceList)), [draft.lines, settings, priceList]);
   const tot = totals(lines.filter(priceable));
   const toPrice = draft.lines.filter(priceable);
   const done = toPrice.filter((l) => l.priceState === "done").length;
@@ -71,12 +71,13 @@ export default function PricingStep() {
   const marginPct = tot.sell > 0 ? Math.round((tot.margin / tot.sell) * 100) : undefined;
   const unpriced = lines.filter((l) => priceable(l) && l.priceState === "done" && l.buyPrice === undefined);
   const excluded = lines.filter((l) => !priceable(l));
+  const onList = lines.filter((l) => priceable(l) && l.listPrice !== undefined);
 
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <Stat label={t("pricing.total_buy")} value={eur(tot.buy)} tone="buy" hint={t("pricing.units_priced", { priced: tot.priced, units: tot.units })} />
-        <Stat label={t("pricing.total_sell")} value={eur(tot.sell)} tone="sell" hint={t("pricing.sell_hint")} />
+        <Stat label={t("pricing.total_sell")} value={eur(tot.sell)} tone="sell" hint={onList.length ? t("pricing.on_list", { count: onList.length, total: toPrice.length }) : t("pricing.sell_hint")} />
         <Stat label={t("pricing.margin")} value={eur(tot.margin)} hint={marginPct !== undefined ? t("pricing.margin_hint", { pct: marginPct, target: settings.targetMarginPct }) : undefined} />
         <div className="rounded-[2rem] hero-gradient text-bright p-6 flex flex-col gap-3 justify-between">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider"><Bot className="w-4 h-4" /> {t("pricing.agents")}</div>
@@ -130,7 +131,25 @@ export default function PricingStep() {
                     <td className="p-3 text-right tabular-nums">{l.quantity.toLocaleString("fr-FR")}</td>
                     <td className="p-3 text-right tabular-nums text-muted">{l.priceState === "done" ? eur(l.marketBuy) : ""}</td>
                     <td className="p-3 text-right tabular-nums font-semibold text-sell">
-                      {l.priceState === "done" ? eur(l.sellPrice) : <Loader2 className={`w-4 h-4 inline ${l.priceState === "running" ? "animate-spin" : "opacity-30"}`} />}
+                      {l.priceState === "done" || l.listPrice !== undefined ? eur(l.sellPrice) : <Loader2 className={`w-4 h-4 inline ${l.priceState === "running" ? "animate-spin" : "opacity-30"}`} />}
+                      {l.listPrice !== undefined && (
+                        <div className="flex flex-col items-end gap-0.5 mt-0.5">
+                          <span title={l.listPriceNote} className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-sell bg-lime/20 rounded-full px-2 py-0.5 whitespace-nowrap">
+                            <Tag className="w-3 h-3" /> {l.priceBasis?.startsWith("Votre") ? t("pricing.your_price") : t("pricing.your_price_is", { price: eur(l.listPrice) })}
+                          </span>
+                          {l.listPriceNote && <span className="text-[10px] text-muted font-medium">{l.listPriceNote}</span>}
+                          {l.priceState === "done" && l.marketSell !== undefined && (() => {
+                            const gap = marketGap(l)!;
+                            const far = Math.abs(gap) >= 0.15;
+                            return (
+                              <span className={`text-[10px] font-medium whitespace-nowrap ${far ? "text-warn font-bold" : "text-muted"}`} title={far ? t("pricing.gap_hint") : undefined}>
+                                {far && <AlertTriangle className="w-3 h-3 inline mr-0.5 -mt-0.5" />}
+                                {t("pricing.market", { price: eur(l.marketSell) })} · {gap > 0 ? "+" : ""}{Math.round(gap * 100)} %
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      )}
                       {l.priceBasis?.startsWith("Estimation") && <div className="text-[10px] font-bold uppercase tracking-wider text-warn">{t("pricing.kind_estimate")}</div>}
                       {(() => {
                         const resale = l.agentResults.filter((r) => r.kind === "resale" && r.status === "ok");
@@ -165,7 +184,15 @@ export default function PricingStep() {
                         className={`w-24 text-right bg-surface shadow-inner-soft rounded-xl px-3 py-1.5 font-bold tabular-nums text-buy focus:outline-none focus:ring-2 focus:ring-primary/40 ${l.buyOverride !== undefined ? "ring-2 ring-sand/60" : ""}`}
                       />
                     </td>
-                    <td className={`p-3 text-right tabular-nums ${margin !== undefined && margin < 0 ? "text-warn font-bold" : ""}`}>{eur(margin)}</td>
+                    <td className={`p-3 text-right tabular-nums ${margin !== undefined && margin < 0 ? "text-warn font-bold" : ""}`}>
+                      {eur(margin)}
+                      {(() => {
+                        const rate = marginRate(l);
+                        if (rate === undefined) return null;
+                        const low = rate * 100 < settings.targetMarginPct - 0.5;
+                        return <div className={`text-[10px] font-semibold ${low ? "text-warn" : "text-muted"}`} title={low ? t("pricing.low_margin", { target: settings.targetMarginPct }) : undefined}>{Math.round(rate * 100)} %{low ? " ↓" : ""}</div>;
+                      })()}
+                    </td>
                     <td className="p-3 text-right tabular-nums font-semibold">{l.buyPrice !== undefined ? eur(l.buyPrice * l.quantity) : "—"}</td>
                     <td className="p-3">
                       <button onClick={() => setOpen(isOpen ? null : l.key)} aria-expanded={isOpen} aria-label={t("pricing.details")} className="p-1.5 rounded-full text-muted hover:text-ink">

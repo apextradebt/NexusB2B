@@ -8,7 +8,7 @@ import { useStore } from "@/lib/store";
 import type { Field, Grade } from "@/types";
 import { GRADES } from "@/types";
 
-const FIELDS: Field[] = ["model", "description", "brand", "cpu", "ram", "storage", "grade", "quantity", "serial", "ignore"];
+const FIELDS: Field[] = ["model", "description", "brand", "cpu", "ram", "storage", "grade", "quantity", "serial", "price", "ignore"];
 
 export default function MappingStep() {
   const { t } = useTranslation();
