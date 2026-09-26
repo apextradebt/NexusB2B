@@ -310,6 +310,7 @@
     "clear_recent": "Effacer",
     "above_market": "Votre prix est {{pct}} % au-dessus du marché ({{market}}).",
     "above_buyback": "Le prix d'achat conseillé ({{offer}}) dépasse ce que paient les sites de rachat ({{buyback}}).",
-    "prudent_tip": "Vérifiez votre prix, ou passez en mode « Prudent » dans Paramètres pour calculer sur le prix le plus bas."
+    "prudent_tip": "Vérifiez votre prix, ou passez en mode « Prudent » dans Paramètres pour calculer sur le prix le plus bas.",
+    "suggestions": "Appareils trouvés"
   }
 }
