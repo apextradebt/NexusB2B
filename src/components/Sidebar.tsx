@@ -23,20 +23,20 @@ export default function Sidebar() {
   const { theme, toggleTheme } = useStore();
 
   const itemClass = (active: boolean) =>
-    `flex items-center px-4 py-3 rounded-[1rem] transition-all duration-300 ${active
-      ? "bg-surface shadow-soft-active text-primary font-semibold"
-      : "text-muted hover:bg-surface hover:shadow-soft-sm hover:text-ink"}`;
+    `flex items-center px-4 py-3 rounded-xl transition-all duration-300 ${active
+      ? "bg-white/10 text-lime font-semibold"
+      : "text-bright/70 hover:bg-white/5 hover:text-bright"}`;
   const label = "opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity duration-300 whitespace-nowrap";
 
   return (
     <>
       {/* Mobile top bar */}
-      <div className="md:hidden flex items-center justify-between bg-bg p-4 border-b border-line sticky top-0 z-40 w-full">
+      <div className="md:hidden flex items-center justify-between bg-hunter text-bright p-4 sticky top-0 z-40 w-full shadow-md">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="" className="w-9 h-9 dark:bg-bright dark:rounded-lg dark:p-1" />
+          <img src={logo} alt="" className="w-9 h-9 bg-bright rounded-lg p-1" />
           <span className="font-bold text-lg tracking-tight">Nexus B2B</span>
         </div>
-        <button onClick={() => setIsOpen(!isOpen)} className="p-2 -mr-2 text-muted hover:text-ink" aria-label="Menu">
+        <button onClick={() => setIsOpen(!isOpen)} className="p-2 -mr-2 text-bright/70 hover:text-bright" aria-label="Menu">
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -46,13 +46,13 @@ export default function Sidebar() {
       <aside
         className={`fixed md:sticky top-0 left-0 h-screen z-50 transition-all duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-        group w-64 md:w-22 md:hover:w-64 md:focus-within:w-64 bg-bg md:border-r border-line p-5 flex flex-col gap-8 overflow-hidden shrink-0`}
+        group w-64 md:w-22 md:hover:w-64 md:focus-within:w-64 bg-hunter text-bright p-5 flex flex-col gap-8 overflow-hidden shrink-0 shadow-xl`}
       >
         <div className="flex items-center gap-4 pl-1">
-          <img src={logo} alt="" className="w-10 h-10 min-w-10 dark:bg-bright dark:rounded-xl dark:p-1" />
+          <img src={logo} alt="" className="w-10 h-10 min-w-10 bg-bright rounded-xl p-1 shadow-sm" />
           <div className={`flex flex-col ${label}`}>
             <span className="font-bold text-xl tracking-tight leading-none">Nexus B2B</span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted mt-1">{t("sidebar.tagline")}</span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-lime/80 mt-1">{t("sidebar.tagline")}</span>
           </div>
         </div>
 
@@ -68,7 +68,7 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div className="mt-auto pt-4 border-t border-line flex flex-col gap-2">
+        <div className="mt-auto pt-4 border-t border-white/10 flex flex-col gap-2">
           <button onClick={toggleTheme} className={itemClass(false)}>
             {theme === "dark" ? <Sun className="w-5 h-5 min-w-5 mr-4" strokeWidth={1.6} /> : <Moon className="w-5 h-5 min-w-5 mr-4" strokeWidth={1.6} />}
             <span className={`${label} text-sm font-medium`}>{theme === "dark" ? t("sidebar.light") : t("sidebar.dark")}</span>
@@ -79,17 +79,17 @@ export default function Sidebar() {
           </button>
 
           <div className="flex items-center gap-4 p-2 mt-2">
-            <div className="w-10 h-10 min-w-10 rounded-full bg-whisper shadow-inner-soft flex items-center justify-center overflow-hidden text-hunter font-bold text-sm">
+            <div className="w-10 h-10 min-w-10 rounded-full bg-lime shadow-sm flex items-center justify-center overflow-hidden text-hunter font-bold text-sm">
               {userPicture ? <img src={userPicture} alt="" className="w-full h-full object-cover" /> : (userName?.charAt(0).toUpperCase() || "B")}
             </div>
             <div className={`flex flex-col flex-1 ${label}`}>
-              <span className="text-sm font-medium capitalize">{enabled ? userName : t("sidebar.local_user")}</span>
-              <span className="mt-1 bg-lime/25 text-sell text-[10px] font-bold px-2 py-0.5 rounded-full w-max uppercase tracking-wider">
+              <span className="text-sm font-medium capitalize text-bright">{enabled ? userName : t("sidebar.local_user")}</span>
+              <span className="mt-1 bg-lime text-hunter text-[10px] font-bold px-2 py-0.5 rounded-full w-max uppercase tracking-wider">
                 {enabled ? "B2B" : t("sidebar.local_mode")}
               </span>
             </div>
             {enabled && (
-              <button onClick={logout} className={`${label} p-1.5 rounded-full text-muted hover:text-ink`} aria-label="Déconnexion">
+              <button onClick={logout} className={`${label} p-1.5 rounded-full text-bright/70 hover:text-bright hover:bg-white/10`} aria-label="Déconnexion">
                 <LogOut className="w-5 h-5" />
               </button>
             )}
