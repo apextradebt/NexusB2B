@@ -9,7 +9,7 @@ describe("suggest (quick search, as you type)", () => {
   it("finds a device from the first letters", () => {
     expect(models("iph")[0]).toMatch(/^iPhone/);
     expect(models("latit")[0]).toMatch(/^Latitude/);
-    expect(models("thinkp")[0]).toMatch(/^ThinkPad/);
+    expect(models("thinkpa")[0]).toMatch(/^ThinkPad/); // "thinkp" is also Motorola's ThinkPhone
   });
 
   it("narrows down word by word, with partial words", () => {

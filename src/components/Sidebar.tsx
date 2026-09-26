@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FilePlus2, FolderOpen, Library, Settings, Tag, Zap, Menu, X, Globe, Moon, Sun, LogOut } from "lucide-react";
+import { FilePlus2, FolderOpen, LineChart, Library, Settings, Tag, Zap, Menu, X, Globe, Moon, Sun, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
@@ -10,6 +10,7 @@ const navigation = [
   { key: "sidebar.quick", href: "/recherche", icon: Zap },
   { key: "sidebar.quotes", href: "/devis", icon: FolderOpen },
   { key: "sidebar.prices", href: "/prix", icon: Tag },
+  { key: "sidebar.history", href: "/historique", icon: LineChart },
   { key: "sidebar.reference", href: "/referentiel", icon: Library },
   { key: "sidebar.settings", href: "/parametres", icon: Settings },
 ];

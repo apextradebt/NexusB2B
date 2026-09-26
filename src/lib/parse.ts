@@ -151,7 +151,9 @@ export function classifyCell(v: string): Kind | undefined {
   if (isBrand(s)) return "brand";
   if (CODE_RX.test(s) && !CPU_RX.test(s) && matchLine({ row: 0, text: s, quantity: 1 }).status === "unmatched") return "serial";
   if (CPU_RX.test(s) && s.length <= 40 && matchLine({ row: 0, text: s, quantity: 1 }).status === "unmatched") return "cpu";
-  if (matchLine({ row: 0, text: s, quantity: 1 }).status !== "unmatched") return "model";
+  const status = matchLine({ row: 0, text: s, quantity: 1 }).status;
+  // A lone short code ("X2", "A7") is a stock number unless it names a model for sure — not a guess at "Find X2 Pro".
+  if (status === "matched" || (status === "review" && !/^[a-z]{1,2}\d{1,2}$/i.test(s))) return "model";
   const sp = parseSpecs({ text: s });
   if (sp.cpu || sp.ram || sp.storage || /\b\d{1,2}\s*\/\s*\d{3,4}\b/.test(s)) return "specs";
   return "text";

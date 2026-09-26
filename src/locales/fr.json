@@ -10,7 +10,8 @@
     "local_user": "Utilisateur local",
     "local_mode": "Mode local",
     "prices": "Mes prix",
-    "quick": "Recherche rapide"
+    "quick": "Recherche rapide",
+    "history": "Historique des prix"
   },
   "steps": {
     "import": "Import",
@@ -274,7 +275,9 @@
     "n_prices_other": "{{count}} prix",
     "no_price_yet": "Aucun prix",
     "show_more": "Afficher {{count}} de plus ({{left}} restants)",
-    "edit_model": "Modifier les prix de ce modèle"
+    "edit_model": "Modifier les prix de ce modèle",
+    "tradein_ref": "Prix de reprise",
+    "tradein_hint": "Référence : dernier prix de reprise connu ({{month}}). Non enregistré dans vos prix."
   },
   "quick": {
     "title": "Recherche rapide",
@@ -312,5 +315,27 @@
     "above_buyback": "Le prix d'achat conseillé ({{offer}}) dépasse ce que paient les sites de rachat ({{buyback}}).",
     "prudent_tip": "Vérifiez votre prix, ou passez en mode « Prudent » dans Paramètres pour calculer sur le prix le plus bas.",
     "suggestions": "Appareils trouvés"
+  },
+  "history": {
+    "title": "Historique des prix",
+    "desc": "Prix de reprise mensuels, par capacité, pour {{count}} modèles. Téléphones uniquement pour le moment. Données mises à jour le {{date}}.",
+    "loading": "Chargement de l'historique…",
+    "search": "Rechercher un modèle",
+    "models": "Modèles",
+    "none": "Aucun modèle trouvé",
+    "pick": "Choisissez un modèle dans la liste pour voir l'évolution de son prix.",
+    "launched": "Sorti en {{date}}",
+    "launch_price": "Lancement {{price}} HT",
+    "latest": "Dernier prix · {{variant}}",
+    "change": "Sur {{months}} mois",
+    "vs_launch": "Par rapport au lancement",
+    "vs_launch_hint": "Reprise actuelle / prix de lancement HT",
+    "chart_title": "Évolution du prix de reprise",
+    "chart_hint": "Survolez le graphique (ou utilisez les flèches) pour lire les prix d'un mois.",
+    "table_title": "Détail par capacité",
+    "col_latest": "Dernier prix",
+    "col_month": "Mois",
+    "col_since": "Premier relevé",
+    "view": "Voir l'historique"
   }
 }

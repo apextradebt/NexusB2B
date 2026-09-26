@@ -10,7 +10,8 @@
     "local_user": "Local user",
     "local_mode": "Local mode",
     "prices": "My prices",
-    "quick": "Quick search"
+    "quick": "Quick search",
+    "history": "Price history"
   },
   "steps": {
     "import": "Import",
@@ -274,7 +275,9 @@
     "n_prices_other": "{{count}} prices",
     "no_price_yet": "No price",
     "show_more": "Show {{count}} more ({{left}} left)",
-    "edit_model": "Edit this model's prices"
+    "edit_model": "Edit this model's prices",
+    "tradein_ref": "Trade-in price",
+    "tradein_hint": "Reference: latest known trade-in price ({{month}}). Not saved to your prices."
   },
   "quick": {
     "title": "Quick search",
@@ -312,5 +315,27 @@
     "above_buyback": "The suggested buy price ({{offer}}) is above what buyback sites pay ({{buyback}}).",
     "prudent_tip": "Check your price, or switch to \"Prudent\" mode in Settings to work from the lower price.",
     "suggestions": "Matching devices"
+  },
+  "history": {
+    "title": "Price history",
+    "desc": "Monthly trade-in prices by capacity for {{count}} models. Phones only for now. Data updated {{date}}.",
+    "loading": "Loading history…",
+    "search": "Search a model",
+    "models": "Models",
+    "none": "No model found",
+    "pick": "Pick a model in the list to see how its price has changed.",
+    "launched": "Released {{date}}",
+    "launch_price": "Launch {{price}} ex VAT",
+    "latest": "Latest price · {{variant}}",
+    "change": "Over {{months}} months",
+    "vs_launch": "Versus launch",
+    "vs_launch_hint": "Current trade-in / launch price ex VAT",
+    "chart_title": "Trade-in price over time",
+    "chart_hint": "Hover the chart (or use the arrow keys) to read a month's prices.",
+    "table_title": "By capacity",
+    "col_latest": "Latest price",
+    "col_month": "Month",
+    "col_since": "First quote",
+    "view": "View history"
   }
 }

@@ -23,7 +23,7 @@ describe("random supplier lots", () => {
     const lines = buildLines(await load(f), detectLayout(await load(f)));
     expect(lines.length).toBeGreaterThan(0);
     const matches = lines.map(matchLine);
-    expect(matches.filter((m) => m.status !== "matched").map((m, i) => lines[i].text)).toEqual([]);
+    expect(lines.filter((_, i) => matches[i].status !== "matched").map((l) => l.text)).toEqual([]);
     expect(lines.every((l) => l.gradeRaw && l.quantity > 0)).toBe(true);
   });
 });
