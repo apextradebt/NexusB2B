@@ -1,26 +1,39 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, Smartphone, Tablet, Watch } from "lucide-react";
 import { Card, Chip, Input, PageHeader, Stat } from "@/components/ui";
 import TradeInChart from "@/components/TradeInChart";
 import { normalize } from "@/lib/match";
-import { change, money, latest, monthLabel, useTradeIn, variantLabel } from "@/lib/tradein";
+import { change, money, latest, monthLabel, TRADEIN_CATEGORIES, useTradeIn, variantLabel, type TradeInCategory } from "@/lib/tradein";
+
+const ICONS = { phone: Smartphone, tablet: Tablet, watch: Watch } as const;
+/** The chart has 8 colours: above that, one network at a time (iPad Pro: 5 capacities × Wi-Fi / 5G). */
+const MAX_LINES = 8;
 
 const pct = (x?: number) => (x === undefined ? "—" : `${x > 0 ? "+" : ""}${Math.round(x * 100)} %`);
 
-/** Price evolution of every device in the trade-in history: pick a model, read the curve per capacity. */
+/** Price evolution of every device in the trade-in history, by category: pick a model, read the curve per variant. */
 export default function TradeInHistory() {
   const { t } = useTranslation();
   const data = useTradeIn();
   const [params, setParams] = useSearchParams();
   const [q, setQ] = useState("");
   const selected = params.get("m") ?? "";
+  const [network, setNetwork] = useState("");
+  // The tab follows the selected model; without one, the "c" parameter (phones by default).
+  const category: TradeInCategory = data?.models[selected]?.category ?? (TRADEIN_CATEGORIES.find((c) => c === params.get("c")) ?? "phone");
+
+  const counts = useMemo(() => {
+    const out: Record<TradeInCategory, number> = { phone: 0, tablet: 0, watch: 0 };
+    for (const m of Object.values(data?.models ?? {})) out[m.category]++;
+    return out;
+  }, [data]);
 
   // Newest first within each brand, brands alphabetically.
   const keys = useMemo(
-    () => (data ? Object.keys(data.models).sort((a, b) => a.split("::")[0].localeCompare(b.split("::")[0]) || data.models[b].launch.localeCompare(data.models[a].launch) || a.localeCompare(b)) : []),
-    [data],
+    () => (data ? Object.keys(data.models).filter((k) => data.models[k].category === category).sort((a, b) => a.split("::")[0].localeCompare(b.split("::")[0]) || data.models[b].launch.localeCompare(data.models[a].launch) || a.localeCompare(b)) : []),
+    [data, category],
   );
   const list = useMemo(() => {
     const nq = normalize(q);
@@ -29,15 +42,33 @@ export default function TradeInHistory() {
 
   const model = data?.models[selected];
   const [brand, name] = selected.split("::");
-  const base = model?.variants.find((v) => latest(v)) ;
+  const networks = useMemo(() => [...new Set(model?.variants.map((v) => v.network ?? "") ?? [])], [model]);
+  const needsFilter = !!model && model.variants.length > MAX_LINES && networks.length > 1;
+  const activeNetwork = needsFilter ? (networks.includes(network) ? network : networks[0]) : "";
+  const shown = useMemo(() => (model ? model.variants.filter((v) => !needsFilter || (v.network ?? "") === activeNetwork) : []), [model, needsFilter, activeNetwork]);
+  const base = model?.variants.find((v) => latest(v));
   const baseLatest = base && latest(base);
 
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-12">
       <PageHeader
         title={t("history.title")}
-        desc={data ? t("history.desc", { count: keys.length, date: data.generatedAt }) : t("history.loading")}
+        desc={data ? t("history.desc", { count: Object.keys(data.models).length, date: data.generatedAt }) : t("history.loading")}
       />
+
+      {data && (
+        <div role="tablist" className="flex flex-wrap gap-2">
+          {TRADEIN_CATEGORIES.map((c) => {
+            const Icon = ICONS[c];
+            return (
+              <button key={c} role="tab" aria-selected={category === c} onClick={() => { setParams({ c }); setQ(""); }}
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${category === c ? "shadow-soft-active text-primary" : "text-muted hover:text-ink"}`}>
+                <Icon className="w-4 h-4" /> {t(`history.cat_${c}`)} <span className="opacity-70">({counts[c]})</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {!data ? (
         <p className="inline-flex items-center gap-2 text-sm text-muted"><Loader2 className="w-4 h-4 animate-spin" /> {t("history.loading")}</p>
@@ -88,9 +119,21 @@ export default function TradeInHistory() {
               </div>
 
               <Card className="p-6 flex flex-col gap-2">
-                <h3 className="font-bold">{t("history.chart_title")}</h3>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="font-bold">{t("history.chart_title")}</h3>
+                  {needsFilter && (
+                    <div role="group" aria-label={t("history.network")} className="flex gap-1">
+                      {networks.map((n) => (
+                        <button key={n} onClick={() => setNetwork(n)} aria-pressed={n === activeNetwork}
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${n === activeNetwork ? "bg-lime/25 text-ink" : "text-muted hover:text-ink hover:bg-line/40"}`}>
+                          {n || "—"}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <p className="text-xs text-muted">{t("history.chart_hint")}</p>
-                <TradeInChart model={model} />
+                <TradeInChart variants={shown} />
               </Card>
 
               <Card className="p-6 overflow-x-auto">
@@ -98,7 +141,7 @@ export default function TradeInHistory() {
                   <caption className="text-left font-bold mb-3">{t("history.table_title")}</caption>
                   <thead>
                     <tr className="text-left text-[11px] uppercase tracking-wider text-muted">
-                      <th className="p-2 font-semibold">{t("add.capacity")}</th>
+                      <th className="p-2 font-semibold">{t(category === "phone" ? "add.capacity" : "history.variant")}</th>
                       <th className="p-2 font-semibold text-right">{t("history.col_latest")}</th>
                       <th className="p-2 font-semibold">{t("history.col_month")}</th>
                       <th className="p-2 font-semibold text-right">{t("history.change", { months: 3 })}</th>

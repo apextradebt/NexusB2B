@@ -1,4 +1,4 @@
-import type { AgentResult, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
+import type { AgentResult, Category, Grade, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
 import { findListPrice } from "@/lib/priceList";
 
 export const DEFAULT_SETTINGS: PricingSettings = {
@@ -13,6 +13,10 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   agentConcurrency: 3,
   listPriceMode: "mine",
 };
+
+/** Refurbishment cost per unit. Quotes only hold phones and laptops; any other category costs nothing here. */
+export const refurbCostFor = (s: PricingSettings, category: Category, grade: Grade) =>
+  category === "phone" || category === "laptop" ? s.refurbCost[category][grade] : 0;
 
 const median = (xs: number[]) => {
   if (xs.length === 0) return undefined;
@@ -49,7 +53,7 @@ export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEn
   let buyPrice: number | undefined;
   let priceBasis: string | undefined;
   if (sellPrice !== undefined && line.category) {
-    const refurb = s.refurbCost[line.category][line.grade];
+    const refurb = refurbCostFor(s, line.category, line.grade);
     buyPrice = Math.max(0, Math.round(sellPrice * (1 - s.targetMarginPct / 100) - refurb));
     priceBasis = `${basis} − marge − reconditionnement`;
   } else if (marketBuy !== undefined) {

@@ -327,7 +327,7 @@ export default function QuickSearch() {
                 <h3 className="font-bold flex items-center gap-2"><LineChart className="w-4 h-4" /> {t("history.chart_title")}</h3>
                 <Link to={`/historique?m=${encodeURIComponent(tradeInKey(line.brand, line.model))}`} className="text-xs font-semibold text-primary hover:underline">{t("history.view")}</Link>
               </div>
-              <TradeInChart model={tradeIn.models[tradeInKey(line.brand, line.model)]} />
+              <TradeInChart variants={tradeIn.models[tradeInKey(line.brand, line.model)].variants} />
             </Card>
           )}
         </>

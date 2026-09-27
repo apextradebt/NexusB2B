@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, Download, FileDown, Laptop, List, Library, Pencil, Plus, Search, Smartphone, Tag, Trash2, Upload } from "lucide-react";
+import { ChevronDown, Download, FileDown, Laptop, List, Library, Pencil, Plus, Search, Smartphone, Tablet, Tag, Trash2, Upload, Watch } from "lucide-react";
 import { Button, Card, Chip, Input, PageHeader, Select } from "@/components/ui";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
 import PriceImport from "@/components/prices/PriceImport";
 import ModelPriceEditor from "@/components/prices/ModelPriceEditor";
-import { CATALOG } from "@/lib/catalog";
+import { PRICE_CATALOG } from "@/lib/catalog";
 import { exportPriceList, downloadPriceTemplate } from "@/lib/export";
 import { normalize } from "@/lib/match";
 import { eur } from "@/lib/pricing";
@@ -15,6 +15,10 @@ import type { Category, Grade, PriceListEntry } from "@/types";
 import { GRADES } from "@/types";
 
 const GRADE_ORDER = "ABCDE";
+const CATEGORIES: Category[] = ["laptop", "phone", "tablet", "watch"];
+const CATEGORY_ICON = { laptop: Laptop, phone: Smartphone, tablet: Tablet, watch: Watch } as const;
+const countBy = <T extends { category: Category }>(xs: T[]) =>
+  Object.fromEntries([["all", xs.length], ...CATEGORIES.map((c) => [c, xs.filter((x) => x.category === c).length])]) as Record<Category | "all", number>;
 const PAGE = 60;
 
 /**
@@ -70,7 +74,7 @@ export default function PriceList() {
 
       <Card className="p-6 sm:p-8 flex flex-col gap-5">
         <div role="tablist" aria-label={t("prices.views")} className="flex gap-2 border-b border-line -mx-2 px-2 pb-3 overflow-x-auto [scrollbar-width:none]">
-          {([["mine", List, t("prices.view_mine"), priceList.length], ["models", Library, t("prices.view_models"), CATALOG.length]] as const).map(([key, Icon, label, n]) => (
+          {([["mine", List, t("prices.view_mine"), priceList.length], ["models", Library, t("prices.view_models"), PRICE_CATALOG.length]] as const).map(([key, Icon, label, n]) => (
             <button key={key} role="tab" aria-selected={view === key} onClick={() => setView(key)}
               className={`shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${view === key ? "bg-primary text-on-primary shadow-soft-sm" : "text-muted hover:text-ink"}`}>
               <Icon className="w-4 h-4" /> {label} <span className="opacity-70 tabular-nums">{n}</span>
@@ -78,9 +82,7 @@ export default function PriceList() {
           ))}
         </div>
 
-        <Filters q={q} setQ={setQ} cat={cat} setCat={setCat} counts={view === "mine"
-          ? { all: priceList.length, laptop: priceList.filter((e) => e.category === "laptop").length, phone: priceList.filter((e) => e.category === "phone").length }
-          : { all: CATALOG.length, laptop: CATALOG.filter((r) => r.category === "laptop").length, phone: CATALOG.filter((r) => r.category === "phone").length }} />
+        <Filters q={q} setQ={setQ} cat={cat} setCat={setCat} counts={view === "mine" ? countBy(priceList) : countBy(PRICE_CATALOG)} />
 
         {view === "mine" ? (
           <MinePrices q={q} cat={cat} onEdit={edit} onChange={updatePrice} onDelete={deletePrice} onClear={clearPrices} onBrowse={() => setView("models")} />
@@ -99,7 +101,7 @@ function Filters({ q, setQ, cat, setCat, counts }: {
   return (
     <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
       <div role="tablist" className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
-        {([["all", null], ["laptop", Laptop], ["phone", Smartphone]] as const).map(([key, Icon]) => (
+        {([["all", null], ...CATEGORIES.map((c) => [c, CATEGORY_ICON[c]] as const)] as const).map(([key, Icon]) => (
           <button key={key} role="tab" aria-selected={cat === key} onClick={() => setCat(key)}
             className={`shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${cat === key ? "shadow-soft-active text-primary" : "text-muted hover:text-ink"}`}>
             {Icon && <Icon className="w-4 h-4" />} {key === "all" ? t("quotes.all") : t(`reference.${key}`)} <span className="opacity-70 tabular-nums">{counts[key]}</span>
@@ -130,7 +132,7 @@ function AllModels({ q, cat, openId, setOpenId }: { q: string; cat: Category | "
 
   const models = useMemo(() => {
     const nq = normalize(q);
-    return CATALOG.filter((r) => (cat === "all" || r.category === cat)
+    return PRICE_CATALOG.filter((r) => (cat === "all" || r.category === cat)
       && (only === "all" || (only === "priced") === byModel.has(r.id))
       && (!nq || normalize(`${r.brand} ${r.model}`).includes(nq)));
   }, [q, cat, only, byModel]);
@@ -153,7 +155,7 @@ function AllModels({ q, cat, openId, setOpenId }: { q: string; cat: Category | "
             <li key={r.id} ref={open ? openRef : undefined}>
               <button onClick={() => setOpenId(open ? null : r.id)} aria-expanded={open}
                 className="w-full flex items-center gap-3 py-3 px-2 text-left rounded-xl hover:bg-line/30">
-                {r.category === "laptop" ? <Laptop className="w-4 h-4 text-muted shrink-0" /> : <Smartphone className="w-4 h-4 text-muted shrink-0" />}
+                {(() => { const Icon = CATEGORY_ICON[r.category]; return <Icon className="w-4 h-4 text-muted shrink-0" />; })()}
                 <span className="min-w-0 flex-1">
                   <span className="font-semibold">{r.brand} {r.model}</span>
                   {r.year && <span className="text-xs text-muted ml-2">{r.year}</span>}
@@ -192,10 +194,10 @@ function MinePrices({ q, cat, onEdit, onChange, onDelete, onClear, onBrowse }: {
     const nq = normalize(q);
     return priceList
       .filter((e) => cat === "all" || e.category === cat)
-      .filter((e) => !nq || normalize(`${e.brand} ${e.model} ${e.variant.cpu ?? ""} ${e.variant.ram ?? ""} ${e.variant.storage ?? ""}`).includes(nq))
+      .filter((e) => !nq || normalize(`${e.brand} ${e.model} ${e.variant.cpu ?? ""} ${e.variant.ram ?? ""} ${e.variant.storage ?? ""} ${e.variant.size ?? ""}`).includes(nq))
       .sort((a, b) =>
         a.category.localeCompare(b.category) || a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model, undefined, { numeric: true }) ||
-        [a.variant.cpu, a.variant.ram, a.variant.storage].join("|").localeCompare([b.variant.cpu, b.variant.ram, b.variant.storage].join("|"), undefined, { numeric: true }) ||
+        [a.variant.size, a.variant.cpu, a.variant.ram, a.variant.storage].join("|").localeCompare([b.variant.size, b.variant.cpu, b.variant.ram, b.variant.storage].join("|"), undefined, { numeric: true }) ||
         GRADE_ORDER.indexOf(a.grade ?? "Z") - GRADE_ORDER.indexOf(b.grade ?? "Z"));
   }, [priceList, q, cat]);
 
@@ -253,9 +255,11 @@ function Row({ e, onChange, onDelete, onEdit }: { e: PriceListEntry; onChange: (
       <td className="p-2">
         <div className="font-semibold">{e.brand} {e.model}</div>
         <div className="flex flex-wrap gap-1.5 mt-1">
-          {e.category === "laptop"
+          {e.category === "laptop" || e.variant.cpu || e.variant.ram
             ? [e.variant.cpu, e.variant.ram, e.variant.storage].map((v, i) => <Chip key={i} muted={!v}>{v || t("prices.any")}</Chip>)
-            : <Chip muted={!e.variant.storage}>{e.variant.storage || t("prices.any")}</Chip>}
+            : e.category === "watch"
+              ? <Chip muted={!e.variant.size}>{e.variant.size || t("prices.any")}</Chip>
+              : <Chip muted={!e.variant.storage}>{e.variant.storage || t("prices.any")}</Chip>}
         </div>
       </td>
       <td className="p-2 text-center">

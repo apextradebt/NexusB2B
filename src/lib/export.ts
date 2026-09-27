@@ -79,12 +79,14 @@ export async function exportXlsx(lines: QuoteLine[], name: string, meta: { clien
   ).toFile(`${name}.xlsx`);
 }
 
+const CATEGORY_LABEL: Record<PriceListEntry["category"], string> = { laptop: "PC portable", phone: "Téléphone", tablet: "Tablette", watch: "Montre" };
+
 /** The customer's price list as a CSV that re-imports as is (edit in Excel, import again). */
 export function exportPriceList(list: PriceListEntry[]) {
   const rows = [
-    ["Catégorie", "Marque", "Modèle", "Processeur", "RAM", "Stockage", "Grade", "Prix de vente (EUR)", "Mis à jour"],
+    ["Catégorie", "Marque", "Modèle", "Processeur", "RAM", "Stockage / taille", "Grade", "Prix de vente (EUR)", "Mis à jour"],
     ...list.map((e) => [
-      e.category === "laptop" ? "PC portable" : "Téléphone", e.brand, e.model, e.variant.cpu ?? "", e.variant.ram ?? "", e.variant.storage ?? "",
+      CATEGORY_LABEL[e.category], e.brand, e.model, e.variant.cpu ?? "", e.variant.ram ?? "", e.variant.storage ?? e.variant.size ?? "",
       e.grade ?? "", e.price, e.updatedAt.slice(0, 10),
     ]),
   ];

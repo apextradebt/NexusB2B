@@ -3,11 +3,12 @@ import { buildLines, detectLayout, parseGrade, parsePrice, type Layout, type Tab
 import { matchLine } from "@/lib/match";
 
 type Variant = PriceListEntry["variant"];
-const FIELDS = ["cpu", "ram", "storage"] as const;
+// Watch prices are per case size: a 41mm price never stands in for the 45mm.
+const FIELDS = ["cpu", "ram", "storage", "size"] as const;
 
-/** Identity of an entry: the same model, configuration and grade replace each other. */
+/** Identity of an entry: the same model, configuration and grade replace each other (watches: + case size). */
 export const entryKey = (e: Pick<PriceListEntry, "refId" | "variant" | "grade">) =>
-  [e.refId, e.variant.cpu ?? "*", e.variant.ram ?? "*", e.variant.storage ?? "*", e.grade ?? "*"].join("|");
+  [e.refId, e.variant.cpu ?? "*", e.variant.ram ?? "*", e.variant.storage ?? "*", e.grade ?? "*", ...(e.variant.size ? [e.variant.size] : [])].join("|");
 
 export const newEntryId = () => `P-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
@@ -43,7 +44,7 @@ export function findListPrice(
     for (const f of FIELDS) {
       const want = entry.variant[f];
       if (!want) continue;
-      const have = line.variant[f];
+      const have = (line.variant as Variant)[f];
       if (!have) partial = true;
       else if (have !== want) reject = true;
       else config += 2;

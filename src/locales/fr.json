@@ -163,7 +163,13 @@
     "none": "Aucun résultat.",
     "verified_spec": "Vérifié · fiche constructeur",
     "verified_psref": "Vérifié · Lenovo PSREF",
-    "verified_platform": "Options indicatives"
+    "verified_platform": "Options indicatives",
+    "tablet": "Tablettes",
+    "watch": "Montres",
+    "released": "Sortie",
+    "sizes": "Tailles",
+    "tradein_from": "Reprise dès",
+    "tradein_only": "Tablettes et montres : historique des prix de reprise uniquement pour l'instant (pas encore reconnues dans les devis)."
   },
   "settings": {
     "title": "Paramètres",
@@ -277,7 +283,9 @@
     "show_more": "Afficher {{count}} de plus ({{left}} restants)",
     "edit_model": "Modifier les prix de ce modèle",
     "tradein_ref": "Prix de reprise",
-    "tradein_hint": "Référence : dernier prix de reprise connu ({{month}}). Non enregistré dans vos prix."
+    "tradein_hint": "Référence : dernier prix de reprise connu ({{month}}). Non enregistré dans vos prix.",
+    "size": "Taille",
+    "all_sizes": "Toutes tailles"
   },
   "quick": {
     "title": "Recherche rapide",
@@ -318,7 +326,7 @@
   },
   "history": {
     "title": "Historique des prix",
-    "desc": "Prix de reprise mensuels, par capacité, pour {{count}} modèles. Téléphones uniquement pour le moment. Données mises à jour le {{date}}.",
+    "desc": "Prix de reprise mensuels, par variante, pour {{count}} appareils : téléphones, tablettes et montres. Données mises à jour le {{date}}.",
     "loading": "Chargement de l'historique…",
     "search": "Rechercher un modèle",
     "models": "Modèles",
@@ -336,6 +344,11 @@
     "col_latest": "Dernier prix",
     "col_month": "Mois",
     "col_since": "Premier relevé",
-    "view": "Voir l'historique"
+    "view": "Voir l'historique",
+    "cat_phone": "Téléphones",
+    "cat_tablet": "Tablettes",
+    "cat_watch": "Montres",
+    "variant": "Variante",
+    "network": "Réseau"
   }
 }
