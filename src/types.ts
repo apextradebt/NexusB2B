@@ -1,4 +1,6 @@
-export type Category = "phone" | "laptop";
+/** Quotes cover phones and laptops; tablets and watches are priced (Mes prix) and tracked (history) only, for now. */
+export type QuoteCategory = "phone" | "laptop";
+export type Category = QuoteCategory | "tablet" | "watch";
 
 /** B2B supply grades (same Class A–E scale as the supplier pivot). */
 export type Grade = "A" | "B" | "C" | "D" | "E";
@@ -18,6 +20,8 @@ export type RefModel = {
   ramAmd?: string[];
   storage?: string[];
   display?: string[];
+  /** Watches: case sizes ("41mm"). */
+  size?: string[];
   /** Phone reference price for a flawless device (shared with the B2C app). */
   basePrice?: number;
   source?: string;
@@ -126,7 +130,8 @@ export type PriceListEntry = {
   category: Category;
   brand: string;
   model: string;
-  variant: { cpu?: string; ram?: string; storage?: string };
+  /** `size`: watch case size ("45mm"). */
+  variant: { cpu?: string; ram?: string; storage?: string; size?: string };
   grade?: Grade;
   /** Unit selling price, EUR. */
   price: number;
@@ -136,7 +141,7 @@ export type PriceListEntry = {
 
 export type PricingSettings = {
   targetMarginPct: number;
-  refurbCost: Record<Category, Record<Grade, number>>;
+  refurbCost: Record<QuoteCategory, Record<Grade, number>>;
   /** Share of the grade-A value kept per grade, used only for catalog estimates. */
   gradeCoef: Record<Grade, number>;
   defaultGrade: Grade;

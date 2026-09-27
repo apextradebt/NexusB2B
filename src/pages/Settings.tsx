@@ -4,7 +4,7 @@ import { RotateCcw } from "lucide-react";
 import { Button, Card, Input, PageHeader, Select } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
-import type { Category, Grade, PricingSettings } from "@/types";
+import type { Grade, PricingSettings, QuoteCategory } from "@/types";
 import { GRADES } from "@/types";
 
 const PRICE_API = import.meta.env.VITE_PRICE_API_URL || "http://localhost:8787";
@@ -20,7 +20,7 @@ export default function SettingsPage() {
     fetch(`${PRICE_API}/api/sources`).then((r) => r.json()).then(setSources).catch(() => setSources(null));
   }, []);
 
-  const setRefurb = (c: Category, g: Grade, v: string) =>
+  const setRefurb = (c: QuoteCategory, g: Grade, v: string) =>
     setSettings({ ...settings, refurbCost: { ...settings.refurbCost, [c]: { ...settings.refurbCost[c], [g]: num(v) } } });
 
   return (
@@ -69,7 +69,7 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {(["laptop", "phone"] as Category[]).map((c) => (
+              {(["laptop", "phone"] as QuoteCategory[]).map((c) => (
                 <tr key={c}>
                   <td className="p-2 font-semibold whitespace-nowrap">{t(`reference.${c}`)}</td>
                   {GRADES.map((g) => (

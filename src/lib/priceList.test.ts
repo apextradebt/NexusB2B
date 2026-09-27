@@ -5,7 +5,7 @@ import { buildLines, decode, detectLayout, parsePrice, parseText, priceInText, t
 import { matchLine } from "@/lib/match";
 import { groupLines } from "@/lib/group";
 import { getRef } from "@/lib/catalog";
-import { DEFAULT_SETTINGS, marketGap, priceLine } from "@/lib/pricing";
+import { DEFAULT_SETTINGS, refurbCostFor, marketGap, priceLine } from "@/lib/pricing";
 import { detectPriceLayout, findListPrice, importRows, rowsToEntries, upsertEntries, type ImportRow } from "@/lib/priceList";
 import type { PriceListEntry, QuoteLine } from "@/types";
 
@@ -198,7 +198,7 @@ describe("end to end: price lists + supplier lot", () => {
     expect(at("Latitude 7490", "C").sellPrice).toBeUndefined(); // no list price, no market data here
 
     for (const l of lines.filter((x) => x.listPrice !== undefined)) {
-      const refurb = DEFAULT_SETTINGS.refurbCost[l.category!][l.grade];
+      const refurb = refurbCostFor(DEFAULT_SETTINGS, l.category!, l.grade);
       expect(l.buyPrice).toBe(Math.max(0, Math.round(l.sellPrice! * 0.75 - refurb)));
     }
   });

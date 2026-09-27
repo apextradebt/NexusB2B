@@ -7,17 +7,18 @@ import { phoneStorage } from "@/lib/catalog";
 import { parsePrice } from "@/lib/parse";
 import { entryKey, findListPrice } from "@/lib/priceList";
 import { useStore } from "@/lib/store";
-import { money, latestByStorage, monthLabel, tradeInKey, useTradeIn } from "@/lib/tradein";
+import { lastMonth, latestFor, money, monthLabel, tradeInKey, useTradeIn } from "@/lib/tradein";
 import type { Grade, PriceListEntry, RefModel } from "@/types";
 import { GRADES } from "@/types";
 
 type Variant = PriceListEntry["variant"];
 const COLS: (Grade | undefined)[] = [undefined, ...GRADES];
-const vKey = (v: Variant) => [v.cpu ?? "", v.ram ?? "", v.storage ?? ""].join("|");
-const vLabel = (v: Variant) => [v.cpu, v.ram, v.storage].filter(Boolean).join(" · ");
+const vKey = (v: Variant) => [v.cpu ?? "", v.ram ?? "", v.storage ?? "", v.size ?? ""].join("|");
+const vLabel = (v: Variant) => [v.size, v.cpu, v.ram, v.storage].filter(Boolean).join(" · ");
 
 /**
- * Every price of one model in a grid: configurations (phones: each capacity) × grades.
+ * Every price of one model in a grid: configurations × grades. Phones and tablets list each capacity,
+ * watches each case size; laptops and Surface tablets add configurations (CPU / RAM / storage) by hand.
  * A cell saves on blur; clearing it removes the price. Empty cells show, greyed, the price
  * a quote would use today (from a less specific entry or another grade), so gaps are visible.
  */
@@ -27,18 +28,31 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
   const entries = useMemo(() => priceList.filter((e) => e.refId === model.id), [priceList, model.id]);
   // Reference only, never written to the price list: UK trade-in (GBP), what buyers pay, not a selling price.
   const tradeIn = useTradeIn()?.models[tradeInKey(model.brand, model.model)];
-  const tradeInLatest = useMemo(() => (tradeIn ? latestByStorage(tradeIn) : undefined), [tradeIn]);
+
   const [extra, setExtra] = useState<Variant[]>([]);
   const [cpu, setCpu] = useState("");
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
 
+  // Laptops and Surface tablets: configurations added by hand. Others: one row per capacity / case size.
+  const configurable = model.category === "laptop" || (model.category === "tablet" && !!model.cpu?.length);
+  const rowLabel = model.category === "watch" ? "size" : configurable ? "config" : "capacity";
+
   const rows: Variant[] = useMemo(() => {
-    const seen = new Map<string, Variant>([["||", {}]]);
+    const seen = new Map<string, Variant>([[vKey({}), {}]]);
     if (model.category === "phone") for (const s of phoneStorage(model)) seen.set(vKey({ storage: s }), { storage: s });
+    if (model.category === "tablet" && !configurable) for (const s of model.storage ?? []) seen.set(vKey({ storage: s }), { storage: s });
+    if (model.category === "watch") for (const s of model.size ?? []) seen.set(vKey({ size: s }), { size: s });
+    // Surface tablets: the configurations the trade-in history knows about.
+    if (model.category === "tablet" && configurable) {
+      for (const tv of tradeIn?.variants ?? []) {
+        const v = Object.fromEntries(Object.entries({ cpu: tv.cpu, ram: tv.ram, storage: tv.storage }).filter(([, x]) => x)) as Variant;
+        if (!seen.has(vKey(v))) seen.set(vKey(v), v);
+      }
+    }
     for (const v of [...entries.map((e) => e.variant), ...extra]) if (!seen.has(vKey(v))) seen.set(vKey(v), v);
     return [...seen.values()];
-  }, [model, entries, extra]);
+  }, [model, entries, extra, configurable, tradeIn]);
 
   const exact = (v: Variant, g?: Grade) => entries.find((e) => entryKey(e) === entryKey({ refId: model.id, variant: v, grade: g }));
   const derived = (v: Variant, g?: Grade) => (g ? findListPrice({ refId: model.id, variant: v, grade: g }, priceList, settings.gradeCoef)?.price : undefined);
@@ -61,9 +75,9 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-[11px] uppercase tracking-wider text-muted">
-              <th className="p-1.5 font-semibold min-w-44">{model.category === "phone" ? t("add.capacity") : t("prices.configuration")}</th>
+              <th className="p-1.5 font-semibold min-w-44">{t({ capacity: "add.capacity", size: "prices.size", config: "prices.configuration" }[rowLabel])}</th>
               {COLS.map((g) => <th key={g ?? "any"} className="p-1.5 font-semibold text-center">{g ?? t("prices.any_grade")}</th>)}
-              {tradeInLatest && <th className="p-1.5 font-semibold text-right whitespace-nowrap border-l border-line">{t("prices.tradein_ref")}</th>}
+              {tradeIn && <th className="p-1.5 font-semibold text-right whitespace-nowrap border-l border-line">{t("prices.tradein_ref")}</th>}
               <th className="p-1.5 w-8" />
             </tr>
           </thead>
@@ -72,7 +86,7 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
               const any = !vLabel(v);
               return (
                 <tr key={vKey(v)} className="border-t border-line">
-                  <td className="p-1.5 text-xs font-semibold">{any ? <span className="text-muted">{model.category === "phone" ? t("prices.all_capacities") : t("prices.all_configs")}</span> : vLabel(v)}</td>
+                  <td className="p-1.5 text-xs font-semibold">{any ? <span className="text-muted">{t({ capacity: "prices.all_capacities", size: "prices.all_sizes", config: "prices.all_configs" }[rowLabel])}</span> : vLabel(v)}</td>
                   {COLS.map((g) => (
                     <td key={g ?? "any"} className="p-1">
                       <PriceCell
@@ -83,8 +97,8 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
                       />
                     </td>
                   ))}
-                  {tradeInLatest && (() => {
-                    const ref = any ? tradeInLatest.lowest : v.storage ? tradeInLatest.byStorage.get(v.storage) : undefined;
+                  {tradeIn && (() => {
+                    const ref = latestFor(tradeIn, v);
                     return (
                       <td className="p-1.5 text-right text-xs tabular-nums text-muted border-l border-line whitespace-nowrap" title={ref ? t("prices.tradein_hint", { month: monthLabel(ref.month, "long") }) : undefined}>
                         {ref ? money(ref.price) : "—"}
@@ -92,7 +106,7 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
                     );
                   })()}
                   <td className="p-1 text-right">
-                    {model.category === "laptop" && !any && (
+                    {configurable && !any && (
                       <button onClick={() => removeRow(v)} aria-label={t("prices.remove_config")} className="p-1 rounded-full text-muted hover:text-warn"><Trash2 className="w-3.5 h-3.5" /></button>
                     )}
                   </td>
@@ -103,7 +117,7 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
         </table>
       </div>
 
-      {model.category === "laptop" && (
+      {configurable && (
         <div className="flex flex-wrap items-end gap-2">
           <Select ariaLabel={t("fields.cpu")} value={cpu} onChange={(v) => { setCpu(v); setRam(""); }} options={[{ value: "", label: `${t("fields.cpu")} : ${t("prices.any")}` }, ...(model.cpu ?? []).map((x) => ({ value: x, label: x }))]} />
           <Select ariaLabel={t("fields.ram")} value={ram} onChange={setRam} options={[{ value: "", label: `RAM : ${t("prices.any")}` }, ...(ramOptions ?? []).map((x) => ({ value: x, label: x }))]} />
@@ -112,9 +126,9 @@ export default function ModelPriceEditor({ model }: { model: RefModel }) {
         </div>
       )}
       <p className="text-[11px] text-muted">{t("prices.grid_hint")}</p>
-      {tradeInLatest && (
+      {tradeIn && (
         <p className="text-[11px] text-muted flex flex-wrap items-center gap-x-2">
-          <span>{t("prices.tradein_hint", { month: monthLabel([...tradeInLatest.byStorage.values()].reduce((a, b) => (b.month > a ? b.month : a), ""), "long") })}</span>
+          <span>{t("prices.tradein_hint", { month: monthLabel(lastMonth(tradeIn), "long") })}</span>
           <Link to={`/historique?m=${encodeURIComponent(tradeInKey(model.brand, model.model))}`} className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">
             <LineChart className="w-3.5 h-3.5" /> {t("history.view")}
           </Link>

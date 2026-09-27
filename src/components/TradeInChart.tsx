@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { addMonths, money, latest, monthLabel, monthsBetween, priceAt, variantLabel, type TradeInModel } from "@/lib/tradein";
+import { addMonths, money, latest, monthLabel, monthsBetween, priceAt, variantLabels, type TradeInVariant } from "@/lib/tradein";
 
 // Categorical slots (validated for this app's light and dark surfaces), in fixed order: a capacity
 // keeps its color whatever else is shown. Defined in index.css as --series-1..8.
 const SERIES = Array.from({ length: 8 }, (_, i) => `var(--series-${i + 1})`);
-const PAD = { top: 16, right: 72, bottom: 28, left: 48 };
+const PAD = { top: 16, bottom: 28, left: 48 };
 const HEIGHT = 300;
 
 /** Round tick step (1, 2, 2.5 or 5 × 10^k) giving about four intervals up to `max`. */
@@ -16,10 +16,11 @@ function niceTicks(max: number): number[] {
 }
 
 /**
- * Trade-in price per month, one line per capacity. Hover (or focus + arrow keys) shows every
- * capacity's price for that month; each line is labelled at its end, and a legend sits above.
+ * Trade-in price per month, one line per variant (at most 8: callers filter larger sets). Hover (or
+ * focus + arrow keys) shows every variant's price for that month; each line is labelled at its end,
+ * and a legend sits above. Labels only name what differs between the lines shown.
  */
-export default function TradeInChart({ model }: { model: TradeInModel }) {
+export default function TradeInChart({ variants }: { variants: TradeInVariant[] }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(720);
   const [hover, setHover] = useState<number | null>(null);
@@ -32,7 +33,13 @@ export default function TradeInChart({ model }: { model: TradeInModel }) {
     return () => ro.disconnect();
   }, []);
 
-  const series = useMemo(() => model.variants.slice(0, SERIES.length).map((v, i) => ({ v, color: SERIES[i], label: variantLabel(v) })), [model]);
+  const series = useMemo(() => {
+    const shown = variants.slice(0, SERIES.length);
+    const labels = variantLabels(shown);
+    return shown.map((v, i) => ({ v, color: SERIES[i], label: labels[i] }));
+  }, [variants]);
+  // Room on the right for the longest end label (≈6.5 px per character at 11 px).
+  const padRight = Math.min(200, 16 + Math.max(...series.map((s) => s.label.length)) * 6.5);
   const { first, n, max: dataMax } = useMemo(() => {
     const starts = series.map((s) => s.v.start).sort();
     const ends = series.map((s) => addMonths(s.v.start, s.v.prices.length - 1)).sort();
@@ -44,7 +51,7 @@ export default function TradeInChart({ model }: { model: TradeInModel }) {
 
   const ticks = niceTicks(dataMax);
   const max = ticks[ticks.length - 1];
-  const plotW = width - PAD.left - PAD.right;
+  const plotW = width - PAD.left - padRight;
   const plotH = HEIGHT - PAD.top - PAD.bottom;
   const x = (i: number) => PAD.left + (n <= 1 ? plotW / 2 : (i / (n - 1)) * plotW);
   const y = (p: number) => PAD.top + plotH - (p / max) * plotH;

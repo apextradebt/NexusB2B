@@ -1,0 +1,1088 @@
+{
+ "note": "Genere par B2C-Backend/ml/import_tradein.py a partir de tradeInPriceHistory.",
+ "devices": [
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 11 (2026)",
+   "year": 2026,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 13 (2026)",
+   "year": 2026,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 11 (2025)",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 11 (2025)",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 13 (2025)",
+   "year": 2025,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2025)",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 13 (2025)",
+   "year": 2025,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 11 (2024)",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 13 (2024)",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Mini (2024)",
+   "year": 2024,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2024)",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 13 (2024)",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 10.9 (2022)",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air (2022)",
+   "year": 2022,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2022)",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2022)",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 10.2 (2021)",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Mini (2021)",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2021)",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2021)",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 10.2 (2020)",
+   "year": 2020,
+   "storage": [
+    "32GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air (2020)",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2020)",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2020)",
+   "year": 2020,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 10.2 (2019)",
+   "year": 2019,
+   "storage": [
+    "32GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air (2019)",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Mini (2019)",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 9.7 (2018)",
+   "year": 2018,
+   "storage": [
+    "32GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 11 (2018)",
+   "year": 2018,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2018)",
+   "year": 2018,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad 9.7 (2017)",
+   "year": 2017,
+   "storage": [
+    "32GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 10.5 (2017)",
+   "year": 2017,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2017)",
+   "year": 2017,
+   "storage": [
+    "64GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 9.7 (2016)",
+   "year": 2016,
+   "storage": [
+    "32GB",
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Mini 4",
+   "year": 2015,
+   "storage": [
+    "16GB",
+    "32GB",
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Pro 12.9 (2015)",
+   "year": 2015,
+   "storage": [
+    "32GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Air 2",
+   "year": 2014,
+   "storage": [
+    "16GB",
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Apple",
+   "model": "iPad Mini 3",
+   "year": 2014,
+   "storage": [
+    "16GB",
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro 9",
+   "year": 2022,
+   "storage": [
+    "256GB",
+    "512GB"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "cpu": [
+    "i5",
+    "i7"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Go 3",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "128GB"
+   ],
+   "ram": [
+    "4GB",
+    "8GB"
+   ],
+   "cpu": [
+    "6500Y",
+    "i3"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro 7+",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "cpu": [
+    "i3",
+    "i5",
+    "i7"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro 8",
+   "year": 2021,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "cpu": [
+    "i5",
+    "i7"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Go 2",
+   "year": 2020,
+   "storage": [
+    "64GB",
+    "128GB"
+   ],
+   "ram": [
+    "4GB",
+    "8GB"
+   ],
+   "cpu": [
+    "M3",
+    "Pentium 4425Y"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro X (2020)",
+   "year": 2020,
+   "storage": [
+    "256GB",
+    "512GB"
+   ],
+   "ram": [
+    "16GB"
+   ],
+   "cpu": [
+    "SQ2"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro 7",
+   "year": 2019,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "16GB"
+   ],
+   "cpu": [
+    "i3",
+    "i5",
+    "i7"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Microsoft",
+   "model": "Surface Pro X",
+   "year": 2019,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "cpu": [
+    "SQ1"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S10 FE",
+   "year": 2025,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S10 FE+",
+   "year": 2025,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S10 Ultra",
+   "year": 2024,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S10+",
+   "year": 2024,
+   "storage": [
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S6 Lite (2024)",
+   "year": 2024,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab A9",
+   "year": 2023,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab A9+",
+   "year": 2023,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S9",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S9 FE",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S9 FE+",
+   "year": 2023,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S9 Ultra",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S9+",
+   "year": 2023,
+   "storage": [
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab A8 10.5 (2021)",
+   "year": 2022,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S8",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S8 Ultra",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S8+",
+   "year": 2022,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab A7 Lite 8.7",
+   "year": 2021,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S7 FE",
+   "year": 2021,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab A7 10.4 (2020)",
+   "year": 2020,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S6 Lite",
+   "year": 2020,
+   "storage": [
+    "64GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S7",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S7+",
+   "year": 2020,
+   "storage": [
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S5e 10.5",
+   "year": 2019,
+   "storage": [
+    "64GB",
+    "128GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S6",
+   "year": 2019,
+   "storage": [
+    "128GB",
+    "256GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S4 10.5",
+   "year": 2018,
+   "storage": [
+    "64GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S3 9.7",
+   "year": 2017,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S2 8.0",
+   "year": 2015,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S2 9.7",
+   "year": 2015,
+   "storage": [
+    "32GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S 10.5",
+   "year": 2014,
+   "storage": [
+    "16GB"
+   ]
+  },
+  {
+   "category": "tablet",
+   "brand": "Samsung",
+   "model": "Galaxy Tab S 8.4",
+   "year": 2014,
+   "storage": [
+    "16GB"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 11",
+   "year": 2025,
+   "size": [
+    "42mm",
+    "46mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Ultra 3",
+   "year": 2025,
+   "size": [
+    "49mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 10",
+   "year": 2024,
+   "size": [
+    "42mm",
+    "46mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 9",
+   "year": 2023,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Ultra 2",
+   "year": 2023,
+   "size": [
+    "49mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch SE (2022)",
+   "year": 2022,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 8",
+   "year": 2022,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 8 Hermes",
+   "year": 2022,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Ultra",
+   "year": 2022,
+   "size": [
+    "49mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch SE",
+   "year": 2020,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 6",
+   "year": 2020,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 7",
+   "year": 2020,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 7 Edition",
+   "year": 2020,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 7 Hermes",
+   "year": 2020,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 5",
+   "year": 2019,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 4",
+   "year": 2018,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Apple",
+   "model": "Watch Series 3",
+   "year": 2017,
+   "size": [
+    "38mm",
+    "42mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Google",
+   "model": "Pixel Watch 4",
+   "year": 2025,
+   "size": [
+    "41mm",
+    "45mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Samsung",
+   "model": "Galaxy Watch 6",
+   "year": 2023,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Samsung",
+   "model": "Galaxy Watch 6 Classic",
+   "year": 2023,
+   "size": [
+    "43mm",
+    "47mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Samsung",
+   "model": "Galaxy Watch 5",
+   "year": 2022,
+   "size": [
+    "40mm",
+    "44mm"
+   ]
+  },
+  {
+   "category": "watch",
+   "brand": "Samsung",
+   "model": "Galaxy Watch 5 Pro",
+   "year": 2022,
+   "size": [
+    "45mm"
+   ]
+  }
+ ]
+}
