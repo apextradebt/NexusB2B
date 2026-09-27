@@ -9,7 +9,11 @@ import type { Field, Grade } from "@/types";
 import { GRADES } from "@/types";
 
 const FIELDS: Field[] = ["model", "description", "brand", "cpu", "ram", "storage", "grade", "quantity", "serial", "price", "ignore"];
-
+/**
+ * MappingStep est un composant React qui permet de mapper les colonnes d'un fichier excel à des champs prédéfinis.
+ * 
+ * @returns MappingStep - Composant React
+ */
 export default function MappingStep() {
   const { t } = useTranslation();
   const { draft, setDraft, settings, setSettings } = useStore();
