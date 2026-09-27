@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "server": "tsx server/index.ts",
-    "probe": "tsx server/probe.ts"
+    "probe": "tsx server/probe.ts",
+    "audit": "tsx server/audit.ts"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.24.1",

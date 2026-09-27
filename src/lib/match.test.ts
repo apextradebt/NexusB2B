@@ -69,6 +69,33 @@ describe("matchLine — laptops", () => {
   });
 });
 
+describe("matchLine — Macs", () => {
+  it.each([
+    ["Apple iMac 24 M1 8/256", "iMac 24 M1 2021"],
+    ["iMac 24\" M3 2023 16GB 512GB", "iMac 24 M3 2023"],
+    ["iMac 27 2020 i7-10700K 32GB 1TB SSD", "iMac 27 2020 Intel"],
+    ["iMac 21,5 2019 i5-8500 8GB 256GB SSD", "iMac 21.5 2019 Intel"],
+    ["Mac mini M4 Pro 24GB 512GB", "Mac mini M4 2024"],
+    ["Mac mini M1 8/256", "Mac mini M1 2020"],
+    ["Mac Studio M2 Ultra 64GB 1TB", "Mac Studio 2023"],
+    ["MacBook Pro 14 M1 Pro 16/512", "MacBook Pro 14 2021"],
+    ["MacBook Pro 14 M4 Max 36GB 1TB", "MacBook Pro 14 M4 2024"],
+    ["MacBook Pro 16 2019 i9-9880H 16GB 1TB SSD", "MacBook Pro 16 2019 Intel"],
+    ["MacBook Air 15 M4 16/512", "MacBook Air 15 M4 2025"],
+  ])("%s → %s", (input, expected) => {
+    const m = matchLine(line(input));
+    expect(m.ref?.model).toBe(expected);
+    expect(m.status).not.toBe("unmatched");
+  });
+
+  it("reads Apple chips and suffix-less desktop Intel CPUs", () => {
+    expect(parseSpecs(line("Mac Studio M1 Ultra")).cpu).toBe("Apple M1 Ultra");
+    expect(parseSpecs(line("MacBook Pro 14 M5 16/512")).cpu).toBe("Apple M5");
+    expect(parseSpecs(line("iMac 27 i5-10500 8GB")).cpu).toBe("i5-10500");
+    expect(parseSpecs(line("Latitude 5420 i5 2021")).cpu).toBeUndefined();
+  });
+});
+
 describe("matchLine — phones", () => {
   it.each([
     ["Apple iPhone 15 Pro Max 256GB", "iPhone 15 Pro Max"],

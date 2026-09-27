@@ -1,4 +1,4 @@
-import { get, getJson, getSitemap } from "../http.ts";
+import { SourceError, get, getJson, getSitemap } from "../http.ts";
 import { gradeOf, norm, titleMatch } from "../match.ts";
 import type { Grade, Query, RawOffer, Source } from "../types.ts";
 
@@ -174,13 +174,21 @@ export const compareandrecycle: Source = {
   kinds: ["buyback"],
   categories: ["phone"],
   async run(q) {
-    const slug = `${q.brand} ${q.model}`.toLowerCase().replace(/\+/g, " plus").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    // "Honor" + "Honor 90" → "honor-90", not "honor-honor-90".
+    const name = q.model.toLowerCase().startsWith(q.brand.toLowerCase()) ? q.model : `${q.brand} ${q.model}`;
+    const slug = name.toLowerCase().replace(/\+/g, " plus").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const path = `/mobile-phones/${slug}${q.storage ? "-" + q.storage.toLowerCase() : ""}`;
     let html: string;
     try {
       html = await get(`https://www.compareandrecycle.co.uk${path}`);
     } catch {
-      html = await get(`https://www.compareandrecycle.co.uk/mobile-phones/${slug}`);
+      try {
+        html = await get(`https://www.compareandrecycle.co.uk/mobile-phones/${slug}`);
+      } catch (e) {
+        // No page for this model: not listed on the UK market, not a failure.
+        if (e instanceof SourceError && e.message === "HTTP 404") return [];
+        throw e;
+      }
     }
     const ld = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>(.*?)<\/script>/gs)].map((m) => JSON.parse(m[1]));
     const product = ld.find((d) => d["@type"] === "Product");

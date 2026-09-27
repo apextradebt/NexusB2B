@@ -1,5 +1,7 @@
 import type { Grade, Query } from "./types.ts";
 
+const DRIVE_SIZE: Record<string, string> = { "120": "128gb", "240": "256gb", "250": "256gb", "480": "512gb", "500": "512gb", "960": "1tb", "1000": "1tb" };
+
 /** Same spirit as the client matcher: accents, generations, capacities and CPUs written one way. */
 export function norm(s: string): string {
   return s
@@ -15,7 +17,13 @@ export function norm(s: string): string {
     .replace(/\((\d+)(?:st|nd|rd|th)\s*gen\)/g, "g$1")
     .replace(/\b(\d+)\s*(go|gb)\b/g, "$1gb")
     .replace(/\b(\d+)\s*(to|tb)\b/g, "$1tb")
+    // Sellers write drive sizes in decimal or rounded ("250 GB SSD", "120 GB", "1000 GB"): same drive as 256 GB / 128 GB / 1 TB.
+    .replace(/\b(120|240|250|480|500|960|1000)gb\b/g, (_, n: string) => DRIVE_SIZE[n])
     .replace(/\b(i[3579])[\s-]+(\d{4,5}[a-z]{1,2}\d?)\b/g, "$1-$2")
+    // "Magic6", "Fold6", "XCover7", "Reno12": same phone as "Magic 6", "Fold 6", "XCover 7", "Reno 12".
+    .replace(/\b([a-z]{4,})(\d{1,2})\b/g, "$1 $2")
+    // "Core-X5", "Stellar-M6": same phone as "Core X5" (CPU names like "i5-8265u" keep their hyphen).
+    .replace(/(?<![\w-])([a-z]{2,})-([a-z]?\d+[a-z]?)\b/g, "$1 $2")
     .replace(/\+/g, " plus ")
     .replace(/[^a-z0-9-]+/g, " ")
     .replace(/\s+/g, " ")

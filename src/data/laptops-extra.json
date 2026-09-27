@@ -5750,6 +5750,700 @@
    "id": "APPMACBOOKAIR2020INTEL"
   },
   {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 15 M4 2025",
+   "year": 2025,
+   "screen": "",
+   "cpu": [
+    "Apple M4"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR15M42025"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 16 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M2 Pro",
+    "Apple M2 Max",
+    "Apple M3 Pro",
+    "Apple M3 Max"
+   ],
+   "ram": [
+    "16GB",
+    "18GB",
+    "32GB",
+    "36GB",
+    "48GB",
+    "64GB",
+    "96GB",
+    "128GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO162023"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 14 M4 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M4",
+    "Apple M4 Pro",
+    "Apple M4 Max"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB",
+    "36GB",
+    "48GB",
+    "64GB",
+    "128GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO14M42024"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 16 M4 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M4 Pro",
+    "Apple M4 Max"
+   ],
+   "ram": [
+    "24GB",
+    "36GB",
+    "48GB",
+    "64GB",
+    "128GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO16M42024"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 14 M5 2025",
+   "year": 2025,
+   "screen": "",
+   "cpu": [
+    "Apple M5"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO14M52025"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 13 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i5-8257U",
+    "i7-8557U",
+    "i5-8279U",
+    "i7-8569U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO132019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 15 2018 Intel",
+   "year": 2018,
+   "screen": "",
+   "cpu": [
+    "i7-8750H",
+    "i7-8850H",
+    "i9-8950HK"
+   ],
+   "ram": [
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO152018INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 15 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i7-9750H",
+    "i9-9880H",
+    "i9-9980HK"
+   ],
+   "ram": [
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO152019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Pro 16 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i7-9750H",
+    "i9-9880H",
+    "i9-9980HK"
+   ],
+   "ram": [
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO162019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 2018 Intel",
+   "year": 2018,
+   "screen": "",
+   "cpu": [
+    "i5-8210Y"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "1.5TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR2018INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
+   "model": "MacBook Air 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i5-8210Y"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKAIR2019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 24 M1 2021",
+   "year": 2021,
+   "screen": "",
+   "cpu": [
+    "Apple M1"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC24M12021"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 24 M3 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M3"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC24M32023"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 24 M4 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M4"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC24M42024"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 21.5 2017 Intel",
+   "year": 2017,
+   "screen": "",
+   "cpu": [
+    "i5-7360U",
+    "i5-7400",
+    "i5-7500",
+    "i7-7700"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC2152017INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 21.5 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i3-8100",
+    "i5-8500",
+    "i7-8700"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC2152019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 27 2017 Intel",
+   "year": 2017,
+   "screen": "",
+   "cpu": [
+    "i5-7500",
+    "i5-7600",
+    "i5-7600K",
+    "i7-7700K"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC272017INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 27 2019 Intel",
+   "year": 2019,
+   "screen": "",
+   "cpu": [
+    "i5-8500",
+    "i5-8600",
+    "i5-9600K",
+    "i9-9900K"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC272019INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "iMac",
+   "model": "iMac 27 2020 Intel",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "i5-10500",
+    "i5-10600",
+    "i7-10700K",
+    "i9-10910"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB",
+    "128GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPIMAC272020INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac mini",
+   "model": "Mac mini 2018 Intel",
+   "year": 2018,
+   "screen": "",
+   "cpu": [
+    "i3-8100B",
+    "i5-8500B",
+    "i7-8700B"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "32GB",
+    "64GB"
+   ],
+   "storage": [
+    "128GB",
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACMINI2018INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac mini",
+   "model": "Mac mini M1 2020",
+   "year": 2020,
+   "screen": "",
+   "cpu": [
+    "Apple M1"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACMINIM12020"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac mini",
+   "model": "Mac mini M2 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M2",
+    "Apple M2 Pro"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACMINIM22023"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac mini",
+   "model": "Mac mini M4 2024",
+   "year": 2024,
+   "screen": "",
+   "cpu": [
+    "Apple M4",
+    "Apple M4 Pro"
+   ],
+   "ram": [
+    "16GB",
+    "24GB",
+    "32GB",
+    "48GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACMINIM42024"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac Studio",
+   "model": "Mac Studio 2022",
+   "year": 2022,
+   "screen": "",
+   "cpu": [
+    "Apple M1 Max",
+    "Apple M1 Ultra"
+   ],
+   "ram": [
+    "32GB",
+    "64GB",
+    "128GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACSTUDIO2022"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac Studio",
+   "model": "Mac Studio 2023",
+   "year": 2023,
+   "screen": "",
+   "cpu": [
+    "Apple M2 Max",
+    "Apple M2 Ultra"
+   ],
+   "ram": [
+    "32GB",
+    "64GB",
+    "96GB",
+    "128GB",
+    "192GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACSTUDIO2023"
+  },
+  {
+   "brand": "Apple",
+   "family": "Mac Studio",
+   "model": "Mac Studio 2025",
+   "year": 2025,
+   "screen": "",
+   "cpu": [
+    "Apple M4 Max",
+    "Apple M3 Ultra"
+   ],
+   "ram": [
+    "36GB",
+    "48GB",
+    "64GB",
+    "96GB",
+    "128GB",
+    "256GB",
+    "512GB"
+   ],
+   "storage": [
+    "512GB",
+    "1TB",
+    "2TB",
+    "4TB",
+    "8TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACSTUDIO2025"
+  },
+  {
    "brand": "Microsoft",
    "family": "Surface",
    "model": "Surface Laptop 3",

@@ -35,6 +35,27 @@ describe("titleMatch", () => {
   });
 });
 
+describe("titleMatch — seller spellings", () => {
+  const q = (brand: string, model: string, storage?: string): Query => ({ category: "phone", brand, model, storage, grade: "C" });
+  it("reads rounded drive sizes as the standard capacity", () => {
+    expect(titleMatch("HP EliteBook 840 G6 | Intel Core i5 8265U - 16 GB DDR4 - 250 GB SSD", laptop("HP", "EliteBook 840 G6", "i5-8265U", "256GB"))).toBeGreaterThan(0.8);
+    expect(titleMatch("HP EliteBook 840 G6 | i5-8350U | 4 GB | 120 GB SSD", laptop("HP", "EliteBook 840 G6", undefined, "128GB"))).toBeGreaterThan(0.8);
+  });
+  it("reads glued and hyphenated model numbers", () => {
+    expect(titleMatch("honor magic6 lite 5g dual sim 256 go", q("Honor", "Magic 6 Lite", "256GB"))).toBeGreaterThan(0.8);
+    expect(titleMatch("Crosscall CORE-X5 | 64 GB", q("Crosscall", "Core X5", "64GB"))).toBeGreaterThan(0.8);
+    expect(titleMatch("Crosscall Core X5 64GB", q("Crosscall", "Core-X5", "64GB"))).toBeGreaterThan(0.8);
+    expect(titleMatch("Crosscall Core-X4", q("Crosscall", "Core-X5"))).toBe(0);
+    expect(titleMatch("samsung galaxy z fold6", q("Samsung", "Galaxy Z Fold 6"))).toBeGreaterThan(0);
+    expect(titleMatch("samsung galaxy xcover7 pro", q("Samsung", "Galaxy XCover 7 Pro"))).toBeGreaterThan(0);
+    expect(titleMatch("samsung galaxy xcover7 pro", q("Samsung", "Galaxy XCover 7"))).toBe(0);
+  });
+  it("keeps CPU names and 2-in-1 intact", () => {
+    expect(titleMatch("Dell Latitude 5420 i5-1145G7 16GB", laptop("Dell", "Latitude 5420", "i5-1145G7"))).toBeGreaterThan(0.75);
+    expect(titleMatch("Lenovo ThinkPad X1 Yoga 2-in-1", laptop("Lenovo", "ThinkPad X1 Yoga"))).toBe(0);
+  });
+});
+
 describe("gradeOf", () => {
   it("maps source condition labels", () => {
     expect(gradeOf("A2")).toBe("B");

@@ -2,9 +2,13 @@
  * Polite HTTP layer shared by every source:
  * - robots.txt is honoured (Google-style wildcards, longest match wins); disallowed URLs are never fetched
  * - one request at a time per host, at least MIN_GAP_MS apart
- * - responses cached in memory for CACHE_TTL_MS
+ * - responses cached in memory for CACHE_TTL_MS, oldest pages evicted past CACHE_MAX_CHARS
  * - anti-bot walls (Cloudflare / DataDome challenge pages) are reported as "blocked", never worked around
  */
+
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36";
 const MIN_GAP_MS = 1000;
@@ -73,15 +77,53 @@ async function robotsFor(origin: string) {
   return robotsCache.get(origin)!;
 }
 
+// Hosts that rate-limit (HTTP 429) at one request per second. Keys are throttle groups (see throttleKey).
+const HOST_GAP_MS: Record<string, number> = {
+  "www.alternate.de": 8000,
+  // rebuy's five storefronts share one rate limit.
+  rebuy: 1500,
+};
+const throttleKey = (host: string) => (/(^|\.)rebuy\.[a-z]+$/.test(host) ? "rebuy" : host);
+/** On HTTP 429, wait what the site asks (Retry-After, capped) and try once more before reporting "blocked". */
+const RETRY_AFTER_MAX_MS = 30000;
+/** A site still answering 429 after the retry is left alone for a while instead of being asked again. */
+const COOLDOWN_MS = 15 * 60 * 1000;
+const cooldownUntil = new Map<string, number>();
+function checkCooldown(host: string) {
+  const until = cooldownUntil.get(throttleKey(host)) ?? 0;
+  if (Date.now() < until) throw new SourceError("blocked", `Limite de requêtes atteinte, site en pause jusqu'à ${new Date(until).toLocaleTimeString("fr-FR")}`);
+}
+const startCooldown = (host: string) => cooldownUntil.set(throttleKey(host), Date.now() + COOLDOWN_MS);
+
 const lastHit = new Map<string, Promise<void>>();
 function throttle(host: string) {
-  const prev = lastHit.get(host) ?? Promise.resolve();
-  const next = prev.then(() => new Promise<void>((r) => setTimeout(r, MIN_GAP_MS)));
-  lastHit.set(host, next);
+  const key = throttleKey(host);
+  const prev = lastHit.get(key) ?? Promise.resolve();
+  const next = prev.then(() => new Promise<void>((r) => setTimeout(r, HOST_GAP_MS[key] ?? MIN_GAP_MS)));
+  lastHit.set(key, next);
   return prev;
 }
 
 const cache = new Map<string, { at: number; body: string }>();
+// Product pages weigh up to ~1 MB each: without a cap a long-running server runs out of memory.
+const CACHE_MAX_CHARS = 100_000_000;
+let cacheChars = 0;
+function remember(key: string, body: string) {
+  const old = cache.get(key);
+  if (old) {
+    cacheChars -= old.body.length;
+    cache.delete(key);
+  }
+  cache.set(key, { at: Date.now(), body });
+  cacheChars += body.length;
+  // Maps iterate in insertion order: evict the oldest pages first, keep sitemaps (slow to rebuild).
+  for (const [k, v] of cache) {
+    if (cacheChars <= CACHE_MAX_CHARS) break;
+    if (k.startsWith("SITEMAP ")) continue;
+    cache.delete(k);
+    cacheChars -= v.body.length;
+  }
+}
 
 const WALL = /(captcha-delivery|datadome|cf-chl-|challenge-platform|_Incapsula_|px-captcha|Just a moment\.\.\.|Attention Required! \| Cloudflare)/i;
 
@@ -94,25 +136,35 @@ export async function get(url: string, init: { headers?: Record<string, string>;
   if (!isAllowed(await robotsFor(u.origin), u.pathname + u.search)) {
     throw new SourceError("robots", `robots.txt interdit ${u.pathname}`);
   }
-  await throttle(u.host);
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      method: init.method || "GET",
-      body: init.body,
-      redirect: "follow",
-      headers: { "User-Agent": UA, "Accept-Language": "fr-FR,fr;q=0.9,de;q=0.8,en;q=0.7", Accept: "text/html,application/json;q=0.9,*/*;q=0.8", ...init.headers },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-  } catch (e) {
-    throw new SourceError("timeout", `Réseau : ${(e as Error).message}`);
+  checkCooldown(u.host);
+  const send = async () => {
+    await throttle(u.host);
+    try {
+      return await fetch(url, {
+        method: init.method || "GET",
+        body: init.body,
+        redirect: "follow",
+        headers: { "User-Agent": UA, "Accept-Language": "fr-FR,fr;q=0.9,de;q=0.8,en;q=0.7", Accept: "text/html,application/json;q=0.9,*/*;q=0.8", ...init.headers },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+    } catch (e) {
+      throw new SourceError("timeout", `Réseau : ${(e as Error).message}`);
+    }
+  };
+  let res = await send();
+  if (res.status === 429) {
+    const wait = Math.min(RETRY_AFTER_MAX_MS, (Number(res.headers.get("retry-after")) || 10) * 1000);
+    await res.body?.cancel();
+    await new Promise((r) => setTimeout(r, wait));
+    res = await send();
   }
   const body = await res.text();
+  if (res.status === 429) startCooldown(u.host);
   if (res.status === 403 || res.status === 429 || WALL.test(body.slice(0, 20000))) {
     throw new SourceError("blocked", `Protection anti-robot (HTTP ${res.status})`);
   }
   if (!res.ok) throw new SourceError("http", `HTTP ${res.status}`);
-  cache.set(key, { at: Date.now(), body });
+  remember(key, body);
   return body;
 }
 
@@ -120,17 +172,55 @@ export async function get(url: string, init: { headers?: Record<string, string>;
 export async function getSitemap(url: string): Promise<string[]> {
   const u = new URL(url);
   const hit = cache.get("SITEMAP " + url);
-  if (hit && Date.now() - hit.at < 24 * 3600 * 1000) return JSON.parse(hit.body);
+  if (hit && Date.now() - hit.at < SITEMAP_TTL_MS) return JSON.parse(hit.body);
+  const saved = readSavedSitemap(url);
+  if (saved) {
+    remember("SITEMAP " + url, JSON.stringify(saved));
+    return saved;
+  }
   if (!isAllowed(await robotsFor(u.origin), u.pathname + u.search)) throw new SourceError("robots", `robots.txt interdit ${u.pathname}`);
-  await throttle(u.host);
-  const res = await fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(TIMEOUT_MS * 2) });
+  checkCooldown(u.host);
+  const send = async () => {
+    await throttle(u.host);
+    return fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(TIMEOUT_MS * 2) });
+  };
+  let res = await send();
+  if (res.status === 429) {
+    await res.body?.cancel();
+    await new Promise((r) => setTimeout(r, Math.min(RETRY_AFTER_MAX_MS, (Number(res.headers.get("retry-after")) || 10) * 1000)));
+    res = await send();
+  }
+  if (res.status === 429) startCooldown(u.host);
   if (res.status === 403 || res.status === 429) throw new SourceError("blocked", `Protection anti-robot (HTTP ${res.status})`);
   if (!res.ok) throw new SourceError("http", `Sitemap HTTP ${res.status}`);
   let buf = Buffer.from(await res.arrayBuffer());
   if (buf[0] === 0x1f && buf[1] === 0x8b) buf = (await import("node:zlib")).gunzipSync(buf);
   const locs = [...buf.toString("utf8").matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => m[1]);
-  cache.set("SITEMAP " + url, { at: Date.now(), body: JSON.stringify(locs) });
+  remember("SITEMAP " + url, JSON.stringify(locs));
+  saveSitemap(url, locs);
   return locs;
+}
+
+// Sitemaps are also kept on disk for a day, so restarting the server does not download them all again.
+const SITEMAP_TTL_MS = 24 * 3600 * 1000;
+const SITEMAP_DIR = join(import.meta.dirname, "..", ".cache", "sitemaps");
+const sitemapFile = (url: string) => join(SITEMAP_DIR, createHash("sha1").update(url).digest("hex") + ".json");
+function readSavedSitemap(url: string): string[] | undefined {
+  try {
+    const file = sitemapFile(url);
+    if (Date.now() - statSync(file).mtimeMs > SITEMAP_TTL_MS) return undefined;
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch {
+    return undefined;
+  }
+}
+function saveSitemap(url: string, locs: string[]) {
+  try {
+    mkdirSync(SITEMAP_DIR, { recursive: true });
+    writeFileSync(sitemapFile(url), JSON.stringify(locs));
+  } catch {
+    // Disk cache is an optimisation only.
+  }
 }
 
 export async function getJson<T = unknown>(url: string, init?: Parameters<typeof get>[1]): Promise<T> {
@@ -151,7 +241,7 @@ export async function toEur(amount: number, currency: string): Promise<number> {
       const data = (await (await fetch("https://api.frankfurter.app/latest?from=EUR", { signal: AbortSignal.timeout(TIMEOUT_MS) })).json()) as { rates: Record<string, number> };
       fx = { at: Date.now(), rates: data.rates };
     } catch {
-      fx = fx ?? { at: 0, rates: { USD: 1.1, GBP: 0.85, CHF: 0.95 } };
+      fx = fx ?? { at: 0, rates: { USD: 1.1, GBP: 0.85, CHF: 0.95, SEK: 11.5, DKK: 7.46, NOK: 11.7 } };
     }
   }
   const rate = fx.rates[currency];

@@ -41,6 +41,9 @@ export type SourcePrice = {
   /** Up to 3 distinct listings behind this price, cheapest first. */
   urls: string[];
   note?: string;
+  /** Price as the site shows it (non-EUR sources), and the site's condition label when all offers share one. */
+  native?: { price: number; currency: string };
+  condition?: string;
 };
 
 export type PriceResult = { query: Query; prices: SourcePrice[]; sources: SourceReport[]; offers: Offer[] };
@@ -59,6 +62,10 @@ async function runSource(src: Source, q: Query): Promise<{ report: SourceReport;
     if (kept.length === 0 && q.category === "laptop") {
       const loose = { ...q, ram: undefined, storage: undefined };
       kept = raw.filter((o) => titleMatch(o.title, loose) > 0).map((o) => ({ ...o, note: o.note ?? "Configuration proche (RAM/SSD différents)" }));
+    }
+    // Phones: same model in another capacity rather than nothing (clearly flagged).
+    if (kept.length === 0 && q.category === "phone" && q.storage) {
+      kept = raw.filter((o) => titleMatch(o.title, { ...q, storage: undefined }) > 0).map((o) => ({ ...o, note: o.note ?? "Autre capacité que celle demandée — indicatif" }));
     }
     // Still nothing: same model with another CPU, same CPU tier (i5 for an i5) first. Indicative only.
     if (kept.length === 0 && q.category === "laptop") {
@@ -81,7 +88,16 @@ async function runSource(src: Source, q: Query): Promise<{ report: SourceReport;
 }
 
 export async function price(q: Query): Promise<PriceResult> {
-  const results = await Promise.all(SOURCES.map((s) => runSource(s, q)));
+  const results = await Promise.all(SOURCES.filter((s) => !s.fallback).map((s) => runSource(s, q)));
+  // Classifieds only when no professional source has a resale price for this device.
+  const fallbacks = SOURCES.filter((s) => s.fallback);
+  if (!results.some((r) => r.offers.some((o) => o.kind === "resale"))) {
+    results.push(...(await Promise.all(fallbacks.map((s) => runSource(s, q)))));
+  } else {
+    for (const s of fallbacks) {
+      results.push({ report: { id: s.id, name: s.name, country: s.country, kinds: s.kinds, status: "not_applicable", count: 0, ms: 0, message: "Non utilisé : prix professionnels trouvés" }, offers: [] });
+    }
+  }
   const prices: SourcePrice[] = [];
   for (const { offers } of results) {
     for (const kind of ["buyback", "resale"] as Kind[]) {
@@ -90,6 +106,10 @@ export async function price(q: Query): Promise<PriceResult> {
       const { offers: kept, usedGrade } = pickGrade(own, q.grade);
       const eur = kept.map((o) => o.priceEur);
       const cheapest = kept.reduce((a, b) => (b.priceEur < a.priceEur ? b : a));
+      const currencies = new Set(kept.map((o) => o.currency));
+      const conditions = new Set(kept.map((o) => o.condition));
+      const [currency] = currencies;
+      const [condition] = conditions;
       prices.push({
         source: kept[0].source,
         sourceName: kept[0].sourceName,
@@ -103,6 +123,8 @@ export async function price(q: Query): Promise<PriceResult> {
         url: cheapest.url,
         urls: [...new Set([...kept].sort((a, b) => a.priceEur - b.priceEur).map((o) => o.url))].slice(0, 3),
         note: kept.find((o) => o.note)?.note ?? (usedGrade && usedGrade !== q.grade ? `Grade ${usedGrade} utilisé (pas d'offre en ${q.grade})` : undefined),
+        native: currencies.size === 1 && currency !== "EUR" ? { price: Math.round(median(kept.map((o) => o.price))), currency } : undefined,
+        condition: conditions.size === 1 && condition ? condition : undefined,
       });
     }
   }

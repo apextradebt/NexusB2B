@@ -17,7 +17,7 @@ export type RawOffer = {
   kind: Kind;
   title: string;
   price: number;
-  currency: "EUR" | "USD" | "GBP" | "CHF";
+  currency: "EUR" | "USD" | "GBP" | "CHF" | "SEK" | "DKK" | "NOK";
   url: string;
   /** Condition label as the source writes it ("Très bon état", "A2", "Sehr gut"…). */
   condition?: string;
@@ -49,6 +49,8 @@ export type Source = {
   site: string;
   kinds: Kind[];
   categories: Category[];
+  /** Only queried when no other source found a resale price (classifieds: private asking prices, indicative). */
+  fallback?: boolean;
   /** Extra applicability rule (e.g. rebuy only trades Apple laptops). */
   supports?: (q: Query) => boolean;
   run: (q: Query) => Promise<RawOffer[]>;

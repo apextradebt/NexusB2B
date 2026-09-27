@@ -54,12 +54,15 @@ function rebuy(c: Country): Source {
     supports: (q) => q.category === "phone" || /apple|macbook/i.test(`${q.brand} ${q.model}`),
     async run(q) {
       const urls = await productUrls(c);
-      // Same device in several colours: prices are near-identical, two pages are enough.
-      const candidates = urls
-        .map((url) => ({ url, score: titleMatch(slugTitle(url), q) }))
-        .filter((x) => x.score > 0 && (!q.storage || x.score >= 0.85))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 2);
+      // Same device in several colours: prices are near-identical, one page is enough.
+      const scored = urls.map((url) => ({ url, score: titleMatch(slugTitle(url), q) }));
+      let candidates = scored.filter((x) => x.score > 0 && (!q.storage || x.score >= 0.85));
+      // Requested capacity not sold: pages of the same model in other capacities (the engine flags them).
+      if (candidates.length === 0 && q.storage) {
+        const any = { ...q, storage: undefined };
+        candidates = urls.map((url) => ({ url, score: titleMatch(slugTitle(url), any) })).filter((x) => x.score > 0);
+      }
+      candidates = candidates.sort((a, b) => b.score - a.score).slice(0, 1);
       const offers: RawOffer[] = [];
       for (const cand of candidates) {
         const title = slugTitle(cand.url);

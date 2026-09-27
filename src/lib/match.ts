@@ -47,7 +47,7 @@ const INDEX: Indexed[] = CATALOG.map((ref) => ({
 const TEXT_BRANDS = new Map<string, string>(([
   ...INDEX.map((ix) => [ix.brand, ix.brand]),
   ...["acer", "toshiba", "dynabook", "msi", "razer", "lg", "alcatel", "zte", "vivo", "realme", "tcl", "wiko", "blackberry", "panasonic", "getac"].map((b) => [b, b]),
-  ["iphone", "apple"], ["macbook", "apple"], ["ipad", "apple"], ["galaxy", "samsung"], ["thinkpad", "lenovo"], ["thinkbook", "lenovo"],
+  ["iphone", "apple"], ["macbook", "apple"], ["imac", "apple"], ["mac", "apple"], ["ipad", "apple"], ["galaxy", "samsung"], ["thinkpad", "lenovo"], ["thinkbook", "lenovo"],
   ["latitude", "dell"], ["precision", "dell"], ["xps", "dell"], ["elitebook", "hp"], ["probook", "hp"], ["zbook", "hp"],
   ["pixel", "google"], ["lifebook", "fujitsu"], ["surface", "microsoft"], ["redmi", "xiaomi"],
 ] as [string, string][]).filter(([w]) => w.length > 1));
@@ -102,6 +102,8 @@ export function stripSpecs(text: string): string {
     .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
     // A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names.
     .replace(/\b(?:\d{1,4}\s?(?:gb|go|g|tb|to)|[124]\s?t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")
+    // "M2 Pro" / "M1 Ultra" name the chip, not a "Pro" or "Ultra" model; the "M2" stays ("MacBook Air M2").
+    .replace(/\b(m[1-5])\s+(?:pro|max|ultra)\b/gi, "$1")
     .replace(/\b(?:intel\s*)?(?:core\s*)?i[3579][\s-]*\d{4,5}[a-z]{0,2}\d?\b/gi, " ")
     .replace(/\b(?:intel\s*)?core\s*ultra\s*[579]\s*\d{3}[a-z]\b/gi, " ")
     .replace(/\b(?:amd\s*)?ryzen\s*[3579]\s*(?:pro\s*)?\d{4}[a-z]{1,2}\b/gi, " ")
@@ -117,13 +119,14 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   const txt = ` ${line.text} `.toLowerCase();
   const cpuTxt = (line.cpu || txt).toLowerCase();
 
-  const intel = cpuTxt.match(/\b(i[3579])[\s-]*(\d{4,5}[a-z]{1,2}\d?)\b/);
+  // Desktop chips have no suffix ("i5-10500"), but "i5 2019" is a year.
+  const intel = cpuTxt.match(/\b(i[3579])[\s-]*(?!20[0-3]\d\b)(\d{4,5}[a-z]{0,2}\d?)\b/);
   const ryzen = cpuTxt.match(/ryzen\s*([3579])\s*(pro\s*)?(\d{4}[a-z]{1,2})\b/);
   const low = cpuTxt.match(/\b(celeron|pentium(?:\s+(?:silver|gold))?)\s*(n?\d{4}[a-z]?)\b/);
   const ultra = cpuTxt.match(/\bultra\s*([579])\s*(\d{3}[a-z])\b/);
-  const apple = cpuTxt.match(/\b(?:apple\s+)?m([1-4])(?:\s+(pro|max))?\b(?!\.\d)/);
+  const apple = cpuTxt.match(/\b(?:apple\s+)?m([1-5])(?:\s+(pro|max|ultra))?\b(?!\.\d)/);
   if (ultra) specs.cpu = `Core Ultra ${ultra[1]} ${up(ultra[2])}`;
-  else if (apple && /apple|macbook|\bm[1-4]\b/.test(cpuTxt) && !/m\.2/.test(cpuTxt.slice(apple.index!, apple.index! + 4))) specs.cpu = `Apple M${apple[1]}${apple[2] ? " " + apple[2][0].toUpperCase() + apple[2].slice(1) : ""}`;
+  else if (apple && /apple|mac|\bm[1-5]\b/.test(cpuTxt) && !/m\.2/.test(cpuTxt.slice(apple.index!, apple.index! + 4))) specs.cpu = `Apple M${apple[1]}${apple[2] ? " " + apple[2][0].toUpperCase() + apple[2].slice(1) : ""}`;
   else if (intel) specs.cpu = `${intel[1]}-${up(intel[2])}`;
   else if (ryzen) specs.cpu = `Ryzen ${ryzen[1]} ${ryzen[2] ? "PRO " : ""}${up(ryzen[3])}`;
   else if (low) specs.cpu = `${low[1].replace(/\b\w/g, (c) => c.toUpperCase())} ${up(low[2])}`;
