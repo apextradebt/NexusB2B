@@ -6,7 +6,7 @@ import { Button, Card, Chip, Input, PageHeader, Select, Stat } from "@/component
 import SourcesPanel from "@/components/quote/SourcesPanel";
 import TradeInChart from "@/components/TradeInChart";
 import { agentsFor, runAgents } from "@/lib/agents";
-import { useAuth } from "@/lib/auth";
+//import { useAuth } from "@/lib/auth";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
 import { matchAgainst, matchLine } from "@/lib/match";
@@ -63,7 +63,7 @@ function variantFor(r: RefModel, text: string): Variant {
 export default function QuickSearch() {
   const { t } = useTranslation();
   const { settings, priceList, setPrice, setDraft, draft } = useStore();
-  const { getToken } = useAuth();
+  //const { getToken } = useAuth();
   const navigate = useNavigate();
   const [text, setText] = useState("");
   const [refId, setRefId] = useState("");

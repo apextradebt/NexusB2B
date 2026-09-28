@@ -6,7 +6,7 @@ const LEGACY_API = import.meta.env.VITE_API_URL || "http://localhost:3001";
 type Agent = {
   name: string;
   supports: (line: QuoteLine) => boolean;
-  run: (line: QuoteLine, token?: string) => Promise<AgentResult[]>;
+  run: (line: QuoteLine) => Promise<AgentResult[]>;
 };
 
 const B2C_GRADE: Record<Grade, string> = { A: "parfait_etat", B: "tres_bon_etat", C: "bon_etat", D: "etat_correct", E: "etat_correct" };
@@ -17,15 +17,15 @@ const toOffers = (xs: LegacyOffer[] | undefined, fallback: string): AgentOffer[]
 const nexusMarketAgent: Agent = {
   name: "Marché (Nexus API)",
   supports: (l) => !!LEGACY_API && (l.category === "phone" || l.category === "laptop"),
-  async run(line, token) {
+  async run(line) {
     try {
       const res = await fetch(`${LEGACY_API}/api/market/prices`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           devices: [{
             brand: line.brand.toLowerCase(),
-            model: line.model,
+            model: line.category === "laptop" ? `${line.model} ${line.variant.cpu || ""} ${line.variant.ram || ""}`.trim() : line.model,
             color: "",
             storage: (line.variant.storage || "").replace("GB", "").replace("TB", "000"),
             grade: B2C_GRADE[line.grade],
@@ -70,9 +70,9 @@ export function agentsFor(gradeCoef: Record<Grade, number>): Agent[] {
   return [nexusMarketAgent, catalogEstimate(gradeCoef)];
 }
 
-export async function runAgents(line: QuoteLine, agents: Agent[], token?: string): Promise<AgentResult[]> {
+export async function runAgents(line: QuoteLine, agents: Agent[]): Promise<AgentResult[]> {
   const applicable = agents.filter((a) => a.supports(line));
-  const results = await Promise.all(applicable.map((a) => a.run(line, token)));
+  const results = await Promise.all(applicable.map((a) => a.run(line)));
   return results.flat();
 }
 

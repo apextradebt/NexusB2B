@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FilePlus2, FolderOpen, LineChart, Library, Settings, Tag, Zap, Menu, X, Globe, Moon, Sun, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/lib/auth";
+//import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
 
 const navigation = [
@@ -21,7 +21,7 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
-  const { enabled, userName, userPicture, logout } = useAuth();
+  //const { enabled, userName, userPicture, logout } = useAuth();
   const { theme, toggleTheme } = useStore();
 
   const itemClass = (active: boolean) =>
@@ -80,22 +80,7 @@ export default function Sidebar() {
             <span className={`${label} text-sm font-medium`}>{i18n.language === "fr" ? "English" : "Français"}</span>
           </button>
 
-          <div className="flex items-center gap-4 p-2 mt-2">
-            <div className="w-10 h-10 min-w-10 rounded-full bg-lime shadow-sm flex items-center justify-center overflow-hidden text-hunter font-bold text-sm">
-              {userPicture ? <img src={userPicture} alt="" className="w-full h-full object-cover" /> : (userName?.charAt(0).toUpperCase() || "B")}
-            </div>
-            <div className={`flex flex-col flex-1 ${label}`}>
-              <span className="text-sm font-medium capitalize text-bright">{enabled ? userName : t("sidebar.local_user")}</span>
-              <span className="mt-1 bg-lime text-hunter text-[10px] font-bold px-2 py-0.5 rounded-full w-max uppercase tracking-wider">
-                {enabled ? "B2B" : t("sidebar.local_mode")}
-              </span>
-            </div>
-            {enabled && (
-              <button onClick={logout} className={`${label} p-1.5 rounded-full text-bright/70 hover:text-bright hover:bg-white/10`} aria-label="Déconnexion">
-                <LogOut className="w-5 h-5" />
-              </button>
-            )}
-          </div>
+
         </div>
       </aside>
     </>

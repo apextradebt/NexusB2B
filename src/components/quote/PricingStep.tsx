@@ -6,7 +6,6 @@ import SourcesPanel from "@/components/quote/SourcesPanel";
 import { agentsFor, pool, runAgents } from "@/lib/agents";
 import { eur, marginRate, marketGap, priceLine, totals } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
-import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
 import type { QuoteLine } from "@/types";
 
@@ -15,7 +14,6 @@ const priceable = (l: QuoteLine) => l.status !== "unmatched" && !!l.refId;
 export default function PricingStep() {
   const { t } = useTranslation();
   const { draft, setDraft, settings, saveQuote, resetDraft, priceList } = useStore();
-  const { getToken } = useAuth();
   const [open, setOpen] = useState<string | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -37,15 +35,14 @@ export default function PricingStep() {
     const targets = draft.lines.filter((l) => priceable(l) && (!onlyIdle || l.priceState === "idle"));
     if (targets.length === 0) return;
     setDraft((d) => ({ ...d, lines: d.lines.map((l) => (targets.some((x) => x.key === l.key) ? { ...l, priceState: "queued" } : l)) }));
-    const token = await getToken();
     const agents = agentsFor(settings.gradeCoef);
     await pool(targets, settings.agentConcurrency, async (line) => {
       patch(line.key, { priceState: "running" });
-      const agentResults = await runAgents(line, agents, token);
+      const agentResults = await runAgents(line, agents);
       if (!ctrl.signal.aborted) patch(line.key, { priceState: "done", agentResults });
     }, ctrl.signal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft.lines, settings, getToken]);
+  }, [draft.lines, settings]);
 
   // Start the agents on arrival for any line not priced yet.
   useEffect(() => {
