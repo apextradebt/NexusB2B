@@ -10,9 +10,9 @@ type Agent = {
 };
 
 const B2C_GRADE: Record<Grade, string> = { A: "parfait_etat", B: "tres_bon_etat", C: "bon_etat", D: "etat_correct", E: "etat_correct" };
-type LegacyOffer = { prix?: number; price?: number; revendeur?: string; source?: string; url?: string };
+type LegacyOffer = { prix?: number; price?: number; revendeur?: string; source?: string; url?: string; lien?: string };
 const toOffers = (xs: LegacyOffer[] | undefined, fallback: string): AgentOffer[] =>
-  (xs || []).map((o) => ({ source: o.revendeur || o.source || fallback, price: Number(o.prix ?? o.price), url: o.url })).filter((o) => o.price > 0);
+  (xs || []).map((o) => ({ source: o.revendeur || o.source || fallback, price: Number(o.prix ?? o.price), url: o.url || o.lien })).filter((o) => o.price > 0);
 
 const nexusMarketAgent: Agent = {
   name: "Marché (Nexus API)",
