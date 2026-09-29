@@ -113,6 +113,7 @@ export default function PricingStep() {
             {lines.filter(priceable).map((l) => {
               const margin = l.sellPrice !== undefined && l.buyPrice !== undefined ? l.sellPrice - l.buyPrice : undefined;
               const isOpen = open === l.key;
+              console.log(l.agentResults)
               return (
                 <Fragment key={l.key}>
                   <tr className="border-t border-line">
@@ -162,8 +163,8 @@ export default function PricingStep() {
                         >
                           <ExternalLink className="w-3 h-3" />
                           {t("pricing.source_counts", {
-                            buy: l.agentResults.filter((r) => r.kind === "buyback" && r.status === "ok").length,
-                            sell: l.agentResults.filter((r) => r.kind === "resale" && r.status === "ok").length,
+                            buy: l.agentResults?.filter((r) => r.kind === "buyback" && r.status === "ok").reduce((acc, r) => acc + (r.offers?.length || 0), 0) || 0,
+                            sell: l.agentResults?.filter((r) => r.kind === "resale" && r.status === "ok").reduce((acc, r) => acc + (r.offers?.length || 0), 0) || 0,
                           })}
                         </button>
                       )}
