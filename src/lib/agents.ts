@@ -23,14 +23,27 @@ const nexusMarketAgent: Agent = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          devices: [{
-            brand: line.brand.toLowerCase(),
-            model: line.category === "laptop" ? `${line.model} ${line.variant.cpu || ""} ${line.variant.ram || ""}`.trim() : line.model,
-            color: "",
-            storage: (line.variant.storage || "").replace("GB", "").replace("TB", "000"),
-            grade: B2C_GRADE[line.grade],
-            type: line.category === "laptop" ? "laptops" : "phones"
-          }]
+          devices: [
+            line.category === "laptop" 
+              ? {
+                  type: "laptops",
+                  titre: `${line.brand} ${line.model} ${line.variant.cpu || ""} ${line.variant.ram || ""} ${line.variant.storage || ""}`.trim().replace(/\s+/g, ' '),
+                  brand: line.brand,
+                  model: `${line.brand} ${line.model}`.replace(/\b(i[3579]-\w+)\b/gi, '').replace(/\b(ryzen\s+\d+\s+(pro\s+)?\w+)\b/gi, '').replace(/\b\d+\s*GB\b/gi, '').replace(/\s+/g, ' ').trim(),
+                  storage: (line.variant.storage || "0").replace(/[^0-9]/g, ""),
+                  color: "",
+                  grade: B2C_GRADE[line.grade]
+                }
+              : {
+                  type: "phones",
+                  titre: "",
+                  brand: line.brand.toLowerCase(),
+                  model: line.model,
+                  storage: (line.variant.storage || "").replace("GB", "").replace("TB", "000"),
+                  color: "",
+                  grade: B2C_GRADE[line.grade]
+                }
+          ]
         }),
       });
       if (!res.ok) return [{ agent: this.name, kind: "buyback", status: "error", offers: [], message: `HTTP ${res.status}` }];
