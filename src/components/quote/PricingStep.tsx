@@ -36,7 +36,7 @@ export default function PricingStep() {
     if (targets.length === 0) return;
     setDraft((d) => ({ ...d, lines: d.lines.map((l) => (targets.some((x) => x.key === l.key) ? { ...l, priceState: "queued" } : l)) }));
     const agents = agentsFor(settings.gradeCoef);
-    await pool(targets, settings.agentConcurrency, async (line) => {
+    await pool(targets, 2, async (line) => {
       patch(line.key, { priceState: "running" });
       const agentResults = await runAgents(line, agents);
       if (!ctrl.signal.aborted) patch(line.key, { priceState: "done", agentResults });

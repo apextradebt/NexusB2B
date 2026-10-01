@@ -19,19 +19,49 @@ const nexusMarketAgent: Agent = {
   supports: (l) => !!LEGACY_API && (l.category === "phone" || l.category === "laptop"),
   async run(line) {
     try {
+      // Construction de l'objet Device à envoyer au backend
+      // On le prépare de manière lisible pour séparer la logique PC et Téléphone
+      let devicePayload: any;
+
+      if (line.category === "laptop") {
+        // Pour les PC, on génère un "titre" complet contenant toutes les spécifications
+        // Cela permet aux agents (BackMarket, EasyCash) d'extraire la RAM et le CPU eux-mêmes.
+        const fullTitle = `${line.brand} ${line.model} ${line.variant.cpu || ""} ${line.variant.ram || ""} ${line.variant.storage || ""}`.trim().replace(/\s+/g, ' ');
+        
+        // Le modèle "propre" sans le CPU et la RAM (utilisé comme fallback)
+        const cleanModel = `${line.brand} ${line.model}`
+          .replace(/\b(i[3579]-\w+)\b/gi, '')
+          .replace(/\b(ryzen\s+\d+\s+(pro\s+)?\w+)\b/gi, '')
+          .replace(/\b\d+\s*GB\b/gi, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        devicePayload = {
+          type: "laptops",
+          titre: fullTitle,
+          brand: line.brand,
+          model: cleanModel,
+          storage: (line.variant.storage || "0").replace(/[^0-9]/g, ""),
+          color: "",
+          grade: B2C_GRADE[line.grade]
+        };
+      } else {
+        // Pour les téléphones, le formatage est plus simple
+        devicePayload = {
+          type: "phones",
+          titre: "",
+          brand: line.brand.toLowerCase(),
+          model: line.model,
+          storage: (line.variant.storage || "").replace("GB", "").replace("TB", "000"),
+          color: "",
+          grade: B2C_GRADE[line.grade]
+        };
+      }
+
       const res = await fetch(`${LEGACY_API}/api/market/prices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          devices: [{
-            brand: line.brand.toLowerCase(),
-            model: line.category === "laptop" ? `${line.model} ${line.variant.cpu || ""} ${line.variant.ram || ""}`.trim() : line.model,
-            color: "",
-            storage: (line.variant.storage || "").replace("GB", "").replace("TB", "000"),
-            grade: B2C_GRADE[line.grade],
-            type: line.category === "laptop" ? "laptops" : "phones"
-          }]
-        }),
+        body: JSON.stringify({ devices: [devicePayload] }),
       });
       if (!res.ok) return [{ agent: this.name, kind: "buyback", status: "error", offers: [], message: `HTTP ${res.status}` }];
       const responseBody = await res.json();
