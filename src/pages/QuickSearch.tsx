@@ -9,6 +9,7 @@ import { agentsFor, runAgents } from "@/lib/agents";
 //import { useAuth } from "@/lib/auth";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
+import { factoryVariant, identifierIn, identify, refOf, specsSummary, useIdentification, type Identification, type IdentifyState } from "@/lib/identify";
 import { matchAgainst, matchLine } from "@/lib/match";
 import { suggest, type Suggestion } from "@/lib/suggest";
 import { extractInline, parseGrade, parsePrice } from "@/lib/parse";
@@ -80,7 +81,19 @@ export default function QuickSearch() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const run = useRef(0);
-  const suggestions = useMemo(() => suggest(text, 10), [text]);
+  // An IMEI or a serial number typed (or scanned) instead of a model name.
+  const identifier = useMemo(() => identifierIn(gradeIn(text).rest), [text]);
+  const identification = useIdentification(identifier);
+  const identified = identification.status === "done" ? identification.result : undefined;
+  // Its device, when the catalogue has it, replaces the suggestions by name. Null: the backend
+  // says it wasn't an identifier after all (a word that only looked like a serial number).
+  const identifiedRef = refOf(identified);
+  const suggestions = useMemo<Suggestion[]>(
+    () => !identifier || identified === null || identification.status === "error"
+      ? suggest(text, 10)
+      : identifiedRef ? [{ ref: identifiedRef, variant: {} }] : [],
+    [text, identifier, identified, identifiedRef, identification.status],
+  );
 
   const ref = getRef(refId);
   const tradeIn = useTradeIn();
@@ -92,7 +105,7 @@ export default function QuickSearch() {
     setLine({ ...base, priceState: "running" });
     setRunning(true);
     setDone(null);
-    const agentResults = await runAgents(base, agentsFor(settings.gradeCoef), await getToken());
+    const agentResults = await runAgents(base, agentsFor(settings.gradeCoef));
     if (id !== run.current) return; // a newer search started meanwhile
     const result: QuoteLine = { ...base, priceState: "done", agentResults };
     setLine(result);
@@ -116,19 +129,33 @@ export default function QuickSearch() {
   };
 
   /** A suggestion was picked: its capacity (phones), else the configuration typed; the grade typed. */
-  const choose = ({ ref: r, variant: sv }: Suggestion) => {
-    const v = sv.storage ? { ...variantFor(r, text), ...sv } : variantFor(r, text);
+  const choose = ({ ref: r, variant: sv }: Suggestion, id: Identification | null | undefined = identified) => {
+    // An IMEI or a Mac serial number says nothing about the configuration: it is picked below.
+    // A Lenovo or HP serial number gives the factory one.
+    const v = identifier ? factoryVariant(r, id) : sv.storage ? { ...variantFor(r, text), ...sv } : variantFor(r, text);
     const g = gradeIn(text).grade ?? grade;
     pick(r, v, g);
     setOpen(false);
     setActive(-1);
-    search(r, v, g, text.trim() || `${r.brand} ${r.model}`);
+    // The recent searches keep the model, not the IMEI.
+    search(r, v, g, identifier ? `${r.brand} ${r.model}` : text.trim() || `${r.brand} ${r.model}`);
   };
 
-  const submitText = () => {
+  const submitText = async () => {
     if (!text.trim()) return;
     if (open && active >= 0 && suggestions[active]) return choose(suggestions[active]);
     setOpen(false);
+    if (identifier) {
+      const result = await identify(identifier).catch(() => undefined);
+      const r = refOf(result);
+      if (r) return choose({ ref: r, variant: {} }, result);
+      // Identified outside the catalogue, or not at all: the note under the box says why.
+      if (result !== null) {
+        setLine(null);
+        setAlternatives([]);
+        return;
+      }
+    }
     const { match, grade: g } = understand(text, settings.defaultGrade);
     // Nothing certain from the full reading: take the first suggestion, as a search box would.
     if ((!match.ref || match.status === "unmatched") && suggestions[0]) return choose(suggestions[0]);
@@ -191,7 +218,7 @@ export default function QuickSearch() {
                 className="absolute z-30 left-0 right-0 mt-2 bg-surface rounded-2xl shadow-soft p-2 max-h-96 overflow-y-auto">
                 {suggestions.map((s, i) => {
                   const r = s.ref;
-                  const v = variantFor(r, text);
+                  const v = identifier ? factoryVariant(r, identified) : variantFor(r, text);
                   const g = gradeIn(text).grade;
                   // Phones show their capacity in the name; laptops the configuration typed.
                   const chips = [...(r.category === "laptop" ? [v.cpu, v.ram, v.storage] : []), g && `Grade ${g}`].filter(Boolean);
@@ -216,6 +243,7 @@ export default function QuickSearch() {
           <Button type="submit" disabled={!text.trim() || running}>{running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />} {t("quick.search")}</Button>
         </form>
 
+        <IdentifiedDevice state={identification} />
         {notFound && <p role="alert" className="text-sm font-semibold text-warn">{t("quick.not_found")}</p>}
 
         <div className="flex flex-col gap-3 pt-4 border-t border-line">
@@ -359,6 +387,38 @@ export default function QuickSearch() {
           </ul>
         </Card>
       )}
+    </div>
+  );
+}
+
+/** What the IMEI or serial number typed in the search box turned out to be. */
+function IdentifiedDevice({ state }: { state: IdentifyState }) {
+  const { t } = useTranslation();
+  if (state.status === "idle" || (state.status === "done" && !state.result)) return null;
+  if (state.status === "loading") {
+    return <p className="text-sm text-muted inline-flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {t("quick.identifying")}</p>;
+  }
+  if (state.status === "error") return <p className="text-sm text-muted">{t("quick.identify_error")}</p>;
+
+  const id = state.result!;
+  if (!id.found) {
+    const why = id.kind === "imei" ? t("quick.imei_unknown", { tac: id.tac }) : t(id.reason === "modern_serial" ? "quick.serial_modern" : "quick.serial_unknown");
+    return <p role="status" className="text-sm font-semibold text-warn">{why}</p>;
+  }
+  const name = id.kind === "serial" ? `${id.brand} ${id.name}` : id.ref ? `${id.ref.brand} ${id.ref.model}` : `${id.brand} ${id.model}`;
+  // Factory configuration of a Lenovo or HP PC: "i7-8565U · 16GB · 256GB · 14" FHD".
+  const details = id.kind === "imei" ? id.details : id.specs && specsSummary(id.specs);
+  return (
+    <div role="status" className="flex flex-col gap-1 text-sm">
+      <p className="flex items-center gap-2">
+        {id.kind === "imei" ? <Smartphone className="w-4 h-4 text-muted shrink-0" /> : <Laptop className="w-4 h-4 text-muted shrink-0" />}
+        <span>
+          <span className="text-muted">{t(id.kind === "imei" ? "quick.from_imei" : "quick.from_serial")} </span>
+          <span className="font-semibold">{name}</span>
+          {details && <span className="text-xs text-muted"> · {details}</span>}
+        </span>
+      </p>
+      {!id.ref && <p className="text-xs font-semibold text-warn">{t("quick.not_in_catalog")}</p>}
     </div>
   );
 }

@@ -14,7 +14,9 @@ export function groupLines(lines: RawLine[], matches: Match[], defaultGrade: Gra
     const m = matches[i];
     const parsed = parseGrade(line.gradeRaw);
     const grade = parsed ?? defaultGrade;
-    const identity = m.ref ? `${m.ref.id}|${variantKey(m.variant)}` : `?|${normalize(line.model || line.text)}`;
+    // Unknown devices named by their serial number or IMEI group by that name, not by the number itself.
+    const named = m.identified && [m.identified.brand, m.identified.model, m.identified.details].filter(Boolean).join(" ");
+    const identity = m.ref ? `${m.ref.id}|${variantKey(m.variant)}` : `?|${normalize(named || line.model || line.text)}`;
     const key = `${identity}|${grade}`;
     const existing = groups.get(key);
     if (existing) {
@@ -28,8 +30,8 @@ export function groupLines(lines: RawLine[], matches: Match[], defaultGrade: Gra
       key,
       refId: m.ref?.id,
       category: m.ref?.category,
-      brand: m.ref?.brand || line.brand || "",
-      model: m.ref?.model || line.model || line.text,
+      brand: m.ref?.brand || m.identified?.brand || line.brand || "",
+      model: m.ref?.model || m.identified?.model || line.model || line.text,
       variant: m.variant,
       grade,
       gradeAssumed: !parsed,

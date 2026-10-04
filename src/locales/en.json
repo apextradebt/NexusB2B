@@ -47,7 +47,8 @@
     "grade_col": "Grade {{grade}} quantities",
     "default_grade": "Default grade when missing",
     "analyse": "Recognise devices",
-    "need_model": "Map at least one \"Model\" or \"Description\" column."
+    "need_model": "Map at least one \"Model\", \"Description\" or \"Serial no.\" column.",
+    "identifying": "Looking up serial numbers and IMEIs… {{done}}/{{total}}"
   },
   "fields": {
     "model": "Model",
@@ -290,7 +291,7 @@
   "quick": {
     "title": "Quick search",
     "desc": "Look up the price of a single device without a quote: the agents query every buyback and resale source, and the tool works out the buy price that keeps your margin.",
-    "placeholder": "iPhone 13 128GB grade B, Latitude 5420 i5-1145G7 16/256 A…",
+    "placeholder": "iPhone 13 128 GB grade B, Latitude 5420 i5-1145G7 16/256 A, IMEI, Mac, Lenovo, HP or Fujitsu serial number…",
     "search": "Find prices",
     "rerun": "Run again",
     "device": "Device (editable)",
@@ -322,7 +323,15 @@
     "above_market": "Your price is {{pct}}% above the market ({{market}}).",
     "above_buyback": "The suggested buy price ({{offer}}) is above what buyback sites pay ({{buyback}}).",
     "prudent_tip": "Check your price, or switch to \"Prudent\" mode in Settings to work from the lower price.",
-    "suggestions": "Matching devices"
+    "suggestions": "Matching devices",
+    "identifying": "Identifying the device…",
+    "identify_error": "Identification failed: the Nexus backend isn't responding.",
+    "from_imei": "IMEI:",
+    "from_serial": "Serial number:",
+    "not_in_catalog": "Not in the catalogue: pick the model from the list below.",
+    "imei_unknown": "IMEI not recognised: TAC {{tac}} isn't in the database. Pick the model below.",
+    "serial_modern": "Recent serial number (Mac from 2021 onward): today's identification limit is reached. Pick the model below.",
+    "serial_unknown": "Serial number not recognised (only Apple, Lenovo, HP and Fujitsu are identified): check it or pick the model below."
   },
   "history": {
     "title": "Price history",
