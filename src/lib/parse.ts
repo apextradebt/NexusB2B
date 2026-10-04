@@ -470,13 +470,16 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
   table.rows.forEach((row, i) => {
     const model = get(row, "model");
     const description = get(row, "description");
-    if (!model && !description) return;
+    const serial = get(row, "serial");
+    // A serial number or IMEI alone still names a device, once looked up (a section title in that column doesn't).
+    if (!model && !description && !(serial && (CODE_RX.test(serial) || IMEI_RX.test(serial.replace(/\s/g, ""))))) return;
     if (SKIP.test(model || description || "")) return;
     // Section titles ("LAPTOPS", "Smartphones") sit alone on their row in a table that otherwise has counts or grades.
     const filled = row.filter(Boolean).length;
-    if (structured && filled === 1 && !/\d/.test(model || description || "") && matchLine({ row: 0, text: model || description!, quantity: 1 }).status === "unmatched") return;
+    const name = model || description;
+    if (structured && filled === 1 && name && !/\d/.test(name) && matchLine({ row: 0, text: name, quantity: 1 }).status === "unmatched") return;
 
-    const inline = extractInline([model, description].filter(Boolean).join(" "));
+    const inline = extractInline([model, description].filter(Boolean).join(" ") || serial!);
     // A price written in the text ("iPhone 13 128GB - 420 €") when there is no price column.
     let price = get(row, "price");
     if (!price && layout.expect === "prices") {
@@ -493,7 +496,7 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
       cpu: get(row, "cpu"),
       ram: get(row, "ram"),
       storage: get(row, "storage"),
-      serial: get(row, "serial"),
+      serial,
       price,
     };
     const brandInText = base.brand && normHeader(inline.text).includes(normHeader(base.brand));

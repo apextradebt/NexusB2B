@@ -1,9 +1,11 @@
-import { ArrowRight, Grid3x3 } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Grid3x3, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Select } from "@/components/ui";
 import { buildLines } from "@/lib/parse";
 import { matchLine } from "@/lib/match";
 import { groupLines } from "@/lib/group";
+import { identifyMatches } from "@/lib/identify";
 import { useStore } from "@/lib/store";
 import type { Field, Grade } from "@/types";
 import { GRADES } from "@/types";
@@ -17,19 +19,27 @@ const FIELDS: Field[] = ["model", "description", "brand", "cpu", "ram", "storage
 export default function MappingStep() {
   const { t } = useTranslation();
   const { draft, setDraft, settings, setSettings } = useStore();
+  // Serial numbers and IMEIs being looked up: done / total.
+  const [progress, setProgress] = useState<[number, number] | null>(null);
   const { table, layout } = draft;
   if (!table || !layout) return null;
 
   const pivot = Object.keys(layout.gradeColumns).length > 0;
-  const hasModel = Object.values(layout.mapping).some((f) => f === "model" || f === "description");
+  // A list of serial numbers or IMEIs alone is enough: the backend names the devices.
+  const hasModel = Object.values(layout.mapping).some((f) => f === "model" || f === "description" || f === "serial");
 
   const setField = (header: string, field: Field) =>
     setDraft((d) => ({ ...d, layout: { ...d.layout!, mapping: { ...d.layout!.mapping, [header]: field } } }));
 
-  const analyse = () => {
+  const analyse = async () => {
     const raw = buildLines(table, layout);
-    const lines = groupLines(raw, raw.map(matchLine), settings.defaultGrade);
-    setDraft((d) => ({ ...d, step: 2, lines }));
+    setProgress([0, 0]);
+    try {
+      const matches = await identifyMatches(raw, raw.map(matchLine), (done, total) => setProgress([done, total]));
+      setDraft((d) => ({ ...d, step: 2, lines: groupLines(raw, matches, settings.defaultGrade) }));
+    } finally {
+      setProgress(null);
+    }
   };
 
   return (
@@ -89,8 +99,10 @@ export default function MappingStep() {
             options={GRADES.map((g) => ({ value: g, label: `Grade ${g}` }))}
           />
         </label>
-        <Button onClick={analyse} disabled={!hasModel}>
-          {t("mapping.analyse")} <ArrowRight className="w-4 h-4" />
+        <Button onClick={analyse} disabled={!hasModel || progress !== null}>
+          {progress
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> {progress[1] ? t("mapping.identifying", { done: progress[0], total: progress[1] }) : t("mapping.analyse")}</>
+            : <>{t("mapping.analyse")} <ArrowRight className="w-4 h-4" /></>}
         </Button>
       </div>
       {!hasModel && <p className="text-sm text-warn font-semibold -mt-4">{t("mapping.need_model")}</p>}

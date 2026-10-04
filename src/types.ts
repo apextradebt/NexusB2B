@@ -20,6 +20,8 @@ export type RefModel = {
   ramAmd?: string[];
   storage?: string[];
   display?: string[];
+  /** Lenovo machine types sold under this name ("Intel 20S0/20S1 · AMD 20UD/20UE"). */
+  machineTypes?: string;
   /** Watches: case sizes ("41mm"). */
   size?: string[];
   /** Phone reference price for a flawless device (shared with the B2C app). */
@@ -69,6 +71,8 @@ export type Match = {
   variant: { cpu?: string; ram?: string; storage?: string };
   warnings: string[];
   alternatives: { ref: RefModel; score: number }[];
+  /** Device named by its serial number or IMEI when the catalogue doesn't list it ("HP", "EliteBook x360 1040 G6"). */
+  identified?: { brand: string; model: string; details?: string };
 };
 
 export type AgentOffer = {

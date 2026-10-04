@@ -47,7 +47,8 @@
     "grade_col": "Quantités grade {{grade}}",
     "default_grade": "Grade par défaut si absent",
     "analyse": "Reconnaître les appareils",
-    "need_model": "Indiquez au moins une colonne « Modèle » ou « Description »."
+    "need_model": "Indiquez au moins une colonne « Modèle », « Description » ou « N° de série ».",
+    "identifying": "Identification des n° de série et IMEI… {{done}}/{{total}}"
   },
   "fields": {
     "model": "Modèle",
@@ -290,7 +291,7 @@
   "quick": {
     "title": "Recherche rapide",
     "desc": "Cherchez le prix d'un seul appareil sans faire de devis : les agents interrogent toutes les sources de rachat et de revente, et l'outil calcule le prix d'achat qui garde votre marge.",
-    "placeholder": "iPhone 13 128 Go grade B, Latitude 5420 i5-1145G7 16/256 A…",
+    "placeholder": "iPhone 13 128 Go grade B, Latitude 5420 i5-1145G7 16/256 A, IMEI, n° de série Mac, Lenovo, HP ou Fujitsu…",
     "search": "Chercher les prix",
     "rerun": "Relancer",
     "device": "Appareil (modifiable)",
@@ -322,7 +323,15 @@
     "above_market": "Votre prix est {{pct}} % au-dessus du marché ({{market}}).",
     "above_buyback": "Le prix d'achat conseillé ({{offer}}) dépasse ce que paient les sites de rachat ({{buyback}}).",
     "prudent_tip": "Vérifiez votre prix, ou passez en mode « Prudent » dans Paramètres pour calculer sur le prix le plus bas.",
-    "suggestions": "Appareils trouvés"
+    "suggestions": "Appareils trouvés",
+    "identifying": "Identification de l'appareil…",
+    "identify_error": "Identification impossible : le backend Nexus ne répond pas.",
+    "from_imei": "IMEI :",
+    "from_serial": "N° de série :",
+    "not_in_catalog": "Absent du catalogue : choisissez le modèle dans la liste ci-dessous.",
+    "imei_unknown": "IMEI non reconnu : TAC {{tac}} absent de la base. Choisissez le modèle ci-dessous.",
+    "serial_modern": "N° de série récent (Mac de 2021 et après) : limite d'identification du jour atteinte. Choisissez le modèle ci-dessous.",
+    "serial_unknown": "N° de série non reconnu (seuls Apple, Lenovo, HP et Fujitsu sont identifiés) : vérifiez la saisie ou choisissez le modèle ci-dessous."
   },
   "history": {
     "title": "Historique des prix",
