@@ -41,7 +41,8 @@ export default function SettingsPage() {
           </label>
           <label className="flex flex-col gap-2 text-sm font-semibold">
             {t("settings.concurrency")}
-            <Input type="number" min={1} max={10} value={settings.agentConcurrency} onChange={(e) => setSettings({ ...settings, agentConcurrency: Math.max(1, num(e.target.value)) })} />
+            {/* Chrome n'ouvre que 6 connexions simultanées vers le backend : au-delà, les lignes attendent dans le navigateur. */}
+            <Input type="number" min={1} max={6} value={settings.agentConcurrency} onChange={(e) => setSettings({ ...settings, agentConcurrency: Math.max(1, num(e.target.value)) })} />
           </label>
           <label className="flex flex-col gap-2 text-sm font-semibold sm:col-span-2">
             {t("settings.list_mode")}

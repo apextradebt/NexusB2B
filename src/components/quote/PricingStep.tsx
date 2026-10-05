@@ -7,7 +7,7 @@ import { agentsFor, pool, runAgents } from "@/lib/agents";
 import { eur, marginRate, marketGap, priceLine, totals } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
 import { useStore } from "@/lib/store";
-import type { QuoteLine } from "@/types";
+import type { AgentResult, QuoteLine } from "@/types";
 
 const priceable = (l: QuoteLine) => l.status !== "unmatched" && !!l.refId;
 
@@ -17,6 +17,7 @@ export default function PricingStep() {
   const [open, setOpen] = useState<string | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
   const abort = useRef<AbortController | null>(null);
+  const inFlight = useRef(new Map<string, Promise<AgentResult[]>>());
 
   // Prices are derived at render time so changing margin/refurb settings updates the quote instantly.
   const lines = useMemo(() => draft.lines.map((l) => priceLine(l, settings, priceList)), [draft.lines, settings, priceList]);
@@ -36,9 +37,16 @@ export default function PricingStep() {
     if (targets.length === 0) return;
     setDraft((d) => ({ ...d, lines: d.lines.map((l) => (targets.some((x) => x.key === l.key) ? { ...l, priceState: "queued" } : l)) }));
     const agents = agentsFor(settings.gradeCoef);
-    await pool(targets, 1, async (line) => {
+    await pool(targets, settings.agentConcurrency, async (line) => {
       patch(line.key, { priceState: "running" });
-      const agentResults = await runAgents(line, agents);
+      // StrictMode (dev) starts the agents twice on mount: reuse the request
+      // already sent for this line instead of scraping the device again.
+      let request = inFlight.current.get(line.key);
+      if (!request) {
+        request = runAgents(line, agents).finally(() => inFlight.current.delete(line.key));
+        inFlight.current.set(line.key, request);
+      }
+      const agentResults = await request;
       if (!ctrl.signal.aborted) patch(line.key, { priceState: "done", agentResults });
     }, ctrl.signal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
