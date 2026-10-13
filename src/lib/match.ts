@@ -99,6 +99,8 @@ const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].in
  */
 export function stripSpecs(text: string): string {
   return ` ${text} `
+    // "EliteBook 840 G 6": the generation, not an "840 G" capacity.
+    .replace(/\b(\d{3,4}) ?g (\d{1,2})\b/gi, "$1 g$2")
     .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
     // A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names.
     .replace(/\b(?:\d{1,4}\s?(?:gb|go|g|tb|to)|[124]\s?t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")

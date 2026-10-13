@@ -12,6 +12,8 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   defaultGrade: "C",
   agentConcurrency: 3,
   listPriceMode: "mine",
+  aiMatching: true,
+  shareCorrections: true,
 };
 
 /** Refurbishment cost per unit. Quotes only hold phones and laptops; any other category costs nothing here. */

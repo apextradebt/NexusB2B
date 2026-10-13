@@ -1,11 +1,13 @@
-import { useMemo, useState } from "react";
-import { ArrowRight, AlertTriangle, Plus, Trash2, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowRight, AlertTriangle, Plus, Sparkles, Trash2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Select, StatusBadge } from "@/components/ui";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
 import { matchAgainst } from "@/lib/match";
 import { mergeDuplicates } from "@/lib/group";
+import { sendFeedback } from "@/lib/feedback";
+import { AI_MIN_MS } from "@/lib/aiMatch";
 import { useStore } from "@/lib/store";
 import type { Grade, MatchStatus, QuoteLine } from "@/types";
 import { GRADES } from "@/types";
@@ -20,7 +22,7 @@ const MODEL_OPTIONS = [
 
 export default function MatchStep() {
   const { t } = useTranslation();
-  const { draft, setDraft } = useStore();
+  const { draft, setDraft, settings } = useStore();
   const [filter, setFilter] = useState<Filter>("all");
   const lines = draft.lines;
   const [adding, setAdding] = useState(lines.length === 0);
@@ -41,13 +43,13 @@ export default function MatchStep() {
   const pickModel = (l: QuoteLine, id: string) =>
     update(l.key, (cur) => {
       const ref = getRef(id);
-      if (!ref) return { ...cur, refId: undefined, category: undefined, status: "unmatched", variant: {}, warnings: ["Exclu manuellement"] };
+      if (!ref) return { ...cur, refId: undefined, category: undefined, status: "unmatched", variant: {}, warnings: ["Exclu manuellement"], edited: true, aiNote: undefined };
       const m = matchAgainst({ row: 0, text: cur.sampleText, quantity: cur.quantity }, ref);
-      return { ...cur, refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model, variant: m.variant, status: "matched", score: 1, warnings: m.warnings };
+      return { ...cur, refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model, variant: m.variant, status: "matched", score: 1, warnings: m.warnings, edited: true, aiNote: undefined };
     });
 
   const setVariant = (l: QuoteLine, field: "cpu" | "ram" | "storage", value: string) =>
-    update(l.key, (cur) => ({ ...cur, variant: { ...cur.variant, [field]: value || undefined } }));
+    update(l.key, (cur) => ({ ...cur, variant: { ...cur.variant, [field]: value || undefined }, edited: true }));
 
   const visible = filter === "all" ? lines : lines.filter((l) => l.status === filter);
 
@@ -73,6 +75,15 @@ export default function MatchStep() {
           </div>
         ))}
       </div>
+
+      {draft.ai?.state === "running" && <AiProgress done={draft.ai.done ?? 0} total={draft.ai.total ?? 0} startedAt={draft.ai.run} />}
+      {draft.ai && draft.ai.state !== "running" && (draft.ai.state !== "done" || draft.ai.asked > 0) && (
+        <p role="status" className={`flex items-center gap-2 text-sm font-medium ${draft.ai.state === "error" ? "text-muted" : "text-primary"}`}>
+          <Sparkles className="w-4 h-4" />
+          {draft.ai.state === "done" && t("match.ai_done", { count: draft.ai.asked, changed: draft.ai.changed, rejected: draft.ai.rejected ?? 0, seconds: ((draft.ai.ms ?? 0) / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) })}
+          {draft.ai.state === "error" && t("match.ai_error", { error: draft.ai.error })}
+        </p>
+      )}
 
       {adding && <AddDeviceForm />}
 
@@ -120,6 +131,11 @@ export default function MatchStep() {
                     <div className="text-xs text-muted font-mono mt-2 truncate max-w-md" title={l.sampleText}>
                       « {l.sampleText} » · {t("match.rows", { count: l.sourceRows.length })}
                     </div>
+                    {l.aiNote && (
+                      <div className={`text-xs font-medium mt-1 flex items-center gap-1.5 ${l.aiNote === "rejected" ? "text-warn" : "text-primary"}`}>
+                        <Sparkles className="w-3 h-3 shrink-0" /> {t(`match.ai_${l.aiNote}`)}
+                      </div>
+                    )}
                   </td>
                   <td className="p-3">
                     {ref?.category === "laptop" ? (
@@ -149,7 +165,7 @@ export default function MatchStep() {
                   </td>
                   <td className="p-3 pt-5 text-right font-bold tabular-nums">{l.quantity.toLocaleString("fr-FR")}</td>
                   <td className="p-3 pt-4">
-                    <button onClick={() => setDraft((d) => ({ ...d, lines: d.lines.filter((x) => x.key !== l.key) }))} aria-label={t("add.remove")}
+                    <button onClick={() => setDraft((d) => ({ ...d, lines: d.lines.filter((x) => x.key !== l.key), removed: [...(d.removed ?? []), l] }))} aria-label={t("add.remove")}
                       className="p-1.5 rounded-full text-muted hover:text-warn"><Trash2 className="w-4 h-4" /></button>
                   </td>
                 </tr>
@@ -161,9 +177,42 @@ export default function MatchStep() {
       </div>
 
       <div className="flex justify-end pt-4 border-t border-line">
-        <Button onClick={() => setDraft((d) => ({ ...d, step: 3, lines: mergeDuplicates(d.lines) }))} disabled={counts.matched + counts.review === 0}>
+        <Button
+          onClick={() => {
+            if (settings.shareCorrections) sendFeedback(draft);
+            setDraft((d) => ({ ...d, step: 3, lines: mergeDuplicates(d.lines) }));
+          }}
+          disabled={counts.matched + counts.review === 0 || draft.ai?.state === "running"}
+        >
           {t("match.price")} <ArrowRight className="w-4 h-4" />
         </Button>
+      </div>
+    </div>
+  );
+}
+
+/** The AI check under way: lines answered so far, on a bar that eases ahead a little while a batch is out. */
+function AiProgress({ done, total, startedAt }: { done: number; total: number; startedAt: number }) {
+  const { t } = useTranslation();
+  const [shown, setShown] = useState(4);
+  useEffect(() => {
+    const real = total ? (100 * done) / total : 0;
+    // Creep towards the end of the batches being answered, never past 95 % before the answers are in.
+    // and fill no faster than AI_MIN_MS, so a quick answer still reads as work being done.
+    const id = setInterval(() => {
+      const timeCap = (100 * (Date.now() - startedAt)) / AI_MIN_MS;
+      setShown((s) => Math.min(95, timeCap, Math.max(real, s + (Math.min(95, real + 25) - s) * 0.12)));
+    }, 60);
+    return () => clearInterval(id);
+  }, [done, total, startedAt]);
+  return (
+    <div role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done} aria-label={t("match.ai_running")} className="flex flex-col gap-2">
+      <div className="flex items-center justify-between text-sm font-medium text-primary">
+        <span className="flex items-center gap-2"><Sparkles className="w-4 h-4 animate-pulse" /> {t("match.ai_running")}</span>
+        {total > 0 && <span className="tabular-nums text-muted text-xs">{t("match.ai_progress", { done, total })}</span>}
+      </div>
+      <div className="h-1.5 rounded-full bg-line overflow-hidden">
+        <div className="h-full rounded-full bg-lime transition-[width] duration-300 ease-out" style={{ width: `${shown}%` }} />
       </div>
     </div>
   );

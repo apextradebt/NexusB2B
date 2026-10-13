@@ -57,6 +57,19 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="p-8 flex flex-col gap-6">
+        <h2 className="text-xl font-bold">{t("settings.recognition")}</h2>
+        {(["aiMatching", "shareCorrections"] as const).map((key) => (
+          <label key={key} className="flex items-start gap-3 text-sm font-semibold">
+            <input type="checkbox" checked={settings[key] ?? true} onChange={(e) => setSettings({ ...settings, [key]: e.target.checked })} className="accent-[var(--primary)] w-4 h-4 mt-0.5" />
+            <span className="flex flex-col gap-1">
+              {t(`settings.${key}`)}
+              <span className="text-xs text-muted font-medium">{t(`settings.${key}_desc`)}</span>
+            </span>
+          </label>
+        ))}
+      </Card>
+
+      <Card className="p-8 flex flex-col gap-6">
         <div>
           <h2 className="text-xl font-bold">{t("settings.refurb")}</h2>
           <p className="text-sm text-muted font-medium mt-1">{t("settings.refurb_desc")}</p>

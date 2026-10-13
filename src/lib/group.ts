@@ -1,4 +1,4 @@
-import type { Grade, Match, QuoteLine, RawLine, RefModel } from "@/types";
+import type { AbsorbedLine, Grade, Match, QuoteLine, RawLine, RefModel } from "@/types";
 import { parseGrade } from "@/lib/parse";
 import { normalize } from "@/lib/match";
 
@@ -43,6 +43,7 @@ export function groupLines(lines: RawLine[], matches: Match[], defaultGrade: Gra
       sampleText: line.text,
       priceState: "idle",
       agentResults: [],
+      auto: { refId: m.ref?.id, status: m.status, score: m.score, variant: m.variant },
     });
   });
   return sortLines([...groups.values()]);
@@ -89,6 +90,7 @@ export function mergeDuplicates(lines: QuoteLine[]): QuoteLine[] {
     }
     out.set(key, {
       ...prev,
+      absorbed: [...(prev.absorbed ?? []), ...absorb(l)],
       quantity: prev.quantity + l.quantity,
       sourceRows: [...prev.sourceRows, ...l.sourceRows],
       warnings: [...new Set([...prev.warnings, ...l.warnings])],
@@ -99,6 +101,10 @@ export function mergeDuplicates(lines: QuoteLine[]): QuoteLine[] {
   }
   return sortLines([...out.values()]);
 }
+
+/** A merged line and the lines it had absorbed, as the feedback needs them. */
+const absorb = (l: QuoteLine): AbsorbedLine[] =>
+  l.auto ? [{ sampleText: l.sampleText, rows: l.sourceRows.length, auto: l.auto, edited: l.edited }, ...(l.absorbed ?? [])] : l.absorbed ?? [];
 
 const GRADE_ORDER = "ABCDE";
 

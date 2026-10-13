@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FilePlus2, FolderOpen, LineChart, Library, Settings, Tag, Zap, Menu, X, Globe, Moon, Sun, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
-//import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
 
 const navigation = [
@@ -21,7 +21,7 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
-  //const { enabled, userName, userPicture, logout } = useAuth();
+  const { enabled, userName, userPicture, logout } = useAuth();
   const { theme, toggleTheme } = useStore();
 
   const itemClass = (active: boolean) =>
@@ -79,8 +79,14 @@ export default function Sidebar() {
             <Globe className="w-5 h-5 min-w-5 mr-4" strokeWidth={1.6} />
             <span className={`${label} text-sm font-medium`}>{i18n.language === "fr" ? "English" : "Français"}</span>
           </button>
-
-
+          {enabled && (
+            <button onClick={logout} className={itemClass(false)} title={t("sidebar.logout")}>
+              {userPicture
+                ? <img src={userPicture} alt="" className="w-5 h-5 min-w-5 mr-4 rounded-full" />
+                : <LogOut className="w-5 h-5 min-w-5 mr-4" strokeWidth={1.6} />}
+              <span className={`${label} text-sm font-medium truncate`}>{userName ? `${userName} · ${t("sidebar.logout")}` : t("sidebar.logout")}</span>
+            </button>
+          )}
         </div>
       </aside>
     </>

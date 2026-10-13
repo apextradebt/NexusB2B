@@ -11,7 +11,11 @@
     "local_mode": "Mode local",
     "prices": "Mes prix",
     "quick": "Recherche rapide",
-    "history": "Historique des prix"
+    "history": "Historique des prix",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "signing_in": "Connexion…"
   },
   "steps": {
     "import": "Import",
@@ -81,7 +85,15 @@
     "not_priced": "Ne sera pas chiffré",
     "grade_assumed": "Grade par défaut",
     "empty": "Rien dans ce filtre.",
-    "price": "Chiffrer avec les agents"
+    "price": "Chiffrer avec les agents",
+    "ai_running": "L'IA vérifie les lignes…",
+    "ai_done_one": "IA : {{count}} ligne vérifiée, {{changed}} modèle changé, {{rejected}} écarté ({{seconds}} s)",
+    "ai_done_other": "IA : {{count}} lignes vérifiées, {{changed}} modèle(s) changé(s), {{rejected}} écarté(s) ({{seconds}} s)",
+    "ai_error": "IA indisponible : {{error}}",
+    "ai_picked": "Modèle proposé par l'IA, à confirmer",
+    "ai_confirmed": "Confirmé par l'IA",
+    "ai_rejected": "Modèle écarté par l'IA : aucun modèle du référentiel ne correspond",
+    "ai_progress": "{{done}} / {{total}} lignes"
   },
   "pricing": {
     "total_buy": "Total achat",
@@ -194,7 +206,12 @@
     "list_mode": "Prix de revente de référence",
     "list_mode_mine": "Mon prix de vente (grille « Mes prix ») quand il existe",
     "list_mode_prudent": "Prudent : le plus bas entre mon prix et le marché",
-    "list_mode_desc": "Le prix d'achat proposé est calculé à partir de ce prix de revente. Le mode prudent protège la marge quand le marché est passé sous votre grille."
+    "list_mode_desc": "Le prix d'achat proposé est calculé à partir de ce prix de revente. Le mode prudent protège la marge quand le marché est passé sous votre grille.",
+    "recognition": "Reconnaissance des appareils",
+    "aiMatching": "Faire vérifier les lignes par l'IA locale",
+    "aiMatching_desc": "Chaque ligne reconnue est revue par le modèle local (backend Nexus et Ollama), qui choisit le bon modèle parmi ceux du référentiel : il complète les lignes non reconnues et corrige les erreurs des règles. Un modèle changé reste à confirmer.",
+    "shareCorrections": "Partager les corrections",
+    "shareCorrections_desc": "En passant aux prix, envoie au backend Nexus ce qui a été reconnu et ce que vous avez corrigé (sans numéros de série ni IMEI), pour mesurer et améliorer la reconnaissance."
   },
   "add": {
     "title": "Ajouter un appareil",

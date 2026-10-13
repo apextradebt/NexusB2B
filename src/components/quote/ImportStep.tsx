@@ -6,6 +6,7 @@ import { detectLayout, parseText, readFile, type Table } from "@/lib/parse";
 import { downloadTemplate } from "@/lib/export";
 import { sampleLot } from "@/lib/sample";
 import { useStore } from "@/lib/store";
+import { newQuoteId } from "@/lib/feedback";
 
 export default function ImportStep() {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ export default function ImportStep() {
       setError(t("import.empty"));
       return;
     }
-    setDraft((d) => ({ ...d, step: 1, fileName, table, layout: detectLayout(table), lines: [], savedId: undefined }));
+    setDraft((d) => ({ ...d, step: 1, fileName, table, layout: detectLayout(table), lines: [], savedId: undefined, id: newQuoteId(), ai: undefined, removed: [] }));
   };
 
   const onFile = async (file?: File) => {

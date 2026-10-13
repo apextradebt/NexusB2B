@@ -6,6 +6,7 @@ import { buildLines } from "@/lib/parse";
 import { matchLine } from "@/lib/match";
 import { groupLines } from "@/lib/group";
 import { identifyMatches } from "@/lib/identify";
+import { needsAi, startAi } from "@/lib/aiMatch";
 import { useStore } from "@/lib/store";
 import type { Field, Grade } from "@/types";
 import { GRADES } from "@/types";
@@ -36,7 +37,12 @@ export default function MappingStep() {
     setProgress([0, 0]);
     try {
       const matches = await identifyMatches(raw, raw.map(matchLine), (done, total) => setProgress([done, total]));
-      setDraft((d) => ({ ...d, step: 2, lines: groupLines(raw, matches, settings.defaultGrade) }));
+      const lines = groupLines(raw, matches, settings.defaultGrade);
+      // The lines show at once; the AI checks them in the background.
+      const run = Date.now();
+      const ai = settings.aiMatching && lines.some(needsAi);
+      setDraft((d) => ({ ...d, step: 2, lines, removed: [], ai: ai ? { run, state: "running", asked: 0, changed: 0, rejected: 0 } : undefined }));
+      if (ai) startAi(lines, run, setDraft);
     } finally {
       setProgress(null);
     }

@@ -11,7 +11,11 @@
     "local_mode": "Local mode",
     "prices": "My prices",
     "quick": "Quick search",
-    "history": "Price history"
+    "history": "Price history",
+    "logout": "Sign out"
+  },
+  "auth": {
+    "signing_in": "Signing in…"
   },
   "steps": {
     "import": "Import",
@@ -81,7 +85,15 @@
     "not_priced": "Will not be priced",
     "grade_assumed": "Default grade",
     "empty": "Nothing in this filter.",
-    "price": "Price with the agents"
+    "price": "Price with the agents",
+    "ai_running": "The AI is checking the lines…",
+    "ai_done_one": "AI: {{count}} line checked, {{changed}} model changed, {{rejected}} removed ({{seconds}} s)",
+    "ai_done_other": "AI: {{count}} lines checked, {{changed}} model(s) changed, {{rejected}} removed ({{seconds}} s)",
+    "ai_error": "AI unavailable: {{error}}",
+    "ai_picked": "Model suggested by the AI, to confirm",
+    "ai_confirmed": "Confirmed by the AI",
+    "ai_rejected": "Model removed by the AI: no reference model fits",
+    "ai_progress": "{{done}} / {{total}} lines"
   },
   "pricing": {
     "total_buy": "Total buy",
@@ -194,7 +206,12 @@
     "list_mode": "Reference resale price",
     "list_mode_mine": "My selling price (\"My prices\" list) when there is one",
     "list_mode_prudent": "Prudent: the lower of my price and the market",
-    "list_mode_desc": "The buy offer is computed from this resale price. Prudent mode protects the margin when the market has dropped below your list."
+    "list_mode_desc": "The buy offer is computed from this resale price. Prudent mode protects the margin when the market has dropped below your list.",
+    "recognition": "Device recognition",
+    "aiMatching": "Have the local AI check the lines",
+    "aiMatching_desc": "Every recognised line is reviewed by the local model (Nexus backend and Ollama), which picks the right reference model: it fills in unrecognised lines and fixes the rules' mistakes. A changed model still needs confirming.",
+    "shareCorrections": "Share corrections",
+    "shareCorrections_desc": "When moving on to prices, sends the Nexus backend what was recognised and what you corrected (without serial numbers or IMEIs), to measure and improve recognition."
   },
   "add": {
     "title": "Add a device",

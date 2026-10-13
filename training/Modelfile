@@ -1,0 +1,12 @@
+# nexus-matcher: Qwen2.5-1.5B-Instruct fine-tuned by train.py to pick the catalogue model a supplier
+# line names (see README.md), converted to 8-bit GGUF. Install with:  ollama create nexus-matcher -f Modelfile
+FROM ./out/nexus-matcher-q8_0.gguf
+
+# Qwen's ChatML, as used in training (the backend always sends a system message).
+TEMPLATE """{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+"""
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0
+PARAMETER num_predict 4

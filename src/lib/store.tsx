@@ -39,7 +39,16 @@ export type Draft = {
   layout?: Layout;
   lines: QuoteLine[];
   savedId?: string;
+  /** Identifies the quote in the recognition feedback (set on import). */
+  id?: string;
+  /** AI check of the uncertain lines, started when the lines are matched. */
+  ai?: AiRun;
+  /** Lines deleted at the matching step, kept for the recognition feedback. */
+  removed?: QuoteLine[];
 };
+
+/** `asked`: lines checked; `changed`: given another model; `rejected`: model removed, none fitting. */
+export type AiRun = { run: number; state: "running" | "done" | "error"; asked: number; changed: number; rejected: number; ms?: number; error?: string; done?: number; total?: number };
 
 const EMPTY_DRAFT: Draft = { step: 0, fileName: "", client: "", reference: "", lines: [] };
 

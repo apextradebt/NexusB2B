@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { CATALOG } from "@/lib/catalog";
 import { matchAgainst } from "@/lib/match";
 import type { Match, QuoteLine, RawLine, RefModel } from "@/types";
-
 // Same backend as the "Marché (Nexus API)" agent; the TAC database and the Apple, Lenovo
 // and HP lookups live there (B2C-Backend/src/logic/deviceLookup.ts).
-const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+import { backendFetch } from "@/lib/api";
 
 /** An IMEI (only its 8-digit TAC is sent) or a serial number (Mac, Lenovo, HP or Fujitsu PC) typed in place of a model name. */
 export type Identifier = { kind: "imei"; tac: string } | { kind: "serial"; serial: string };
@@ -140,7 +139,7 @@ const SERIAL_PATHS: Record<SerialSource, (serial: string) => string> = {
 };
 
 async function identifyImei(tac: string): Promise<Identification | null> {
-  const res = await fetch(`${API}/api/lookup/tac/${tac}`);
+  const res = await backendFetch(`/api/lookup/tac/${tac}`);
   if (res.status === 400) return null;
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const body = await res.json();
@@ -153,7 +152,7 @@ async function identifyImei(tac: string): Promise<Identification | null> {
 async function identifySerial(serial: string, sources: SerialSource[]): Promise<Identification | null> {
   let failed = false;
   for (const source of sources) {
-    const res = await fetch(`${API}${SERIAL_PATHS[source](serial)}`).catch(() => undefined);
+    const res = await backendFetch(SERIAL_PATHS[source](serial)).catch(() => undefined);
     if (res?.status === 400) continue; // not this maker's format
     if (!res?.ok) {
       failed = true;

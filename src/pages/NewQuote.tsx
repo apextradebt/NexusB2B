@@ -6,10 +6,11 @@ import MappingStep from "@/components/quote/MappingStep";
 import MatchStep from "@/components/quote/MatchStep";
 import PricingStep from "@/components/quote/PricingStep";
 import { useStore } from "@/lib/store";
+import { sendFeedback } from "@/lib/feedback";
 
 export default function NewQuote() {
   const { t } = useTranslation();
-  const { draft, setDraft } = useStore();
+  const { draft, setDraft, settings } = useStore();
   const maxReached = draft.lines.length ? (draft.lines.some((l) => l.priceState !== "idle") ? 3 : 2) : draft.table ? 1 : 0;
 
   return (
@@ -18,7 +19,15 @@ export default function NewQuote() {
         title={draft.client ? `${t("quote.title")} · ${draft.client}` : t("quote.title")}
         desc={t("quote.desc")}
       />
-      <Stepper step={draft.step} maxReached={Math.max(maxReached, draft.step)} onGo={(s) => setDraft((d) => (s === 1 && !d.table ? d : { ...d, step: s }))} />
+      <Stepper
+        step={draft.step}
+        maxReached={Math.max(maxReached, draft.step)}
+        onGo={(s) => {
+          // Leaving the matching step by the stepper sends the corrections too (the button does).
+          if (draft.step === 2 && s !== 2 && settings.shareCorrections) sendFeedback(draft);
+          setDraft((d) => (s === 1 && !d.table ? d : { ...d, step: s }));
+        }}
+      />
       <Card className="p-6 md:p-10 min-h-100">
         {draft.step === 0 && <ImportStep />}
         {draft.step === 1 && <MappingStep />}

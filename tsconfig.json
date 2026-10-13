@@ -16,6 +16,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "server"],
+  "include": ["src", "server", "training/*.ts"],
   "exclude": ["node_modules"]
 }

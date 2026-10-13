@@ -125,7 +125,26 @@ export type QuoteLine = {
   listPriceNote?: string;
   /** Median market resale found by the agents, kept for comparison when the list price is used. */
   marketSell?: number;
+  /** What recognition found before any manual change (rules, then the AI), for the recognition feedback. */
+  auto?: AutoMatch;
+  /** The user changed the model or the configuration by hand. */
+  edited?: boolean;
+  /** The AI chose another model ("picked"), agreed with rules that were unsure ("confirmed") or removed the rules' model ("rejected"). */
+  aiNote?: "picked" | "confirmed" | "rejected";
+  /** Lines later merged into this one (same device after manual edits): their recognition, for the feedback. */
+  absorbed?: AbsorbedLine[];
 };
+
+export type AutoMatch = {
+  refId?: string;
+  status: MatchStatus;
+  score: number;
+  variant: { cpu?: string; ram?: string; storage?: string };
+  /** Set once the AI was asked: the model it picked, none when no candidate fit. */
+  ai?: { refId?: string };
+};
+
+export type AbsorbedLine = { sampleText: string; rows: number; auto?: AutoMatch; edited?: boolean };
 
 /** One of the customer's own selling prices. Empty variant fields / grade = applies to any. */
 export type PriceListEntry = {
@@ -152,6 +171,10 @@ export type PricingSettings = {
   agentConcurrency: number;
   /** "mine": the customer's price list is the resale price; "prudent": the lower of it and the market. */
   listPriceMode: "mine" | "prudent";
+  /** Ask the AI (Nexus backend) about the lines the rules could not recognise for sure. */
+  aiMatching: boolean;
+  /** Send what was recognised and corrected in each quote to the Nexus backend. */
+  shareCorrections: boolean;
 };
 
 /** Lifecycle of a quote once saved, in order. */

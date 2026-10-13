@@ -17,7 +17,16 @@ Uses the same `.env` variables as the PhoneP2C (B2C) app (`VITE_API_URL`, `VITE_
 1. **Import** — `.xlsx` or `.csv`, or rows pasted from Excel. Title rows are skipped; pivot tables (models × `Class A…E` count columns) are detected and expanded.
 2. **Columns** — auto-mapped (FR/EN headers), editable.
 3. **Matching** — each line is matched to the reference (`src/data/laptops.json` + `src/data/phones.json`), CPU/RAM/storage are resolved against the factory options, identical devices are grouped and sorted. Uncertain lines are flagged *À vérifier* with the reason.
+   Every recognised line then goes to the AI in the background (Nexus backend, `POST /api/b2b/resolve`): each with up to 12 catalogue candidates (the rules' own pick, the matcher's alternatives and the closest names, typos and shorthand like "MBP" or "SGS21" included), and a small model trained for this (`nexus-matcher`, run locally by Ollama, see `training/README.md`) picks one or none. It fills in lines the rules could not recognise and catches the ones they got wrong ("MBP 14 2021" read as an iPhone 14). A model it picks stays *À vérifier* with the note "Modèle proposé par l'IA" until the user confirms it; when no candidate fits, the rules' model is removed (*Non reconnu*, the rules' pick kept in a warning). Lines edited by hand and models named from a serial number are left alone. The table shows at once; the answers arrive in the background, about 30 lines per second. Off switch in Settings.
 4. **Prices** — the agents run per grouped line, with a limited number running at once. Buy price = resale × (1 − target margin) − refurbishment cost (Settings). Every price can be overridden by hand. Export to Excel/CSV, or save the quote in the browser.
+
+### Recognition feedback
+
+When the user moves on to prices, the quote's recognition is sent to the Nexus backend (`POST /api/b2b/match-feedback`, collection `b2bMatchFeedback`): for each grouped line, what the rules found, what the AI picked, and what the user kept or deleted, plus the columns whose role was changed. Serial numbers and IMEIs are removed first. One document per quote, replaced if the quote is sent again. Off switch in Settings.
+
+### Login
+
+With `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID` and `VITE_AUTH0_IDENTIFIER` set (same tenant and API as PhoneP2C, with this app's URL added to the Auth0 application's callback, logout and web origin URLs), the app asks for a login and sends the user's token to the backend. Without them it runs in local mode; the backend then needs `B2B_AUTH=optional` for the AI and the feedback (it requires a token when `NODE_ENV=production`).
 
 ### Price agents (price server)
 

@@ -3,3 +3,11 @@ dist
 .env*
 audit-results.jsonl
 .cache/
+
+# Local model training (venv, base model, generated data, checkpoints)
+training/.venv/
+training/models/
+training/data/
+training/out/
+training/llama.cpp/
+training/*.log

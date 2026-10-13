@@ -21,6 +21,7 @@ describe("matchLine — laptops", () => {
     ["Dell Latitude 5420", "Latitude 5420"],
     ["DELL LATITUDE 5420 I5-1145G7 16GB 512GB SSD", "Latitude 5420"],
     ["HP EliteBook 840 G8 Notebook PC", "EliteBook 840 G8"],
+    ["HP EliteBook 840 G 6 i5-8265U 8GB 256GB", "EliteBook 840 G6"],
     ["Lenovo ThinkPad T14 Gen 2", "ThinkPad T14 Gen 2"],
     ["ThinkPad T14 G3", "ThinkPad T14 Gen 3"],
     ["ThinkPad X1 Carbon Gen 10", "ThinkPad X1 Carbon Gen 10"],
