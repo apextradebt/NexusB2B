@@ -30,6 +30,8 @@ ollama create nexus-matcher -f Modelfile
 .venv/Scripts/python eval.py             # accuracy and speed through Ollama, next to the rules alone
 ```
 
+To judge it on real supplier files, `npx tsx training/check-lots.ts <files>` prints what the model would pick for the lines the rules did not settle, and `npx tsx training/audit-ai.ts <files>` runs the whole recognition as the app does (rules, AI, answers applied) and lists the lines the AI changed, removed or left without a configuration.
+
 Then start the backend as usual: it calls Ollama on `http://127.0.0.1:11434` (`OLLAMA_URL`, `B2B_AI_MODEL` to change).
 
 ### The data

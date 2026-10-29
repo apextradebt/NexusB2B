@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Select, StatusBadge } from "@/components/ui";
 import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
-import { matchAgainst } from "@/lib/match";
+import { rematch } from "@/lib/match";
 import { mergeDuplicates } from "@/lib/group";
 import { sendFeedback } from "@/lib/feedback";
 import { AI_MIN_MS } from "@/lib/aiMatch";
@@ -44,7 +44,7 @@ export default function MatchStep() {
     update(l.key, (cur) => {
       const ref = getRef(id);
       if (!ref) return { ...cur, refId: undefined, category: undefined, status: "unmatched", variant: {}, warnings: ["Exclu manuellement"], edited: true, aiNote: undefined };
-      const m = matchAgainst({ row: 0, text: cur.sampleText, quantity: cur.quantity }, ref);
+      const m = rematch(cur, ref);
       return { ...cur, refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model, variant: m.variant, status: "matched", score: 1, warnings: m.warnings, edited: true, aiNote: undefined };
     });
 
@@ -81,6 +81,7 @@ export default function MatchStep() {
         <p role="status" className={`flex items-center gap-2 text-sm font-medium ${draft.ai.state === "error" ? "text-muted" : "text-primary"}`}>
           <Sparkles className="w-4 h-4" />
           {draft.ai.state === "done" && t("match.ai_done", { count: draft.ai.asked, changed: draft.ai.changed, rejected: draft.ai.rejected ?? 0, seconds: ((draft.ai.ms ?? 0) / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) })}
+          {draft.ai.state === "done" && !!draft.ai.failed && <span className="text-warn">{t("match.ai_failed", { count: draft.ai.failed })}</span>}
           {draft.ai.state === "error" && t("match.ai_error", { error: draft.ai.error })}
         </p>
       )}

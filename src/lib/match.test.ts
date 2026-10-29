@@ -293,3 +293,50 @@ describe("messy imports", () => {
     expect(decode(new Uint8Array([0xff, 0xfe, 0x51, 0x00, 0x74, 0x00, 0xe9, 0x00]).buffer)).toBe("Qté");
   });
 });
+
+describe("supplier spellings", () => {
+  it.each([
+    ["Elitbook 850G6 i5 8/256", "EliteBook 850 G6"],
+    ["Dell Lattitude5520 i7 16/512", "Latitude 5520"],
+    ["ProBook450G8 i5-1135G7 8GB 256GB", "ProBook 450 G8"],
+    ["XPS13 9310 i7 16/512", "XPS 13 9310"],
+    ["Surfacepro7 i5 8/128", "Surface Pro 7"],
+    ["MBA M2 13 2022 8/256", "MacBook Air M2 2022"],
+    ["Prec 5550 i7 32/512", "Precision 5550"],
+    ["IP13 Pro Max 256", "iPhone 13 Pro Max"],
+    ["iphon 13 pro 128", "iPhone 13 Pro"],
+    ["Huawei P30Pro 128", "P30 Pro"],
+    ["Pixel7a 128", "Pixel 7a"],
+    ["Galaxy A 53 5G 128", "Galaxy A53"],
+    ["OnePlus Nord2 5G 128", "OnePlus Nord 2"],
+  ])("%s → %s", (input, expected) => {
+    expect(matchLine(line(input)).ref?.model).toBe(expected);
+  });
+
+  it("takes no tablet or watch for the phone of the same number", () => {
+    expect(matchLine(line("Apple Watch Series 7 45mm")).status).toBe("unmatched");
+    expect(matchLine(line("Galaxy Tab S7 128GB")).status).toBe("unmatched");
+    expect(matchLine(line("Galaxy S7 32GB")).ref?.model).toBe("Galaxy S7");
+  });
+
+  it("reads capacities written without a unit, once the model is known", () => {
+    expect(matchLine(line("Pixel7a 128")).variant).toEqual({ storage: "128GB" });
+    expect(matchLine(line("SGS21 Ultra 256 Phantom Black")).variant).toEqual({ storage: "256GB" });
+    expect(matchLine(line("Latitude 5420 i5-1145G7 16 256")).variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+    // The model's own number is not a capacity, and two possible ones say nothing.
+    expect(matchLine(line("iPhone 16 128")).variant).toEqual({ storage: "128GB" });
+    expect(matchLine(line("iPhone 15 128 256")).variant).toEqual({});
+  });
+});
+
+describe("rematch (another model for a quote line)", () => {
+  it("reads the line's spec columns and the configuration its serial number gave", async () => {
+    const { rematch } = await import("@/lib/match");
+    const { CATALOG } = await import("@/lib/catalog");
+    const latitude = CATALOG.find((r) => r.model === "Latitude 5420")!;
+    const columns = { sampleText: "Lat 5420 i5-1145G7 16 256", quantity: 1, source: { cpu: "i5-1145G7", ram: "16", storage: "256" } };
+    expect(rematch(columns, latitude).variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+    const serial = { sampleText: "PF2W2GLT", quantity: 1, source: { identified: "i5-1145G7 · 16GB · 256GB · 14\" FHD" } };
+    expect(rematch(serial, latitude).variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+  });
+});

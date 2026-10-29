@@ -33,9 +33,9 @@ describe("redact", () => {
 
 describe("buildFeedback", () => {
   it("reports what the rules and the AI found and what the user kept, line by line", () => {
-    let lines = linesOf("Latitude 5420 i5-1145G7 16GB 256GB", "Samsung SGS21 Ultra 256GB", "Surface Pro7 i5 8/128", "PF2W2GLT");
-    lines = applyAi(lines, new Map([["Samsung SGS21 Ultra 256GB", candidatesFor("Galaxy S21 Ultra")[0].id]])).lines;
-    lines = lines.map((l) => (l.sampleText === "Surface Pro7 i5 8/128" ? pick(l, "Surface Pro 7") : l));
+    let lines = linesOf("Latitude 5420 i5-1145G7 16GB 256GB", "Samsung S21U 256GB", "MS Surface P7 i5 8/128", "PF2W2GLT");
+    lines = applyAi(lines, new Map([["Samsung S21U 256GB", candidatesFor("Galaxy S21 Ultra")[0].id]])).lines;
+    lines = lines.map((l) => (l.sampleText === "MS Surface P7 i5 8/128" ? pick(l, "Surface Pro 7") : l));
     const serial = lines.find((l) => l.sampleText === "PF2W2GLT")!;
     const fb = buildFeedback(draftOf(lines.filter((l) => l !== serial), { removed: [serial] }));
 
@@ -43,25 +43,25 @@ describe("buildFeedback", () => {
     expect(fb.lines).toHaveLength(4);
     expect(of("Latitude 5420 i5-1145G7 16GB 256GB")).toMatchObject({ rules: { status: "matched" }, final: { refId: expect.any(String), removed: false }, edited: false });
     expect(of("Latitude 5420 i5-1145G7 16GB 256GB").ai).toBeUndefined();
-    expect(of("Samsung SGS21 Ultra 256GB")).toMatchObject({
+    expect(of("Samsung S21U 256GB")).toMatchObject({
       rules: { refId: null, status: "unmatched" },
       ai: { refId: expect.stringContaining("S21ULTRA") },
       final: { refId: expect.stringContaining("S21ULTRA"), variant: { storage: "256GB" }, removed: false },
       edited: false,
     });
-    expect(of("Surface Pro7 i5 8/128")).toMatchObject({ rules: { status: "review" }, final: { refId: getRef(candidatesFor("Surface Pro 7")[0].id)!.id }, edited: true });
+    expect(of("MS Surface P7 i5 8/128")).toMatchObject({ rules: { status: "review" }, final: { refId: getRef(candidatesFor("Surface Pro 7")[0].id)!.id }, edited: true });
     expect(of("[n° de série]")).toMatchObject({ final: { removed: true } });
   });
 
   it("keeps the lines merged into others after a correction", () => {
-    let lines = linesOf("Latitude 5420 i5-1145G7 16GB 256GB", "Lat5420 i5-1145G7 16GB 256GB");
+    let lines = linesOf("Latitude 5420 i5-1145G7 16GB 256GB", "L5420 i5-1145G7 16GB 256GB");
     lines = lines.map((l) => (l.status === "matched" ? l : pick(l, "Latitude 5420")));
     const merged = mergeDuplicates(lines);
     expect(merged).toHaveLength(1);
     const fb = buildFeedback(draftOf(merged));
     expect(fb.lines.map((l) => [l.text, l.edited])).toEqual(expect.arrayContaining([
       ["Latitude 5420 i5-1145G7 16GB 256GB", false],
-      ["Lat5420 i5-1145G7 16GB 256GB", true],
+      ["L5420 i5-1145G7 16GB 256GB", true],
     ]));
     expect(new Set(fb.lines.map((l) => l.final.refId)).size).toBe(1);
   });

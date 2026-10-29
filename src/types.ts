@@ -127,6 +127,8 @@ export type QuoteLine = {
   marketSell?: number;
   /** What recognition found before any manual change (rules, then the AI), for the recognition feedback. */
   auto?: AutoMatch;
+  /** The line's CPU / RAM / storage columns and the configuration its serial number gave: read again when the model changes. */
+  source?: { cpu?: string; ram?: string; storage?: string; identified?: string };
   /** The user changed the model or the configuration by hand. */
   edited?: boolean;
   /** The AI chose another model ("picked"), agreed with rules that were unsure ("confirmed") or removed the rules' model ("rejected"). */
