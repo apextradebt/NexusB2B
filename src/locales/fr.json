@@ -90,6 +90,8 @@
     "ai_done_one": "IA : {{count}} ligne vérifiée, {{changed}} modèle changé, {{rejected}} écarté ({{seconds}} s)",
     "ai_done_other": "IA : {{count}} lignes vérifiées, {{changed}} modèle(s) changé(s), {{rejected}} écarté(s) ({{seconds}} s)",
     "ai_error": "IA indisponible : {{error}}",
+    "ai_failed_one": "· {{count}} ligne sans réponse de l'IA",
+    "ai_failed_other": "· {{count}} lignes sans réponse de l'IA",
     "ai_picked": "Modèle proposé par l'IA, à confirmer",
     "ai_confirmed": "Confirmé par l'IA",
     "ai_rejected": "Modèle écarté par l'IA : aucun modèle du référentiel ne correspond",

@@ -1,5 +1,5 @@
-import type { Match, ParsedSpecs, RawLine, RefModel } from "@/types";
-import { CATALOG } from "@/lib/catalog";
+import type { Match, ParsedSpecs, QuoteLine, RawLine, RefModel } from "@/types";
+import { CATALOG, phoneStorage } from "@/lib/catalog";
 
 /**
  * Normalise free text so supplier spellings line up with catalog names:
@@ -29,6 +29,8 @@ const NOISE = new Set(["notebook", "laptop", "pc", "portable", "ordinateur", "sm
 const LINE_WORDS = new Set(["iphone", "galaxy", "pixel", "thinkpad", "elitebook", "probook", "latitude", "lifebook", "chromebook", "redmi"]);
 // Words that turn one model into its sibling ("15 Pro" vs "15 Pro Max").
 const SIBLING_WORDS = new Set(["pro", "max", "plus", "ultra", "mini", "lite", "fe", "carbon", "fortis"]);
+// Devices quotes do not cover: "Apple Watch Series 7" is no iPhone 7, "Galaxy Tab S7" no Galaxy S7.
+const OTHER_KINDS = new Set(["ipad", "tab", "tablet", "tablette", "watch", "montre", "airpods", "buds", "earbuds", "ecouteurs", "pencil", "stylus"]);
 
 const isYear = (t: string) => /^20[0-3]\d$/.test(t);
 // Tokens with a digit identify the model ("5420", "g8", "s23"); a release year only helps tell siblings apart.
@@ -52,8 +54,85 @@ const TEXT_BRANDS = new Map<string, string>(([
   ["pixel", "google"], ["lifebook", "fujitsu"], ["surface", "microsoft"], ["redmi", "xiaomi"],
 ] as [string, string][]).filter(([w]) => w.length > 1));
 
+// Shorthand suppliers use for product lines ("MBP 14", "TP T14", "SGS21", "IP13 Pro").
+const SHORTHAND: [RegExp, string][] = [
+  [/\bmbp\b/g, "macbook pro"],
+  [/\bmba\b/g, "macbook air"],
+  [/\btp\b/g, "thinkpad"],
+  [/\beb\b/g, "elitebook"],
+  [/\bpb\b/g, "probook"],
+  [/\bzb\b/g, "zbook"],
+  [/\blat\b/g, "latitude"],
+  [/\bprec\b/g, "precision"],
+  [/\bsgs ?(\d)/g, "galaxy s$1"],
+  [/\bip ?([4-9]|1\d)\b/g, "iphone $1"],
+];
+
+// Every word of the catalogue's names, and the longer plain words a typo can be checked against.
+const VOCAB = new Set(INDEX.flatMap((ix) => [...ix.toks, ix.brand]));
+const WORDS = [...VOCAB].filter((t) => /^[a-z]{5,}$/.test(t));
+// "i5", "m2", "5g" are a CPU or the network, not a word glued to a number.
+const NOT_GLUED = /^(?:i[3579]|m[1-5]|[345]g)$/;
+
+/** "850g6" → 850 g6, "lattitude5520" → lattitude 5520, "p30pro" → p30 pro: words the catalogue writes apart. */
+function unglue(t: string): string[] {
+  if (VOCAB.has(t) || NOT_GLUED.test(t)) return [t];
+  // "surfacepro", "macbookair": two catalogue words.
+  if (/^[a-z]+$/.test(t)) {
+    for (let i = 2; i <= t.length - 2; i++) if (VOCAB.has(t.slice(0, i)) && VOCAB.has(t.slice(i))) return [t.slice(0, i), t.slice(i)];
+    return [t];
+  }
+  if (!/\d/.test(t) || !/[a-z]/.test(t)) return [t];
+  const suffix = t.match(/^(.*\d[a-z]?)(pro|max|plus|ultra|mini|lite|fe|g\d{1,2})$/);
+  if (suffix) return [...unglue(suffix[1]), suffix[2]];
+  const prefix = t.match(/^([a-z]{2,})(\d.*)$/);
+  if (prefix) {
+    // "motog8" → moto g8, "nokiag20" → nokia g20: the model number keeps its letter.
+    const [letters, rest] = [prefix[1], prefix[2]];
+    for (let i = letters.length - 1; i >= 2; i--) {
+      if (VOCAB.has(letters.slice(0, i)) && VOCAB.has(letters.slice(i) + rest)) return [letters.slice(0, i), letters.slice(i) + rest];
+    }
+    return [...unglue(letters), ...unglue(rest)];
+  }
+  return [t];
+}
+
+/** At most one letter added, dropped or changed, or two next to each other swapped. */
+function oneEditApart(a: string, b: string): boolean {
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (i < a.length && a[i] === b[i]) i++;
+  if (a.length === b.length) return a.slice(i + 1) === b.slice(i + 1) || (a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+  return a.length > b.length ? a.slice(i + 1) === b.slice(i) : a.slice(i) === b.slice(i + 1);
+}
+
+/** "elitbook" → elitebook, "iphon" → iphone: a misspelt catalogue word, when only one is that close. */
+function spellCheck(t: string): string {
+  if (t.length < 5 || VOCAB.has(t) || /\d/.test(t)) return t;
+  const near = WORDS.filter((w) => oneEditApart(w, t));
+  return near.length === 1 ? near[0] : t;
+}
+
+/** "a 53" → a53, "s 21" → s21: a model number written apart from its letters. */
+function reglue(ts: string[]): string[] {
+  const out: string[] = [];
+  for (const t of ts) {
+    const prev = out[out.length - 1];
+    if (prev && /^[a-z]{1,2}$/.test(prev) && !VOCAB.has(prev) && /^\d/.test(t) && VOCAB.has(prev + t)) out[out.length - 1] = prev + t;
+    else out.push(t);
+  }
+  return out;
+}
+
+/** The words of a line that can name its model: no configuration, glued words apart, shorthand and typos fixed. */
+export function modelTokens(text: string): string[] {
+  const words = reglue(tokens(stripSpecs(text)).flatMap(unglue).map(spellCheck)).join(" ");
+  return SHORTHAND.reduce((s, [rx, to]) => s.replace(rx, to), words).split(" ").filter((t) => t && !NOISE.has(t));
+}
+
 /** Score one catalog model against a line's tokens (0–1). */
 function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
+  for (const t of input) if (OTHER_KINDS.has(t) && !ix.toks.includes(t)) return 0;
   let total = 0;
   let hit = 0;
   let keyMissing = false;
@@ -182,6 +261,31 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
 
 const eqCpu = (a: string, b: string) => normalize(a).replace(/\s/g, "") === normalize(b).replace(/\s/g, "");
 
+/**
+ * Capacities written without a unit ("Pixel 7a 128", "SGS21 Ultra 256", "Latitude 5420 i5 16 256"), read
+ * once the model is known: a bare number is the storage only when the model was sold with it, and not one
+ * of the model's own numbers; on a laptop, a smaller bare number among its RAM options is then the RAM.
+ */
+function bareCapacities(line: Pick<RawLine, "text" | "ram" | "storage">, ref: RefModel, specs: ParsedSpecs): ParsedSpecs {
+  if (specs.storage && (specs.ram || ref.category === "phone")) return specs;
+  const own = new Set(tokens(ref.model));
+  const bare = (s?: string) => (s ? tokens(stripSpecs(s)).filter((t) => /^\d{1,4}$/.test(t) && !own.has(t)).map(Number) : []);
+  const nums = [...bare(line.text), ...bare(line.storage), ...bare(line.ram)];
+  const storageOptions = ref.category === "phone" ? phoneStorage(ref) : ref.storage ?? [];
+  const out = { ...specs };
+  if (!out.storage) {
+    const hits = nums.filter((n) => n >= 16 && storageOptions.some((s) => s.startsWith(`${n}GB`)));
+    // Two different candidates ("64 128") say nothing for sure.
+    if (new Set(hits).size === 1) out.storage = `${hits[0]}GB`;
+  }
+  if (ref.category === "laptop" && !out.ram && out.storage) {
+    const cap = Number(out.storage.match(/^\d+/)![0]) * (/TB/.test(out.storage) ? 1024 : 1);
+    const rams = nums.filter((n) => n < cap && RAM_OK(n) && (ref.ram ?? []).includes(`${n}GB`));
+    if (new Set(rams).size === 1) out.ram = `${rams[0]}GB`;
+  }
+  return out;
+}
+
 /** Resolve parsed specs against the options the model was actually sold with. */
 function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
   const variant: Match["variant"] = {};
@@ -217,7 +321,7 @@ function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
 }
 
 export function matchLine(line: RawLine): Match {
-  const input = new Set(tokens(stripSpecs(line.text)).filter((t) => !NOISE.has(t)));
+  const input = new Set(modelTokens(line.text));
   const specs = parseSpecs(line);
   // The CPU pins down the generation when the name does not ("EliteBook 840" + i5-8265U → G6 only).
   const cpuFit = (ref: RefModel) => {
@@ -232,8 +336,9 @@ export function matchLine(line: RawLine): Match {
     return { ref: ix.ref, score: base > 0.3 ? Math.min(1, Math.max(0, base + cpuFit(ix.ref))) : base, found, full: found === words.length };
   })
     .filter((r) => r.score > 0.3)
-    // Ties go to the more specific model ("iPhone 15 Pro Max" over "iPhone 15").
-    .sort((a, b) => b.score - a.score || b.ref.model.length - a.ref.model.length);
+    // Ties go to the model with more of its words in the text ("Nord N10" over "OnePlus Nord", whose
+    // "OnePlus" is only the brand), then to the more specific one ("iPhone 15 Pro Max" over "iPhone 15").
+    .sort((a, b) => b.score - a.score || b.found - a.found || b.ref.model.length - a.ref.model.length);
 
   const warnings: string[] = [];
   const best = ranked[0];
@@ -244,7 +349,8 @@ export function matchLine(line: RawLine): Match {
   // runner-up's ("Galaxy S25 Edge" vs "Galaxy S25", "Pixel 9 Pro XL" vs "Pixel 9 Pro").
   const spelledOut = !!runnerUp && best.full && (!runnerUp.full || best.found > runnerUp.found);
   const close = !!runnerUp && runnerUp.score >= 0.5 && best.score - runnerUp.score < 0.1 && !spelledOut;
-  const variant = resolveVariant(best.ref, specs, warnings);
+  const bestSpecs = bareCapacities(line, best.ref, specs);
+  const variant = resolveVariant(best.ref, bestSpecs, warnings);
   const specConflict = warnings.some((w) => w.includes("jamais proposé"));
 
   let status: Match["status"] = best.score >= 0.85 ? "matched" : best.score >= 0.5 ? "review" : "unmatched";
@@ -255,16 +361,22 @@ export function matchLine(line: RawLine): Match {
     ref: status === "unmatched" ? undefined : best.ref,
     score: Math.round(best.score * 100) / 100,
     status,
-    specs,
+    specs: status === "unmatched" ? specs : bestSpecs,
     variant: status === "unmatched" ? {} : variant,
     warnings,
     alternatives: ranked.slice(0, 5),
   };
 }
 
+/** A quote line's configuration for another model (picked by hand or by the AI), from all the line said. */
+export function rematch(l: Pick<QuoteLine, "sampleText" | "quantity" | "source">, ref: RefModel): Match {
+  const s = l.source ?? {};
+  return matchAgainst({ row: 0, quantity: l.quantity, text: [l.sampleText, s.identified].filter(Boolean).join(" "), cpu: s.cpu, ram: s.ram, storage: s.storage }, ref);
+}
+
 /** Re-resolve a line after a user picks the model by hand. */
 export function matchAgainst(line: RawLine, ref: RefModel): Match {
-  const specs = parseSpecs(line);
+  const specs = bareCapacities(line, ref, parseSpecs(line));
   const warnings: string[] = [];
   const variant = resolveVariant(ref, specs, warnings);
   return { ref, score: 1, status: "matched", specs, variant, warnings, alternatives: [] };

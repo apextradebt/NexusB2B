@@ -41,6 +41,7 @@ export function groupLines(lines: RawLine[], matches: Match[], defaultGrade: Gra
       warnings: [...m.warnings],
       sourceRows: [line.row],
       sampleText: line.text,
+      source: { cpu: line.cpu, ram: line.ram, storage: line.storage, identified: m.identified?.details },
       priceState: "idle",
       agentResults: [],
       auto: { refId: m.ref?.id, status: m.status, score: m.score, variant: m.variant },

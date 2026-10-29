@@ -1,6 +1,6 @@
 import { CATALOG, getRef } from "@/lib/catalog";
 import { identifierIn } from "@/lib/identify";
-import { matchAgainst, matchLine, normalize, stripSpecs } from "@/lib/match";
+import { matchLine, modelTokens, normalize, rematch } from "@/lib/match";
 import { extractInline } from "@/lib/parse";
 import { postJson } from "@/lib/api";
 import type { Dispatch, SetStateAction } from "react";
@@ -22,18 +22,6 @@ const PARALLEL_REQUESTS = 3;
 /** The progress bar fills over at least this long, even when the answers are back sooner. */
 export const AI_MIN_MS = 1200;
 
-// Shorthand suppliers use for product lines, expanded before searching the catalogue.
-const SHORTHAND: [RegExp, string][] = [
-  [/\bmbp\b/g, "macbook pro"],
-  [/\bmba\b/g, "macbook air"],
-  [/\btp\b/g, "thinkpad"],
-  [/\beb\b/g, "elitebook"],
-  [/\bpb\b/g, "probook"],
-  [/\bzb\b/g, "zbook"],
-  [/\blat\b/g, "latitude"],
-  [/\bsgs ?(\d)/g, "galaxy s$1"],
-];
-
 const NOISE = new Set(["notebook", "laptop", "pc", "portable", "ordinateur", "smartphone", "phone", "telephone", "mobile", "5g", "4g", "dual", "sim", "ds", "grade", "class", "classe"]);
 
 const trigrams = (s: string) => {
@@ -51,11 +39,9 @@ const getIndex = () =>
     return { ref, toks: name.split(" "), grams: trigrams(name) };
   }));
 
-/** Query words of a line: no configuration, grade or quantity; supplier shorthand expanded. */
+/** Query words of a line: no configuration, grade or quantity; glued words apart, shorthand and typos fixed. */
 function queryOf(text: string): string {
-  let q = normalize(stripSpecs(extractInline(text).text));
-  for (const [rx, to] of SHORTHAND) q = q.replace(rx, to);
-  return q.split(" ").filter((w) => w && !NOISE.has(w)).join(" ");
+  return modelTokens(extractInline(text).text).filter((w) => !NOISE.has(w)).join(" ");
 }
 
 /**
@@ -98,11 +84,12 @@ function askText(l: QuoteLine): string | undefined {
 /** Lines worth asking about: found by recognition, not settled by hand, not already asked. */
 export const needsAi = (l: QuoteLine) => !!l.auto && !l.edited && !l.auto.ai && !!askText(l);
 
-export type AiAnswer = { picks: Map<string, string | null>; asked: number };
+export type AiAnswer = { picks: Map<string, string | null>; asked: number; failed: number };
 
 /**
  * Ask the backend about the lines (each distinct text once). Resolves with the model picked for each
- * text (null: none of the candidates); texts whose request failed are left out. Rejects when the
+ * text (null: none of the candidates); texts left unanswered (a request or the model failing) are asked
+ * once more, then left out and counted in `failed`. Rejects when no text got an answer because the
  * backend refuses (login required, quota) or cannot be reached.
  */
 export async function askAi(lines: QuoteLine[], onProgress?: (done: number, total: number) => void): Promise<AiAnswer> {
@@ -121,10 +108,9 @@ export async function askAi(lines: QuoteLine[], onProgress?: (done: number, tota
     return { text, candidates: candidates.map((r) => ({ id: r.id, name: `${r.brand} ${r.model}` })) };
   }).filter((x) => x.candidates.length > 0);
   const picks = new Map<string, string | null>();
-  if (items.length === 0) return { picks, asked: 0 };
+  if (items.length === 0) return { picks, asked: 0, failed: 0 };
 
-  const chunks: (typeof items)[] = [];
-  for (let i = 0; i < items.length; i += CHUNK) chunks.push(items.slice(i, i + CHUNK));
+  const chunksOf = (xs: typeof items) => Array.from({ length: Math.ceil(xs.length / CHUNK) }, (_, i) => xs.slice(i * CHUNK, (i + 1) * CHUNK));
   let done = 0;
   onProgress?.(0, items.length);
   const ask = async (chunk: typeof items) => {
@@ -141,13 +127,24 @@ export async function askAi(lines: QuoteLine[], onProgress?: (done: number, tota
       if (!failed.has(i)) picks.set(item.text, body.picks[i] ?? null);
     });
     done += chunk.length;
-    onProgress?.(done, items.length);
+    onProgress?.(Math.min(done, items.length), items.length);
   };
-  const worker = async () => {
-    for (let chunk = chunks.shift(); chunk; chunk = chunks.shift()) await ask(chunk);
+  // One batch failing (a timeout while the model loads) does not lose the answers of the others.
+  const errors: unknown[] = [];
+  const pass = async (chunks: (typeof items)[]) => {
+    const worker = async () => {
+      for (let chunk = chunks.shift(); chunk; chunk = chunks.shift()) await ask(chunk).catch((e) => errors.push(e));
+    };
+    await Promise.all(Array.from({ length: PARALLEL_REQUESTS }, worker));
   };
-  await Promise.all(Array.from({ length: PARALLEL_REQUESTS }, worker));
-  return { picks, asked: items.length };
+  await pass(chunksOf(items));
+  const unanswered = () => items.filter((x) => !picks.has(x.text));
+  if (unanswered().length && picks.size) {
+    done = items.length - unanswered().length;
+    await pass(chunksOf(unanswered()));
+  }
+  if (picks.size === 0 && errors.length) throw errors[0];
+  return { picks, asked: items.length, failed: unanswered().length };
 }
 
 export type AiApplied = { lines: QuoteLine[]; changed: number; rejected: number };
@@ -180,7 +177,7 @@ export function applyAi(lines: QuoteLine[], picks: Map<string, string | null>): 
       };
     }
     changed++;
-    const m = matchAgainst({ row: 0, text: l.sampleText, quantity: l.quantity }, ref);
+    const m = rematch(l, ref);
     return {
       ...l, auto, aiNote: "picked", refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model, variant: m.variant,
       status: "review", warnings: [...(rulesPick ? [`Les règles proposaient ${rulesPick}`] : []), ...m.warnings], priceState: "idle", agentResults: [],
@@ -198,14 +195,14 @@ export function startAi(lines: QuoteLine[], run: number, setDraft: Dispatch<SetS
   const progress = (done: number, total: number) =>
     setDraft((d) => (d.ai?.run !== run || d.ai.state !== "running" ? d : { ...d, ai: { ...d.ai, done, total } }));
   askAi(lines, progress).then(
-    async ({ picks, asked }) => {
+    async ({ picks, asked, failed }) => {
       // Let the bar finish filling before the table changes.
       const wait = asked ? minMs - (performance.now() - start) : 0;
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       setDraft((d) => {
         if (d.ai?.run !== run) return d;
         const { lines, changed, rejected } = applyAi(d.lines, picks);
-        return { ...d, lines, ai: { run, state: "done", asked, changed, rejected, ms: performance.now() - start } };
+        return { ...d, lines, ai: { run, state: "done", asked, changed, rejected, failed, ms: performance.now() - start } };
       });
     },
     (e: unknown) =>

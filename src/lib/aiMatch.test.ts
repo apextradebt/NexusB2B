@@ -40,8 +40,8 @@ describe("candidatesFor (catalogue models the AI chooses from)", () => {
 describe("needsAi", () => {
   const [matched, review, unmatched] = [
     linesOf("Latitude 5420 i5-1145G7 16GB 256GB")[0],
-    linesOf("Surface Pro7 i5 8/128")[0],
-    linesOf("Samsung SGS21 Ultra 256GB")[0],
+    linesOf("MS Surface P7 i5 8/128")[0],
+    linesOf("Samsung S21U 256GB")[0],
   ];
 
   it("asks about every recognised line, once, and never about what the user settled", () => {
@@ -81,23 +81,34 @@ describe("askAi (backend call)", () => {
   it("sends each text once with its candidates, and maps the answers back", async () => {
     const lines = linesOf("Samsung SGS21 Ultra 256GB", "Surface Pro7 i5 8/128", "Latitude 5420 i5-1145G7 16GB 256GB", "Total");
     lines.push({ ...byText(lines, "Samsung SGS21 Ultra 256GB"), key: "dup", sampleText: "Samsung SGS21 Ultra 256GB" });
-    const sent = stub((body) => [200, { picks: body.lines.map((l: any) => l.candidates[0].id), failed: [1] }]);
-    const { picks, asked } = await askAi(lines);
+    // The backend fails on the second line, every time.
+    const sent = stub((body) => [200, { picks: body.lines.map((l: any) => l.candidates[0].id), failed: sent.length === 1 ? [1] : [0] }]);
+    const { picks, asked, failed } = await askAi(lines);
 
-    expect(sent).toHaveLength(1);
+    // Asked once more, alone.
+    expect(sent).toHaveLength(2);
+    expect(sent[1].lines).toEqual([sent[0].lines[1]]);
     const texts = sent[0].lines.map((l: any) => l.text);
     expect([...texts].sort()).toEqual(["Latitude 5420 i5-1145G7 16GB 256GB", "Samsung SGS21 Ultra 256GB", "Surface Pro7 i5 8/128"]);
     const s21 = sent[0].lines[texts.indexOf("Samsung SGS21 Ultra 256GB")];
     expect(s21.candidates[0]).toEqual({ id: getRef(s21.candidates[0].id)!.id, name: "Samsung Galaxy S21 Ultra" });
-    expect(asked).toBe(3);
-    // The backend failed on the second line: no answer for it, rather than "none".
+    expect([asked, failed]).toEqual([3, 1]);
+    // No answer for it, rather than "none".
     expect([...picks.keys()]).toEqual([texts[0], texts[2]]);
+  });
+
+  it("keeps the answers of the batches that got through when another fails", async () => {
+    const texts = Array.from({ length: 10 }, (_, i) => `iPhone ${11 + (i % 5)} ${[64, 128][i % 2]}GB ${i}`);
+    // The batch of 8 times out, on the retry too; the batch of 2 is answered.
+    stub((body) => (body.lines.length === 8 ? [504, { error: "timeout" }] : [200, { picks: body.lines.map(() => null), failed: [] }]));
+    const { picks, asked, failed } = await askAi(linesOf(...texts));
+    expect([picks.size, asked, failed]).toEqual([2, 10, 8]);
   });
 
   it("always offers the rules' own pick, so the AI can confirm it", async () => {
     const sent = stub((body) => [200, { picks: body.lines.map(() => null), failed: [] }]);
-    // "Precison 5550" is read as a Latitude 5550 by the rules.
-    const [line] = linesOf("Precison 5550 i7 32/512");
+    // "Dell 5550" is read as a Latitude 5550 by the rules, a Precision 5550 being just as likely.
+    const [line] = linesOf("Dell 5550 i7 32/512");
     expect(line.model).toBe("Latitude 5550");
     await askAi([line]);
     expect(sent[0].lines[0].candidates.map((c: any) => c.name)).toEqual(expect.arrayContaining(["Dell Latitude 5550", "Dell Precision 5550"]));
@@ -117,60 +128,61 @@ describe("askAi (backend call)", () => {
 });
 
 describe("applyAi", () => {
-  const lines = linesOf("Samsung SGS21 Ultra 256GB", "Surface Pro7 i5 8/128", "iphon 13 pro 128", "Galaxy A 53 5G 128", "Latitude 5420 i5-1145G7 16GB 256GB");
-  const s21u = candidatesFor("Samsung SGS21 Ultra 256GB")[0].id;
-  const pro7 = candidatesFor("Surface Pro7 i5 8/128").find((r) => r.model === "Surface Pro 7")!.id;
-  const iphone = byText(lines, "iphon 13 pro 128");
+  const lines = linesOf("Samsung S21U 256GB", "MS Surface P7 i5 8/128", "MacBook Pro 14 M1 Pro 16 512", "Dell WD19 Dock", "Latitude 5420 i5-1145G7 16GB 256GB");
+  const s21u = candidatesFor("Samsung S21U 256GB").find((r) => r.model === "Galaxy S21 Ultra")!.id;
+  const pro7 = candidatesFor("MS Surface P7 i5 8/128").find((r) => r.model === "Surface Pro 7")!.id;
+  const mbp = byText(lines, "MacBook Pro 14 M1 Pro 16 512");
 
   it("puts the picked model on the line, re-resolves its configuration and leaves it to confirm", () => {
     const picks = new Map<string, string | null>([
-      ["Samsung SGS21 Ultra 256GB", s21u],
-      ["Surface Pro7 i5 8/128", pro7],
-      ["iphon 13 pro 128", iphone.refId!],
-      ["Galaxy A 53 5G 128", null],
+      ["Samsung S21U 256GB", s21u],
+      ["MS Surface P7 i5 8/128", pro7],
+      ["MacBook Pro 14 M1 Pro 16 512", mbp.refId!],
+      ["Dell WD19 Dock", null],
     ]);
     const { lines: out, changed, rejected } = applyAi(lines, picks);
     expect([changed, rejected]).toEqual([2, 0]);
 
-    const s21 = byText(out, "Samsung SGS21 Ultra 256GB");
+    const s21 = byText(out, "Samsung S21U 256GB");
     expect(s21).toMatchObject({ refId: s21u, model: "Galaxy S21 Ultra", status: "review", aiNote: "picked", variant: { storage: "256GB" } });
     expect(s21.auto).toMatchObject({ status: "unmatched", ai: { refId: s21u } });
     expect(s21.warnings).not.toContain("Aucun modèle du référentiel ne correspond");
 
-    const pro = byText(out, "Surface Pro7 i5 8/128");
+    const pro = byText(out, "MS Surface P7 i5 8/128");
     expect(pro).toMatchObject({ model: "Surface Pro 7", status: "review", aiNote: "picked" });
     expect(pro.warnings).toContain("Les règles proposaient Microsoft Surface Duo");
-    expect(byText(out, "iphon 13 pro 128")).toMatchObject({ refId: iphone.refId, aiNote: "confirmed", status: "review" });
+    expect(byText(out, "MacBook Pro 14 M1 Pro 16 512")).toMatchObject({ refId: mbp.refId, aiNote: "confirmed", status: "review" });
     // No candidate fit: an unmatched line stays as it was, with the answer kept for the feedback.
-    const a53 = byText(out, "Galaxy A 53 5G 128");
-    expect(a53).toMatchObject({ status: "unmatched", aiNote: undefined, auto: { ai: { refId: undefined } } });
+    const dock = byText(out, "Dell WD19 Dock");
+    expect(dock).toMatchObject({ status: "unmatched", aiNote: undefined, auto: { ai: { refId: undefined } } });
     // Not asked: left as it was.
     expect(byText(out, "Latitude 5420 i5-1145G7 16GB 256GB")).toBe(byText(lines, "Latitude 5420 i5-1145G7 16GB 256GB"));
   });
 
   it("removes a model the AI rejects, keeping the rules' pick in a warning, and leaves edited lines alone", () => {
-    const edited = lines.map((l) => (l.sampleText === "Samsung SGS21 Ultra 256GB" ? { ...l, edited: true } : l));
-    const { lines: out, changed, rejected } = applyAi(edited, new Map([["Samsung SGS21 Ultra 256GB", s21u], ["Surface Pro7 i5 8/128", null]]));
+    const edited = lines.map((l) => (l.sampleText === "Samsung S21U 256GB" ? { ...l, edited: true } : l));
+    const { lines: out, changed, rejected } = applyAi(edited, new Map([["Samsung S21U 256GB", s21u], ["MS Surface P7 i5 8/128", null]]));
     expect([changed, rejected]).toEqual([0, 1]);
-    expect(byText(out, "Samsung SGS21 Ultra 256GB").refId).toBeUndefined();
-    expect(byText(out, "Surface Pro7 i5 8/128")).toMatchObject({
+    expect(byText(out, "Samsung S21U 256GB").refId).toBeUndefined();
+    expect(byText(out, "MS Surface P7 i5 8/128")).toMatchObject({
       refId: undefined, status: "unmatched", aiNote: "rejected", variant: {}, warnings: ["Les règles proposaient Microsoft Surface Duo"],
       auto: { status: "review", refId: expect.stringContaining("SURFACEDUO"), ai: { refId: undefined } },
     });
   });
 
   it("corrects lines the rules were sure of, and stays quiet when it agrees", () => {
-    const sure = linesOf("MBP 14 2021 M1 Pro 16/512", "Apple Watch Series 7 45mm", "Latitude 5420 i5-1145G7 16GB 256GB");
-    expect(sure.map((l) => [l.status, l.model]).sort()).toEqual([["matched", "Latitude 5420"], ["matched", "iPhone 14"], ["matched", "iPhone 7"]]);
-    const mbp = candidatesFor("MBP 14 2021 M1 Pro 16/512").find((r) => r.model === "MacBook Pro 14 2021")!.id;
+    const sure = linesOf("Dell 5550 i7 32/512", "Coque iPhone 7 silicone", "Latitude 5420 i5-1145G7 16GB 256GB");
+    expect(sure.map((l) => [l.status, l.model]).sort()).toEqual([["matched", "Latitude 5420"], ["matched", "Latitude 5550"], ["matched", "iPhone 7"]]);
+    const precision = candidatesFor("Dell 5550 i7 32/512").find((r) => r.model === "Precision 5550")!.id;
     const lat = byText(sure, "Latitude 5420 i5-1145G7 16GB 256GB");
     const { lines: out, changed, rejected } = applyAi(sure, new Map([
-      ["MBP 14 2021 M1 Pro 16/512", mbp], ["Apple Watch Series 7 45mm", null], ["Latitude 5420 i5-1145G7 16GB 256GB", lat.refId!],
+      ["Dell 5550 i7 32/512", precision], ["Coque iPhone 7 silicone", null], ["Latitude 5420 i5-1145G7 16GB 256GB", lat.refId!],
     ]));
     expect([changed, rejected]).toEqual([1, 1]);
-    expect(byText(out, "MBP 14 2021 M1 Pro 16/512")).toMatchObject({ model: "MacBook Pro 14 2021", status: "review", aiNote: "picked" });
-    expect(byText(out, "MBP 14 2021 M1 Pro 16/512").warnings).toContain("Les règles proposaient Apple iPhone 14");
-    expect(byText(out, "Apple Watch Series 7 45mm")).toMatchObject({ status: "unmatched", aiNote: "rejected" });
+    // The configuration is read again for the new model.
+    expect(byText(out, "Dell 5550 i7 32/512")).toMatchObject({ model: "Precision 5550", status: "review", aiNote: "picked", variant: { ram: "32GB", storage: "512GB" } });
+    expect(byText(out, "Dell 5550 i7 32/512").warnings).toContain("Les règles proposaient Dell Latitude 5550");
+    expect(byText(out, "Coque iPhone 7 silicone")).toMatchObject({ status: "unmatched", aiNote: "rejected" });
     expect(byText(out, "Latitude 5420 i5-1145G7 16GB 256GB")).toMatchObject({ status: "matched", aiNote: undefined, refId: lat.refId });
   });
 });
@@ -181,9 +193,9 @@ describe("startAi", () => {
   const run = async (draftRun: number) => {
     vi.stubGlobal("fetch", vi.fn(async (_: string, init: RequestInit) => {
       const body = JSON.parse(init.body as string);
-      return new Response(JSON.stringify({ picks: body.lines.map((l: any) => l.candidates[0].id), failed: [] }));
+      return new Response(JSON.stringify({ picks: body.lines.map((l: any) => l.candidates.find((c: any) => c.name.endsWith("S21 Ultra")).id), failed: [] }));
     }));
-    const lines = linesOf("Samsung SGS21 Ultra 256GB");
+    const lines = linesOf("Samsung S21U 256GB");
     let draft = { step: 2, fileName: "", client: "", reference: "", lines, ai: { run: draftRun, state: "running", asked: 0, changed: 0, rejected: 0 } } as Draft;
     startAi(lines, 1, (u) => { draft = typeof u === "function" ? u(draft) : u; }, 0);
     await vi.waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalled());

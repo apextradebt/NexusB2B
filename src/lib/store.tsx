@@ -47,8 +47,8 @@ export type Draft = {
   removed?: QuoteLine[];
 };
 
-/** `asked`: lines checked; `changed`: given another model; `rejected`: model removed, none fitting. */
-export type AiRun = { run: number; state: "running" | "done" | "error"; asked: number; changed: number; rejected: number; ms?: number; error?: string; done?: number; total?: number };
+/** `asked`: lines checked; `changed`: given another model; `rejected`: model removed, none fitting; `failed`: left without an answer. */
+export type AiRun = { run: number; state: "running" | "done" | "error"; asked: number; changed: number; rejected: number; failed?: number; ms?: number; error?: string; done?: number; total?: number };
 
 const EMPTY_DRAFT: Draft = { step: 0, fileName: "", client: "", reference: "", lines: [] };
 

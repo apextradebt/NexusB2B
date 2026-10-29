@@ -90,6 +90,8 @@
     "ai_done_one": "AI: {{count}} line checked, {{changed}} model changed, {{rejected}} removed ({{seconds}} s)",
     "ai_done_other": "AI: {{count}} lines checked, {{changed}} model(s) changed, {{rejected}} removed ({{seconds}} s)",
     "ai_error": "AI unavailable: {{error}}",
+    "ai_failed_one": "· {{count}} line the AI did not answer",
+    "ai_failed_other": "· {{count}} lines the AI did not answer",
     "ai_picked": "Model suggested by the AI, to confirm",
     "ai_confirmed": "Confirmed by the AI",
     "ai_rejected": "Model removed by the AI: no reference model fits",
