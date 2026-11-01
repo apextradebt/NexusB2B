@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { Grade, PriceListEntry, PricingSettings, QuoteLine, QuoteStatus, RefModel, SavedQuote } from "@/types";
 import type { Layout, Table } from "@/lib/parse";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
+import { normalizeCosts, type Route } from "@/lib/costs";
 import { entryKey, newEntryId, upsertEntries } from "@/lib/priceList";
 
 // Browser storage can be unavailable (private mode, blocked site data): never let that break the app.
@@ -45,6 +46,8 @@ export type Draft = {
   ai?: AiRun;
   /** Lines deleted at the matching step, kept for the recognition feedback. */
   removed?: QuoteLine[];
+  /** Where the lot comes from and where it is resold. Unset: the settings' default route. */
+  route?: Route;
 };
 
 /** `asked`: lines checked; `changed`: given another model; `rejected`: model removed, none fitting; `failed`: left without an answer. */
@@ -76,7 +79,10 @@ type Store = {
 const Ctx = createContext<Store | null>(null);
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettingsState] = useState<PricingSettings>(() => load("b2b-pricing-settings", DEFAULT_SETTINGS));
+  const [settings, setSettingsState] = useState<PricingSettings>(() => {
+    const s = load("b2b-pricing-settings", DEFAULT_SETTINGS);
+    return { ...s, costs: normalizeCosts(s.costs, DEFAULT_SETTINGS.costs) };
+  });
   const [quotes, setQuotes] = useState<SavedQuote[]>(() => loadList("b2b-quotes"));
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [theme, setTheme] = useState<"light" | "dark">(() => {

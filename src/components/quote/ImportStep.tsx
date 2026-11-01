@@ -7,6 +7,7 @@ import { downloadTemplate } from "@/lib/export";
 import { sampleLot } from "@/lib/sample";
 import { useStore } from "@/lib/store";
 import { newQuoteId } from "@/lib/feedback";
+import RouteFields from "@/components/quote/RouteFields";
 
 export default function ImportStep() {
   const { t } = useTranslation();
@@ -51,6 +52,7 @@ export default function ImportStep() {
           <Input value={draft.reference} onChange={(e) => setDraft((d) => ({ ...d, reference: e.target.value }))} placeholder="Lot 2026-09 / appel d'offres…" />
         </label>
       </div>
+      <RouteFields />
 
       <div
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}

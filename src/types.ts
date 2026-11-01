@@ -1,3 +1,5 @@
+import type { CostBreakdown, CostSettings, Route } from "@/lib/costs";
+
 /** Quotes cover phones and laptops; tablets and watches are priced (Mes prix) and tracked (history) only, for now. */
 export type QuoteCategory = "phone" | "laptop";
 export type Category = QuoteCategory | "tablet" | "watch";
@@ -135,6 +137,10 @@ export type QuoteLine = {
   aiNote?: "picked" | "confirmed" | "rejected";
   /** Lines later merged into this one (same device after manual edits): their recognition, for the feedback. */
   absorbed?: AbsorbedLine[];
+  /** Costs per unit between purchase and resale (transport, private copy levy, VAT…), at the buy price. */
+  costs?: CostBreakdown;
+  /** Sell − buy − costs, per unit. */
+  netMargin?: number;
 };
 
 export type AutoMatch = {
@@ -177,6 +183,8 @@ export type PricingSettings = {
   aiMatching: boolean;
   /** Send what was recognised and corrected in each quote to the Nexus backend. */
   shareCorrections: boolean;
+  /** Countries, VAT, private copy levy, transport lanes and selling fees. */
+  costs: CostSettings;
 };
 
 /** Lifecycle of a quote once saved, in order. */
@@ -190,7 +198,10 @@ export type SavedQuote = {
   createdAt: string;
   fileName: string;
   lines: QuoteLine[];
-  totals: { units: number; buy: number; sell: number; margin: number };
+  /** `margin` is net of costs since routes exist; gross (sell − buy) on older quotes. */
+  totals: { units: number; buy: number; sell: number; margin: number; costs?: number };
+  /** Where the lot comes from and where it is resold. Missing on older quotes: the settings' route. */
+  route?: Route;
   /** Missing on quotes saved before statuses existed: read as "created". */
   status?: QuoteStatus;
   statusHistory?: { status: QuoteStatus; at: string }[];

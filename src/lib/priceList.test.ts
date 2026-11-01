@@ -151,6 +151,9 @@ describe("findListPrice", () => {
   });
 });
 
+// Sans transport, TVA ni frais : la formule d'origine.
+const PLAIN = { ...DEFAULT_SETTINGS, costs: { ...DEFAULT_SETTINGS.costs, lanes: [], countries: [], vatScheme: "none" as const } };
+
 describe("priceLine with the price list", () => {
   const cfg = { cpu: "i5-1145G7", ram: "16GB", storage: "256GB" };
   const line = groupLines([{ row: 1, text: "Latitude 5420 i5-1145G7 16GB 256GB SSD", quantity: 1, gradeRaw: "B" }], [matchLine({ row: 1, text: "Latitude 5420 i5-1145G7 16GB 256GB SSD", quantity: 1 })], "C")[0];
@@ -158,9 +161,9 @@ describe("priceLine with the price list", () => {
   const withMarket = (resale: number): QuoteLine => ({ ...line, priceState: "done", agentResults: [{ agent: "t", kind: "resale", status: "ok", offers: [{ source: "x", price: resale }] }] });
 
   it("sells at the customer's price and keeps the target margin on it", () => {
-    const p = priceLine(withMarket(360), DEFAULT_SETTINGS, list);
+    const p = priceLine(withMarket(360), PLAIN, list);
     expect(p.sellPrice).toBe(400);
-    expect(p.buyPrice).toBe(Math.round(400 * 0.75 - DEFAULT_SETTINGS.refurbCost.laptop.B));
+    expect(p.buyPrice).toBe(Math.floor(400 * 0.75 - DEFAULT_SETTINGS.refurbCost.laptop.B));
     expect(p.priceBasis).toMatch(/^Votre prix/);
     expect(p.marketSell).toBe(360);
     expect(marketGap(p)).toBeCloseTo(40 / 360);
@@ -185,7 +188,7 @@ describe("end to end: price lists + supplier lot", () => {
     const entries = upsertEntries(rowsToEntries(await importFile("prix-simple.csv")), rowsToEntries(await importFile("grille-grades.csv")));
     const table = await load("devis-fournisseur.csv");
     const raw = buildLines(table, detectLayout(table));
-    const lines = groupLines(raw, raw.map(matchLine), "C").map((l) => priceLine(l, DEFAULT_SETTINGS, entries));
+    const lines = groupLines(raw, raw.map(matchLine), "C").map((l) => priceLine(l, PLAIN, entries));
     const at = (model: string, grade: string) => lines.find((l) => l.model === model && l.grade === grade)!;
 
     expect(at("Latitude 5420", "B").sellPrice).toBe(399); // exact
@@ -199,7 +202,7 @@ describe("end to end: price lists + supplier lot", () => {
 
     for (const l of lines.filter((x) => x.listPrice !== undefined)) {
       const refurb = refurbCostFor(DEFAULT_SETTINGS, l.category!, l.grade);
-      expect(l.buyPrice).toBe(Math.max(0, Math.round(l.sellPrice! * 0.75 - refurb)));
+      expect(l.buyPrice).toBe(Math.max(0, Math.floor(l.sellPrice! * 0.75 - refurb + 1e-9)));
     }
   });
 });

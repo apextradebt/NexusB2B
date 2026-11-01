@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FolderOpen, Download, Trash2, FilePlus2, ArrowRight } from "lucide-react";
 import { Button, Card, PageHeader, Select } from "@/components/ui";
 import { useStore } from "@/lib/store";
-import { eur, priceLine } from "@/lib/pricing";
+import { defaultRoute, eur, priceLine } from "@/lib/pricing";
 import { exportXlsx } from "@/lib/export";
 import { QUOTE_STATUSES, type QuoteStatus, type SavedQuote } from "@/types";
 
@@ -85,7 +85,7 @@ export default function Quotes() {
                   <div className="min-w-0">
                     <div className="text-xs font-mono text-muted">{q.id}</div>
                     <div className="text-lg font-bold truncate">{q.client || t("quotes.no_client")}</div>
-                    <div className="text-sm text-muted">{q.reference || q.fileName} · {new Date(q.createdAt).toLocaleDateString("fr-FR")}</div>
+                    <div className="text-sm text-muted">{q.reference || q.fileName} · {new Date(q.createdAt).toLocaleDateString("fr-FR")}{q.route && ` · ${q.route.buyFrom} → ${q.route.sellTo}`}</div>
                   </div>
                   <span className="bg-whisper text-hunter text-xs font-bold px-3 py-1 rounded-full tabular-nums whitespace-nowrap">
                     {q.totals.units.toLocaleString("fr-FR")} {t("quotes.units")}
@@ -128,12 +128,12 @@ export default function Quotes() {
 
                 <div className="flex flex-wrap gap-2 pt-2 border-t border-line">
                   <Button variant="soft" onClick={() => {
-                    setDraft({ step: 3, fileName: q.fileName, client: q.client, reference: q.reference, lines: q.lines, savedId: q.id });
+                    setDraft({ step: 3, fileName: q.fileName, client: q.client, reference: q.reference, lines: q.lines, savedId: q.id, route: q.route });
                     navigate("/");
                   }}>
                     <FolderOpen className="w-4 h-4" /> {t("quotes.open")}
                   </Button>
-                  <Button variant="ghost" onClick={() => exportXlsx(q.lines.map((l) => priceLine(l, settings, priceList)), q.id, q)}>
+                  <Button variant="ghost" onClick={() => exportXlsx(q.lines.map((l) => priceLine(l, settings, priceList, { route: q.route ?? defaultRoute(settings), lotUnits: q.totals.units })), q.id, { ...q, route: q.route ?? defaultRoute(settings) })}>
                     <Download className="w-4 h-4" /> Excel
                   </Button>
                   <Button variant="ghost" className="ml-auto" onClick={() => { if (confirm(t("quotes.confirm_delete"))) deleteQuote(q.id); }}>

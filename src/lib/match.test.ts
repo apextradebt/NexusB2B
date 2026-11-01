@@ -199,10 +199,25 @@ describe("manual entry", () => {
 describe("priceLine", () => {
   const base = groupLines([line("Latitude 5420 i5-1145G7 16GB 256GB SSD", { gradeRaw: "B" })], [matchLine(line("Latitude 5420 i5-1145G7 16GB 256GB SSD"))], "C")[0];
 
+  const resale = { ...base, agentResults: [{ agent: "t", kind: "resale" as const, status: "ok" as const, offers: [{ source: "x", price: 400 }, { source: "y", price: 440 }] }] };
+  // Sans transport, TVA ni frais : la formule d'origine.
+  const plain = { ...DEFAULT_SETTINGS, costs: { ...DEFAULT_SETTINGS.costs, lanes: [], countries: [], vatScheme: "none" as const } };
+
   it("derives the buy price from resale − margin − refurbishment", () => {
-    const priced = priceLine({ ...base, agentResults: [{ agent: "t", kind: "resale", status: "ok", offers: [{ source: "x", price: 400 }, { source: "y", price: 440 }] }] }, DEFAULT_SETTINGS);
+    const priced = priceLine(resale, plain);
     expect(priced.sellPrice).toBe(420);
-    expect(priced.buyPrice).toBe(Math.round(420 * 0.75 - DEFAULT_SETTINGS.refurbCost.laptop.B));
+    expect(priced.buyPrice).toBe(Math.floor(420 * 0.75 - DEFAULT_SETTINGS.refurbCost.laptop.B));
+    expect(priced.netMargin).toBe(Math.round(420 * 0.25));
+  });
+
+  it("also pays the route's transport and VAT, and still keeps the target net margin", () => {
+    const route = { buyFrom: "FI", sellTo: "FR", vatScheme: "normal" as const };
+    const priced = priceLine(resale, DEFAULT_SETTINGS, [], { route, lotUnits: 10 });
+    expect(priced.costs!.items.vat).toBeCloseTo(70, 0); // 420 × 20/120
+    expect(priced.costs!.items.inbound).toBe(3 + 35); // FI → FR : 3 €/PC + 350 € / 10
+    expect(priced.costs!.items.levy).toBeUndefined(); // pas de copie privée sur un PC
+    expect(priced.buyPrice).toBeLessThan(priceLine(resale, plain).buyPrice!);
+    expect(priced.netMargin).toBeGreaterThanOrEqual(105);
   });
 
   it("falls back to competitor buyback when no resale price is known", () => {

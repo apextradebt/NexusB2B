@@ -3,8 +3,10 @@ import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check,
 import { useTranslation } from "react-i18next";
 import { Button, Chip, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
+import RouteFields from "@/components/quote/RouteFields";
+import CostPanel from "@/components/quote/CostPanel";
 import { agentsFor, pool, runAgents } from "@/lib/agents";
-import { eur, marginRate, marketGap, priceLine, totals } from "@/lib/pricing";
+import { defaultRoute, eur, marginRate, marketGap, priceLine, totals, unitMargin } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
 import { useStore } from "@/lib/store";
 import type { AgentResult, QuoteLine } from "@/types";
@@ -19,8 +21,13 @@ export default function PricingStep() {
   const abort = useRef<AbortController | null>(null);
   const inFlight = useRef(new Map<string, Promise<AgentResult[]>>());
 
-  // Prices are derived at render time so changing margin/refurb settings updates the quote instantly.
-  const lines = useMemo(() => draft.lines.map((l) => priceLine(l, settings, priceList)), [draft.lines, settings, priceList]);
+  // Prices are derived at render time so changing margin/refurb settings or the route updates the quote instantly.
+  const route = draft.route ?? defaultRoute(settings);
+  const lines = useMemo(() => {
+    const lotUnits = draft.lines.filter(priceable).reduce((a, l) => a + l.quantity, 0);
+    return draft.lines.map((l) => priceLine(l, settings, priceList, { route, lotUnits }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.lines, settings, priceList, route.buyFrom, route.sellTo, route.vatScheme]);
   const tot = totals(lines.filter(priceable));
   const toPrice = draft.lines.filter(priceable);
   const done = toPrice.filter((l) => l.priceState === "done").length;
@@ -64,13 +71,13 @@ export default function PricingStep() {
   useEffect(() => () => abort.current?.abort(), []);
 
   const baseName = `devis-${(draft.client || "b2b").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${new Date().toISOString().slice(0, 10)}`;
-  const meta = { client: draft.client, reference: draft.reference };
+  const meta = { client: draft.client, reference: draft.reference, route };
 
   const save = () => {
     const id = draft.savedId || `B2B-${Date.now().toString(36).toUpperCase()}`;
     saveQuote({
       id, client: draft.client, reference: draft.reference, createdAt: new Date().toISOString(), fileName: draft.fileName,
-      lines: draft.lines, totals: { units: tot.units, buy: tot.buy, sell: tot.sell, margin: tot.margin },
+      lines: draft.lines, totals: { units: tot.units, buy: tot.buy, sell: tot.sell, margin: tot.margin, costs: tot.costs }, route,
     });
     setDraft((d) => ({ ...d, savedId: id }));
     setSavedFlash(true);
@@ -87,7 +94,7 @@ export default function PricingStep() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <Stat label={t("pricing.total_buy")} value={eur(tot.buy)} tone="buy" hint={t("pricing.units_priced", { priced: tot.priced, units: tot.units })} />
         <Stat label={t("pricing.total_sell")} value={eur(tot.sell)} tone="sell" hint={onList.length ? t("pricing.on_list", { count: onList.length, total: toPrice.length }) : t("pricing.sell_hint")} />
-        <Stat label={t("pricing.margin")} value={eur(tot.margin)} hint={marginPct !== undefined ? t("pricing.margin_hint", { pct: marginPct, target: settings.targetMarginPct }) : undefined} />
+        <Stat label={t("pricing.margin")} value={eur(tot.margin)} hint={marginPct !== undefined ? t("pricing.margin_hint", { pct: marginPct, target: settings.targetMarginPct, costs: eur(tot.costs) }) : undefined} />
         <div className="rounded-[2rem] hero-gradient text-bright p-6 flex flex-col gap-3 justify-between">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider"><Bot className="w-4 h-4" /> {t("pricing.agents")}</div>
           <div className="text-3xl font-bold tabular-nums">{done}/{toPrice.length}</div>
@@ -99,6 +106,11 @@ export default function PricingStep() {
           </button>
         </div>
       </div>
+
+      <details className="rounded-2xl bg-whisper/30 dark:bg-hunter/20 px-5 py-4">
+        <summary className="cursor-pointer text-sm font-bold">{t("route.summary", { from: route.buyFrom, to: route.sellTo, vat: t(`route.vat_${route.vatScheme}`) })}</summary>
+        <div className="mt-4"><RouteFields /></div>
+      </details>
 
       {unpriced.length > 0 && (
         <p className="text-sm text-warn font-semibold bg-sand/15 rounded-2xl px-5 py-3">
@@ -116,6 +128,7 @@ export default function PricingStep() {
               <th className="p-3 font-semibold text-right">{t("pricing.market_buy")}</th>
               <th className="p-3 font-semibold text-right">{t("pricing.sell")}</th>
               <th className="p-3 font-semibold text-right">{t("pricing.buy")}</th>
+              <th className="p-3 font-semibold text-right">{t("pricing.unit_costs")}</th>
               <th className="p-3 font-semibold text-right">{t("pricing.unit_margin")}</th>
               <th className="p-3 font-semibold text-right">{t("pricing.line_total")}</th>
               <th className="p-3" />
@@ -123,9 +136,8 @@ export default function PricingStep() {
           </thead>
           <tbody>
             {lines.filter(priceable).map((l) => {
-              const margin = l.sellPrice !== undefined && l.buyPrice !== undefined ? l.sellPrice - l.buyPrice : undefined;
+              const margin = unitMargin(l);
               const isOpen = open === l.key;
-              console.log(l.agentResults)
               return (
                 <Fragment key={l.key}>
                   <tr className="border-t border-line">
@@ -194,6 +206,14 @@ export default function PricingStep() {
                         className={`w-24 text-right bg-surface shadow-inner-soft rounded-xl px-3 py-1.5 font-bold tabular-nums text-buy focus:outline-none focus:ring-2 focus:ring-primary/40 ${l.buyOverride !== undefined ? "ring-2 ring-sand/60" : ""}`}
                       />
                     </td>
+                    <td className="p-3 text-right tabular-nums text-muted">
+                      {l.costs ? (
+                        <button onClick={() => setOpen(isOpen ? null : l.key)} className="hover:underline" title={t("pricing.costs_hint")}>
+                          {eur(l.costs.total)}
+                          {l.costs.items.levy ? <div className="text-[10px] font-semibold whitespace-nowrap">{t("pricing.levy_short", { eur: l.costs.items.levy.toLocaleString("fr-FR") })}</div> : null}
+                        </button>
+                      ) : "—"}
+                    </td>
                     <td className={`p-3 text-right tabular-nums ${margin !== undefined && margin < 0 ? "text-warn font-bold" : ""}`}>
                       {eur(margin)}
                       {(() => {
@@ -212,7 +232,8 @@ export default function PricingStep() {
                   </tr>
                   {isOpen && (
                     <tr>
-                      <td colSpan={9} className="px-3 pb-5">
+                      <td colSpan={10} className="px-3 pb-5">
+                        {l.costs && <CostPanel line={l} route={route} />}
                         <SourcesPanel line={l} />
                       </td>
                     </tr>

@@ -1,10 +1,12 @@
 import writeXlsxFile from "write-excel-file/browser";
 import type { PriceListEntry, QuoteLine } from "@/types";
-import { totals } from "@/lib/pricing";
+import { totals, unitMargin } from "@/lib/pricing";
+import type { Route } from "@/lib/costs";
 
 const HEADERS = [
   "Catégorie", "Marque", "Modèle", "CPU", "RAM", "Stockage", "Grade", "Quantité",
-  "Rachat marché (u.)", "Revente marché (u.)", "Votre prix de vente (u.)", "Prix de revente retenu (u.)", "Prix d'achat (u.)", "Marge (u.)",
+  "Rachat marché (u.)", "Revente marché (u.)", "Votre prix de vente (u.)", "Prix de revente retenu (u.)", "Prix d'achat (u.)",
+  "Transport (u.)", "Copie privée (u.)", "TVA (u.)", "Autres coûts (u.)", "Marge nette (u.)",
   "Total achat", "Total revente", "Base de calcul", "Statut", "Lignes source", "Liens sources",
 ];
 
@@ -16,11 +18,16 @@ function sourceRows(l: QuoteLine) {
 }
 
 function rowOf(l: QuoteLine) {
-  const margin = l.sellPrice !== undefined && l.buyPrice !== undefined ? l.sellPrice - l.buyPrice : undefined;
+  const margin = unitMargin(l);
+  const c = l.costs?.items ?? {};
+  const r2 = (n: number) => Math.round(n * 100) / 100;
+  const transport = (c.inbound ?? 0) + (c.outbound ?? 0) + (c.duty ?? 0);
+  const other = (c.refurb ?? 0) + (c.eco ?? 0) + (c.handling ?? 0) + (c.fees ?? 0);
   return [
     l.category === "laptop" ? "PC portable" : l.category === "phone" ? "Téléphone" : "Non reconnu",
     l.brand, l.model, l.variant.cpu ?? "", l.variant.ram ?? "", l.variant.storage ?? "", l.grade, l.quantity,
-    l.marketBuy, l.marketSell, l.listPrice, l.sellPrice, l.buyPrice, margin,
+    l.marketBuy, l.marketSell, l.listPrice, l.sellPrice, l.buyPrice,
+    l.costs ? r2(transport) : undefined, l.costs ? r2(c.levy ?? 0) : undefined, l.costs ? r2(c.vat ?? 0) : undefined, l.costs ? r2(other) : undefined, margin,
     l.buyPrice !== undefined ? l.buyPrice * l.quantity : undefined,
     l.sellPrice !== undefined ? l.sellPrice * l.quantity : undefined,
     l.priceBasis ?? "", l.status, l.sourceRows.join(" "),
@@ -46,17 +53,19 @@ export function exportCsv(lines: QuoteLine[], name: string) {
   download(new Blob(["﻿" + body], { type: "text/csv;charset=utf-8" }), `${name}.csv`);
 }
 
-export async function exportXlsx(lines: QuoteLine[], name: string, meta: { client: string; reference: string }) {
+export async function exportXlsx(lines: QuoteLine[], name: string, meta: { client: string; reference: string; route?: Route }) {
   const t = totals(lines);
   const bold = (value: string) => ({ value, fontWeight: "bold" as const });
   const data = [
     [bold("Client"), meta.client || "—"],
     [bold("Référence"), meta.reference || "—"],
     [bold("Date"), new Date().toLocaleDateString("fr-FR")],
+    [bold("Trajet"), meta.route ? `${meta.route.buyFrom} → ${meta.route.sellTo} (TVA : ${{ margin: "régime de la marge", normal: "régime normal", none: "sans TVA" }[meta.route.vatScheme]})` : "—"],
     [bold("Unités"), t.units],
     [bold("Total achat (EUR)"), t.buy],
     [bold("Total revente (EUR)"), t.sell],
-    [bold("Marge brute (EUR)"), t.margin],
+    [bold("Coûts (EUR)"), t.costs],
+    [bold("Marge nette (EUR)"), t.margin],
     [],
     HEADERS.map((h) => ({ value: h, fontWeight: "bold" as const, backgroundColor: "#EAE2D3" })),
     ...lines.map((l) => rowOf(l).map((v) => (v === undefined ? null : v))),
@@ -73,7 +82,7 @@ export async function exportXlsx(lines: QuoteLine[], name: string, meta: { clien
   ];
   await writeXlsxFile(
     [
-      { data: data as never, sheet: "Devis", columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 16, 18, 20, 16, 12, 14, 14, 44, 12, 18, 60].map((width) => ({ width })) },
+      { data: data as never, sheet: "Devis", columns: [14, 12, 28, 18, 8, 12, 8, 10, 16, 16, 18, 20, 16, 14, 16, 12, 16, 16, 14, 14, 44, 12, 18, 60].map((width) => ({ width })) },
       { data: sources as never, sheet: "Sources", columns: [10, 26, 26, 7, 9, 22, 10, 40, 14, 14, 14].map((width) => ({ width })) },
     ]
   ).toFile(`${name}.xlsx`);

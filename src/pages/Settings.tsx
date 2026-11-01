@@ -4,6 +4,7 @@ import { RotateCcw } from "lucide-react";
 import { Button, Card, Input, PageHeader, Select } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import { DEFAULT_SETTINGS } from "@/lib/pricing";
+import CostSettingsEditor from "@/components/settings/CostSettingsEditor";
 import type { Grade, PricingSettings, QuoteCategory } from "@/types";
 import { GRADES } from "@/types";
 
@@ -55,6 +56,8 @@ export default function SettingsPage() {
           </label>
         </div>
       </Card>
+
+      <CostSettingsEditor value={settings.costs} onChange={(costs) => setSettings({ ...settings, costs })} />
 
       <Card className="p-8 flex flex-col gap-6">
         <h2 className="text-xl font-bold">{t("settings.recognition")}</h2>

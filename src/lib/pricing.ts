@@ -1,5 +1,6 @@
 import type { AgentResult, Category, Grade, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
 import { findListPrice } from "@/lib/priceList";
+import { buyForNet, costBreakdown, DEFAULT_COSTS, type CostCategory, type CostInput, type Route } from "@/lib/costs";
 
 export const DEFAULT_SETTINGS: PricingSettings = {
   targetMarginPct: 25,
@@ -14,7 +15,19 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   listPriceMode: "mine",
   aiMatching: true,
   shareCorrections: true,
+  // Un lot d'entreprise est facturé avec TVA récupérable : régime normal. La marge cible couvre
+  // déjà la vente, d'où commission et retours à 0 par défaut.
+  costs: { ...DEFAULT_COSTS, vatScheme: "normal", commissionPct: 0, returnsPct: 0 },
 };
+
+/** Le trajet par défaut d'un devis : celui des réglages. */
+export const defaultRoute = (s: PricingSettings): Route => ({ buyFrom: s.costs.buyFrom, sellTo: s.costs.sellTo, vatScheme: s.costs.vatScheme });
+
+/** Une montre voyage et se taxe comme un téléphone. */
+const costCategory = (c: Category): CostCategory => (c === "watch" ? "phone" : c);
+
+/** Ce que le devis sait du lot : trajet et nombre d'appareils (pour répartir les forfaits par envoi). */
+export type QuoteContext = { route: Route; lotUnits: number };
 
 /** Refurbishment cost per unit. Quotes only hold phones and laptops; any other category costs nothing here. */
 export const refurbCostFor = (s: PricingSettings, category: Category, grade: Grade) =>
@@ -34,10 +47,12 @@ const offersOf = (results: AgentResult[], kind: AgentResult["kind"]) =>
  * Turn agent results and the customer's price list into unit prices.
  * - Sell price: the customer's own selling price when the price list has one ("prudent" mode: the
  *   lower of it and the market), else the median of resale offers, else the catalog estimate.
- * - Buy price (our offer): sell × (1 − target margin) − refurbishment cost; if we only know
- *   competitors' buyback prices, we align on their median. A manual override always wins.
+ * - Buy price (our offer): the price that leaves the target margin (share of the sell price) once
+ *   refurbishment, transport, private copy levy, duties, fees and VAT are paid (costs.ts); if we
+ *   only know competitors' buyback prices, we align on their median. A manual override always wins.
+ * - Without a context, the route of the settings and no per-shipment fees.
  */
-export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEntry[] = []): QuoteLine {
+export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEntry[] = [], ctx?: QuoteContext): QuoteLine {
   const marketBuy = median(offersOf(line.agentResults, "buyback"));
   const resale = median(offersOf(line.agentResults, "resale"));
   const estimate = median(offersOf(line.agentResults, "estimate"));
@@ -52,12 +67,16 @@ export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEn
     basis = prudent ? `${basis} (inférieur à votre prix)` : "Votre prix de vente";
   }
 
+  const route = ctx?.route ?? defaultRoute(s);
+  const input: CostInput | undefined = sellPrice !== undefined && line.category
+    ? { category: costCategory(line.category), storage: line.variant.storage, sell: sellPrice, refurb: refurbCostFor(s, line.category, line.grade), lotUnits: ctx?.lotUnits ?? 0 }
+    : undefined;
+
   let buyPrice: number | undefined;
   let priceBasis: string | undefined;
-  if (sellPrice !== undefined && line.category) {
-    const refurb = refurbCostFor(s, line.category, line.grade);
-    buyPrice = Math.max(0, Math.round(sellPrice * (1 - s.targetMarginPct / 100) - refurb));
-    priceBasis = `${basis} − marge − reconditionnement`;
+  if (input) {
+    buyPrice = buyForNet(s.costs, route, input, input.sell * s.targetMarginPct / 100);
+    priceBasis = `${basis} − coûts − marge`;
   } else if (marketBuy !== undefined) {
     buyPrice = marketBuy;
     priceBasis = "Aligné sur le rachat concurrent (pas de prix de revente trouvé)";
@@ -66,7 +85,9 @@ export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEn
     buyPrice = line.buyOverride;
     priceBasis = "Prix saisi manuellement";
   }
-  return { ...line, marketBuy, sellPrice, buyPrice, priceBasis, listPrice: mine?.price, listPriceNote: mine?.note, marketSell: market };
+  const costs = input && buyPrice !== undefined ? costBreakdown(s.costs, route, input, buyPrice) : undefined;
+  const netMargin = costs && sellPrice !== undefined && buyPrice !== undefined ? Math.round(sellPrice - buyPrice - costs.total) : undefined;
+  return { ...line, marketBuy, sellPrice, buyPrice, priceBasis, listPrice: mine?.price, listPriceNote: mine?.note, marketSell: market, costs, netMargin };
 }
 
 /** Gap between the customer's price and the market, when both are known (e.g. +0.18 = 18 % above market). */
@@ -75,25 +96,34 @@ export function marketGap(l: QuoteLine): number | undefined {
   return (l.listPrice - l.marketSell) / l.marketSell;
 }
 
-/** Gross margin on the sell price, as a share (0.25 = 25 %). */
+/** Margin per unit: net of every cost when known, else sell − buy. */
+export function unitMargin(l: QuoteLine): number | undefined {
+  if (l.sellPrice === undefined || l.buyPrice === undefined) return undefined;
+  return l.netMargin ?? l.sellPrice - l.buyPrice;
+}
+
+/** Net margin on the sell price, as a share (0.25 = 25 %). */
 export function marginRate(l: QuoteLine): number | undefined {
-  if (l.sellPrice === undefined || l.buyPrice === undefined || l.sellPrice === 0) return undefined;
-  return (l.sellPrice - l.buyPrice) / l.sellPrice;
+  const m = unitMargin(l);
+  if (m === undefined || !l.sellPrice) return undefined;
+  return m / l.sellPrice;
 }
 
 export function totals(lines: QuoteLine[]) {
-  let units = 0, buy = 0, sell = 0, priced = 0;
+  let units = 0, buy = 0, sell = 0, priced = 0, margin = 0, costs = 0;
   for (const l of lines) {
     units += l.quantity;
     if (l.buyPrice !== undefined && l.sellPrice !== undefined) {
       buy += l.buyPrice * l.quantity;
       sell += l.sellPrice * l.quantity;
+      margin += unitMargin(l)! * l.quantity;
+      costs += (l.costs?.total ?? 0) * l.quantity;
       priced += l.quantity;
     } else if (l.buyPrice !== undefined) {
       buy += l.buyPrice * l.quantity;
     }
   }
-  return { units, priced, buy, sell, margin: sell - buy };
+  return { units, priced, buy, sell, margin: Math.round(margin), costs: Math.round(costs) };
 }
 
 export const eur = (n?: number) =>
