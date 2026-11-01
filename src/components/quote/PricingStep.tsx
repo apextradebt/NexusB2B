@@ -43,7 +43,11 @@ export default function PricingStep() {
       // already sent for this line instead of scraping the device again.
       let request = inFlight.current.get(line.key);
       if (!request) {
-        request = runAgents(line, agents).finally(() => inFlight.current.delete(line.key));
+        // Prix du relevé de la semaine affichés dès qu'ils arrivent ; ceux des agents
+        // relancés sur le serveur les remplacent ensuite (agents.ts)
+        request = runAgents(line, agents, (agentResults) => {
+          if (!ctrl.signal.aborted) patch(line.key, { priceState: "done", agentResults });
+        }).finally(() => inFlight.current.delete(line.key));
         inFlight.current.set(line.key, request);
       }
       const agentResults = await request;

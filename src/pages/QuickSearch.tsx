@@ -98,6 +98,8 @@ export default function QuickSearch() {
   const ref = getRef(refId);
   const tradeIn = useTradeIn();
   const priced = useMemo(() => (line ? priceLine(line, settings, priceList) : null), [line, settings, priceList]);
+  // Les prix du relevé de la semaine s'affichent pendant que les agents relancés complètent
+  const waiting = running && line?.priceState !== "done";
 
   const search = async (r: RefModel, v: Variant, g: Grade, label: string) => {
     const id = ++run.current;
@@ -105,7 +107,10 @@ export default function QuickSearch() {
     setLine({ ...base, priceState: "running" });
     setRunning(true);
     setDone(null);
-    const agentResults = await runAgents(base, agentsFor(settings.gradeCoef));
+    // Prix du relevé de la semaine tout de suite, complétés quand les agents relancés répondent
+    const agentResults = await runAgents(base, agentsFor(settings.gradeCoef), (partial) => {
+      if (id === run.current) setLine({ ...base, priceState: "done", agentResults: partial });
+    });
     if (id !== run.current) return; // a newer search started meanwhile
     const result: QuoteLine = { ...base, priceState: "done", agentResults };
     setLine(result);
@@ -293,18 +298,18 @@ export default function QuickSearch() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            <Stat label={t("quick.market_sell")} tone="sell" value={running ? "…" : eur(priced.marketSell)}
+            <Stat label={t("quick.market_sell")} tone="sell" value={waiting ? "…" : eur(priced.marketSell)}
               hint={priced.marketSell === undefined ? t("quick.no_market") : t("quick.sources", { count: line.agentResults.filter((r) => r.kind !== "buyback" && r.status === "ok").length })} />
-            <Stat label={t("quick.market_buy")} tone="buy" value={running ? "…" : eur(priced.marketBuy)} hint={t("quick.market_buy_hint")} />
+            <Stat label={t("quick.market_buy")} tone="buy" value={waiting ? "…" : eur(priced.marketBuy)} hint={t("quick.market_buy_hint")} />
             <Stat label={t("quick.your_price")} value={eur(priced.listPrice)}
               hint={priced.listPrice === undefined ? t("quick.no_list_price") : [priced.listPriceNote, gap !== undefined ? t("quick.vs_market", { pct: `${gap > 0 ? "+" : ""}${Math.round(gap * 100)}` }) : undefined].filter(Boolean).join(" · ")} />
             <div className="rounded-[2rem] hero-gradient text-bright p-6 flex flex-col gap-1.5">
               <span className="text-xs font-bold uppercase tracking-wider">{t("quick.offer")}</span>
-              <span className="text-3xl font-bold tabular-nums">{running && priced.listPrice === undefined ? "…" : eur(priced.buyPrice)}</span>
+              <span className="text-3xl font-bold tabular-nums">{waiting && priced.listPrice === undefined ? "…" : eur(priced.buyPrice)}</span>
               <span className="text-xs text-whisper">
                 {priced.buyPrice !== undefined && priced.sellPrice !== undefined
                   ? t("quick.offer_hint", { sell: eur(priced.sellPrice), margin: eur(priced.sellPrice - priced.buyPrice), pct: rate !== undefined ? Math.round(rate * 100) : "—" })
-                  : running ? t("quick.running") : t("quick.no_offer")}
+                  : waiting ? t("quick.running") : t("quick.no_offer")}
               </span>
             </div>
           </div>
