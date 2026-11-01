@@ -6,8 +6,9 @@ import SourcesPanel from "@/components/quote/SourcesPanel";
 import RouteFields from "@/components/quote/RouteFields";
 import CostPanel from "@/components/quote/CostPanel";
 import { agentsFor, pool, runAgents } from "@/lib/agents";
-import { defaultRoute, eur, marginRate, marketGap, priceLine, totals, unitMargin } from "@/lib/pricing";
+import { defaultRoute, eur, lotSize, marginRate, marketGap, priceLine, totals, unitMargin } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
+import { EU_MIX } from "@/lib/costs";
 import { useStore } from "@/lib/store";
 import type { AgentResult, QuoteLine } from "@/types";
 
@@ -24,10 +25,9 @@ export default function PricingStep() {
   // Prices are derived at render time so changing margin/refurb settings or the route updates the quote instantly.
   const route = draft.route ?? defaultRoute(settings);
   const lines = useMemo(() => {
-    const lotUnits = draft.lines.filter(priceable).reduce((a, l) => a + l.quantity, 0);
-    return draft.lines.map((l) => priceLine(l, settings, priceList, { route, lotUnits }));
+    return draft.lines.map((l) => priceLine(l, settings, priceList, { route, ...lotSize(settings, draft.lines) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft.lines, settings, priceList, route.buyFrom, route.sellTo, route.vatScheme]);
+  }, [draft.lines, settings, priceList, route.buyFrom, route.sellTo, route.vatScheme, route.supplier, route.channel]);
   const tot = totals(lines.filter(priceable));
   const toPrice = draft.lines.filter(priceable);
   const done = toPrice.filter((l) => l.priceState === "done").length;
@@ -108,7 +108,10 @@ export default function PricingStep() {
       </div>
 
       <details className="rounded-2xl bg-whisper/30 dark:bg-hunter/20 px-5 py-4">
-        <summary className="cursor-pointer text-sm font-bold">{t("route.summary", { from: route.buyFrom, to: route.sellTo, vat: t(`route.vat_${route.vatScheme}`) })}</summary>
+        <summary className="cursor-pointer text-sm font-bold">{t("route.summary", {
+          from: route.buyFrom, to: route.sellTo === EU_MIX ? t("route.eu_mix_short") : route.sellTo,
+          channel: t(`route.channel_${route.channel ?? "b2c"}`), vat: t(`route.vat_${route.vatScheme}`),
+        })}</summary>
         <div className="mt-4"><RouteFields /></div>
       </details>
 

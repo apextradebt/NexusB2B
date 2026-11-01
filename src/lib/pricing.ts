@@ -1,6 +1,6 @@
 import type { AgentResult, Category, Grade, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
 import { findListPrice } from "@/lib/priceList";
-import { buyForNet, costBreakdown, DEFAULT_COSTS, type CostCategory, type CostInput, type Route } from "@/lib/costs";
+import { buyForNet, costBreakdown, DEFAULT_COSTS, palletsFor, type CostCategory, type CostInput, type Route } from "@/lib/costs";
 
 export const DEFAULT_SETTINGS: PricingSettings = {
   targetMarginPct: 25,
@@ -17,17 +17,25 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   shareCorrections: true,
   // Un lot d'entreprise est facturé avec TVA récupérable : régime normal. La marge cible couvre
   // déjà la vente, d'où commission et retours à 0 par défaut.
-  costs: { ...DEFAULT_COSTS, vatScheme: "normal", commissionPct: 0, returnsPct: 0 },
+  costs: { ...DEFAULT_COSTS, supplier: "business", vatScheme: "normal", commissionPct: 0, returnsPct: 0 },
 };
 
 /** Le trajet par défaut d'un devis : celui des réglages. */
-export const defaultRoute = (s: PricingSettings): Route => ({ buyFrom: s.costs.buyFrom, sellTo: s.costs.sellTo, vatScheme: s.costs.vatScheme });
+export const defaultRoute = (s: PricingSettings): Route => ({
+  buyFrom: s.costs.buyFrom, sellTo: s.costs.sellTo, vatScheme: s.costs.vatScheme, supplier: s.costs.supplier, channel: s.costs.channel,
+});
 
 /** Une montre voyage et se taxe comme un téléphone. */
-const costCategory = (c: Category): CostCategory => (c === "watch" ? "phone" : c);
+export const costCategory = (c: Category): CostCategory => (c === "watch" ? "phone" : c);
+
+/** Taille du lot et nombre de palettes, d'après les lignes chiffrables du devis. */
+export function lotSize(s: PricingSettings, lines: QuoteLine[]): { lotUnits: number; lotPallets: number } {
+  const items = lines.filter((l) => l.category && l.refId && l.status !== "unmatched").map((l) => ({ category: costCategory(l.category!), quantity: l.quantity }));
+  return { lotUnits: items.reduce((a, i) => a + i.quantity, 0), lotPallets: palletsFor(s.costs, items) };
+}
 
 /** Ce que le devis sait du lot : trajet et nombre d'appareils (pour répartir les forfaits par envoi). */
-export type QuoteContext = { route: Route; lotUnits: number };
+export type QuoteContext = { route: Route; lotUnits: number; lotPallets?: number };
 
 /** Refurbishment cost per unit. Quotes only hold phones and laptops; any other category costs nothing here. */
 export const refurbCostFor = (s: PricingSettings, category: Category, grade: Grade) =>
@@ -69,7 +77,7 @@ export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEn
 
   const route = ctx?.route ?? defaultRoute(s);
   const input: CostInput | undefined = sellPrice !== undefined && line.category
-    ? { category: costCategory(line.category), storage: line.variant.storage, sell: sellPrice, refurb: refurbCostFor(s, line.category, line.grade), lotUnits: ctx?.lotUnits ?? 0 }
+    ? { category: costCategory(line.category), storage: line.variant.storage, sell: sellPrice, refurb: refurbCostFor(s, line.category, line.grade), lotUnits: ctx?.lotUnits ?? 0, lotPallets: ctx?.lotPallets }
     : undefined;
 
   let buyPrice: number | undefined;

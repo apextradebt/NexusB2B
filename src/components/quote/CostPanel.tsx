@@ -1,10 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { eur } from "@/lib/pricing";
 import { useStore } from "@/lib/store";
-import { vatFor, type CostItem, type Route } from "@/lib/costs";
+import { EU_MIX, vatFor, type CostItem, type Route } from "@/lib/costs";
 import type { QuoteLine } from "@/types";
 
 const ORDER: CostItem[] = ["refurb", "inbound", "outbound", "duty", "levy", "eco", "handling", "fees", "vat"];
+/** " (palette)", " (colis)"… après le trajet. */
+export const modeLabel = (t: (k: string) => string, mode?: string) => (mode ? ` (${t(`costs.mode_${mode}`)})` : "");
 const cents = (n: number) => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /** Ce qui sépare le prix de revente du prix d'achat, poste par poste, pour un appareil. */
@@ -22,7 +24,11 @@ export default function CostPanel({ line, route }: { line: QuoteLine; route: Rou
         {rows.map((k) => (
           <div key={k} className="contents">
             <dt className="text-muted">
-              {t(`costs.${k}`, { from: route.buyFrom, to: route.sellTo, home: settings.costs.home, pct: vat.pct, country: vat.country })}
+              {t(`costs.${k}`, {
+                from: route.buyFrom, to: route.sellTo === EU_MIX ? t("route.eu_mix_short") : route.sellTo, home: settings.costs.home,
+                pct: vat.pct, country: vat.country ?? t("route.eu_mix_short"),
+                mode: modeLabel(t, k === "inbound" ? costs.modes.inbound : k === "outbound" ? costs.modes.outbound : undefined),
+              })}
             </dt>
             <dd className="text-right tabular-nums">− {cents(costs.items[k]!)}</dd>
           </div>

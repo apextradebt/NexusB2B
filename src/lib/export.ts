@@ -1,7 +1,7 @@
 import writeXlsxFile from "write-excel-file/browser";
 import type { PriceListEntry, QuoteLine } from "@/types";
 import { totals, unitMargin } from "@/lib/pricing";
-import type { Route } from "@/lib/costs";
+import { declarationDeadline, type levyReport, type Route } from "@/lib/costs";
 
 const HEADERS = [
   "Catégorie", "Marque", "Modèle", "CPU", "RAM", "Stockage", "Grade", "Quantité",
@@ -43,6 +43,16 @@ function download(blob: Blob, name: string) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
+const SUPPLIER_LABEL = { consumer: "particuliers", business: "entreprise (facture avec TVA)", business_margin: "entreprise sous régime de la marge" };
+
+/** "Acheté en FI (entreprise…) → revendu en marketplace UE à des particuliers, TVA : régime normal". */
+function routeText(r: Route) {
+  const to = r.sellTo === "EU" ? "marketplace UE" : r.sellTo;
+  const who = r.channel === "b2b" ? "des professionnels" : "des particuliers";
+  const vat = { margin: "régime de la marge", normal: "régime normal", none: "sans TVA" }[r.vatScheme];
+  return `Acheté en ${r.buyFrom}${r.supplier ? ` (${SUPPLIER_LABEL[r.supplier]})` : ""} → revendu en ${to} à ${who}, TVA : ${vat}`;
+}
+
 export function exportCsv(lines: QuoteLine[], name: string) {
   const esc = (v: unknown) => {
     const s = v === undefined || v === null ? "" : String(v);
@@ -60,7 +70,7 @@ export async function exportXlsx(lines: QuoteLine[], name: string, meta: { clien
     [bold("Client"), meta.client || "—"],
     [bold("Référence"), meta.reference || "—"],
     [bold("Date"), new Date().toLocaleDateString("fr-FR")],
-    [bold("Trajet"), meta.route ? `${meta.route.buyFrom} → ${meta.route.sellTo} (TVA : ${{ margin: "régime de la marge", normal: "régime normal", none: "sans TVA" }[meta.route.vatScheme]})` : "—"],
+    [bold("Trajet"), meta.route ? routeText(meta.route) : "—"],
     [bold("Unités"), t.units],
     [bold("Total achat (EUR)"), t.buy],
     [bold("Total revente (EUR)"), t.sell],
@@ -123,4 +133,40 @@ export function downloadTemplate() {
     ";Apple;iPhone 13;;;128GB;B;25",
   ].join("\n");
   download(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }), "modele-import-b2b.csv");
+}
+
+const LEVY_CATEGORY: Record<string, string> = { phone: "Téléphone", tablet: "Tablette", laptop: "PC portable" };
+const LEVY_NOTE: Record<string, string> = {
+  unknown_storage: "Capacité inconnue : tranche la plus haute",
+  not_levied: "Non soumis",
+  resold_abroad: "Revente prévue hors de France : non due",
+  eu_mix: "Marketplace UE : part revendue en France selon la répartition",
+};
+
+/** Déclaration Copie France d'un mois : récapitulatif par tranche du barème, puis le détail par lot. */
+export async function exportLevyReport(report: ReturnType<typeof levyReport>, month: string) {
+  const head = (h: string[]) => h.map((value) => ({ value, fontWeight: "bold" as const, backgroundColor: "#EAE2D3" }));
+  const bold = (value: string) => ({ value, fontWeight: "bold" as const });
+  const summary = [
+    [bold("Déclaration Copie France"), month],
+    [bold("À déclarer avant le"), declarationDeadline(month)],
+    [bold("Appareils achetés"), report.units],
+    [bold("Appareils soumis"), report.leviedUnits],
+    [bold("Redevance HT (EUR)"), report.total],
+    [],
+    head(["Catégorie", "Tranche de capacité", "Quantité", "Redevance unitaire HT", "Total HT"]),
+    ...report.summary.map((x) => [LEVY_CATEGORY[x.category], x.bracket, x.quantity, x.unitLevy, x.total]),
+  ];
+  const detail = [
+    head(["Date d'achat", "Lot", "Client", "Acheté en", "Revente prévue", "Clientèle", "Catégorie", "Marque", "Modèle", "Stockage", "Quantité", "Part en France", "Tranche", "Redevance unitaire HT", "Total HT", "Remarque"]),
+    ...report.lines.map((l) => [
+      l.date, l.ref, l.source, l.buyFrom, l.sellTo === "EU" ? "Marketplace UE" : l.sellTo ?? "", l.channel === "b2b" ? "Professionnels" : "Particuliers",
+      LEVY_CATEGORY[l.category], l.brand, l.model, l.storage ?? "", l.quantity, Math.round(l.share * 100) / 100,
+      l.bracket, l.unitLevy, l.total, l.note ? LEVY_NOTE[l.note] : "",
+    ]),
+  ];
+  await writeXlsxFile([
+    { data: summary as never, sheet: "Déclaration", columns: [22, 24, 12, 22, 14].map((width) => ({ width })) },
+    { data: detail as never, sheet: "Détail", columns: [12, 18, 22, 10, 16, 14, 12, 12, 26, 10, 10, 12, 18, 20, 12, 44].map((width) => ({ width })) },
+  ]).toFile(`copie-france-${month}.xlsx`);
 }

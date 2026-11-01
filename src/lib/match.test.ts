@@ -214,7 +214,9 @@ describe("priceLine", () => {
     const route = { buyFrom: "FI", sellTo: "FR", vatScheme: "normal" as const };
     const priced = priceLine(resale, DEFAULT_SETTINGS, [], { route, lotUnits: 10 });
     expect(priced.costs!.items.vat).toBeCloseTo(70, 0); // 420 × 20/120
-    expect(priced.costs!.items.inbound).toBe(3 + 35); // FI → FR : 3 €/PC + 350 € / 10
+    // 10 PC depuis la Finlande : en colis (22 €) plutôt qu'une palette à 480 € pour 10 (49 €/appareil).
+    expect(priced.costs!.items.inbound).toBe(22);
+    expect(priced.costs!.modes.inbound).toBe("parcel");
     expect(priced.costs!.items.levy).toBeUndefined(); // pas de copie privée sur un PC
     expect(priced.buyPrice).toBeLessThan(priceLine(resale, plain).buyPrice!);
     expect(priced.netMargin).toBeGreaterThanOrEqual(105);
