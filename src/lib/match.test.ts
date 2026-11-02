@@ -304,6 +304,20 @@ describe("messy imports", () => {
     expect(fixed.matches.map((m) => m.ref?.model)).toEqual(["iPhone 12 Mini", "Galaxy S20 FE"]);
   });
 
+  it("joins a device written over several lines", () => {
+    const stacked = run("Dell Precision 3570\ni5-1235U\n16GB\n256GB\nGrade C\n\nLenovo ThinkPad T14 Gen 2\ni5-1145G7\n8GB\n512GB\nGrade B\n3");
+    expect(stacked.lines.map((l) => [l.quantity, l.gradeRaw])).toEqual([[1, "C"], [3, "B"]]);
+    expect(stacked.matches[0].variant).toEqual({ cpu: "i5-1235U", ram: "16GB", storage: "256GB" });
+    expect(stacked.matches[1].ref?.model).toBe("ThinkPad T14 Gen 2");
+    const labelled = run("Latitude 5420\nCPU: i5-1145G7\nRAM : 16 Go\nStockage: 256 Go SSD\nÉtat: B\nQté: 4");
+    expect(labelled.lines).toHaveLength(1);
+    expect(labelled.lines[0]).toMatchObject({ quantity: 4, gradeRaw: "B" });
+    expect(labelled.matches[0].variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+    // One device per line stays one device per line; an unknown model with specs is not folded into the one above.
+    expect(run("iPhone 13 128GB\niPhone 12 64GB\nLatitude 5420").lines).toHaveLength(3);
+    expect(run("Latitude 5420\ni5 / 16 / 256\nAsus ExpertBook B9 i7 16GB 512GB").lines).toHaveLength(2);
+  });
+
   it("decodes Windows-1252 and UTF-16 exports from Excel", async () => {
     const { decode } = await import("@/lib/parse");
     expect(decode(new Uint8Array([0x4d, 0x6f, 0x64, 0xe8, 0x6c, 0x65]).buffer)).toBe("Modèle");
@@ -326,14 +340,47 @@ describe("supplier spellings", () => {
     ["Pixel7a 128", "Pixel 7a"],
     ["Galaxy A 53 5G 128", "Galaxy A53"],
     ["OnePlus Nord2 5G 128", "OnePlus Nord 2"],
+    ["OnePlus Nord 2T 128GB", "OnePlus Nord 2T"],
   ])("%s → %s", (input, expected) => {
     expect(matchLine(line(input)).ref?.model).toBe(expected);
   });
 
   it("takes no tablet or watch for the phone of the same number", () => {
     expect(matchLine(line("Apple Watch Series 7 45mm")).status).toBe("unmatched");
-    expect(matchLine(line("Galaxy Tab S7 128GB")).status).toBe("unmatched");
+    expect(matchLine(line("Galaxy Tab S7 128GB")).ref?.model).toBe("Galaxy Tab S7");
     expect(matchLine(line("Galaxy S7 32GB")).ref?.model).toBe("Galaxy S7");
+    expect(matchLine(line("Galaxy S8 64GB")).ref?.model).toBe("Galaxy S8");
+    expect(matchLine(line("Tablette Samsung S8 128GB")).ref?.category).not.toBe("phone");
+  });
+});
+
+describe("matchLine — tablets", () => {
+  it.each([
+    ["Apple iPad 9th Gen (Wi-Fi) A13 Bionic 3GB 64GB", "iPad 10.2 (2021)", "64GB"],
+    ["iPad Air (5th Gen, M1) Apple M1 8GB 64GB", "iPad Air (2022)", "64GB"],
+    ["Apple iPad mini (6th Gen) A15 Bionic 4GB 64GB", "iPad Mini (2021)", "64GB"],
+    ["iPad Pro 11 (3rd Gen) Apple M1 8GB 128GB", "iPad Pro 11 (2021)", "128GB"],
+    ["Samsung Galaxy Tab A8 Unisoc T618 3GB 32GB", "Galaxy Tab A8 10.5 (2021)", "32GB"],
+    ["Samsung Galaxy Tab S8 Snapdragon 8 Gen 1 8GB 128GB", "Galaxy Tab S8", "128GB"],
+    ["iPad Pro 12.9 2021 256GB", "iPad Pro 12.9 (2021)", "256GB"],
+    ["iPad Air 13 M2 256GB", "iPad Air 13 (2024)", "256GB"],
+    ["iPad Air M2 128GB", "iPad Air 11 (2024)", "128GB"],
+    ["Galaxy Tab S9 Ultra 512GB", "Galaxy Tab S9 Ultra", "512GB"],
+  ])("%s → %s", (input, model, storage) => {
+    const m = matchLine(line(input));
+    expect(m.ref?.model).toBe(model);
+    expect(m.status).toBe("matched");
+    expect(m.variant).toEqual({ storage });
+  });
+
+  it("keeps a tablet and the phone or laptop of the same name apart", () => {
+    expect(matchLine(line("iPad Pro 11 M4 256GB")).ref?.category).toBe("tablet");
+    expect(matchLine(line("MacBook Pro 14 M3 16GB 512GB")).ref?.category).toBe("laptop");
+    expect(matchLine(line("Galaxy A15 128GB")).ref?.model).toBe("Galaxy A15");
+  });
+
+  it("reads no chip name as a model ('Dimensity 8200-Ultra' is no Ultra)", () => {
+    expect(matchLine(line("Xiaomi 13T Dimensity 8200-Ultra 8GB 256GB")).ref?.model).toBe("Xiaomi 13T");
   });
 
   it("reads capacities written without a unit, once the model is known", () => {
@@ -343,6 +390,9 @@ describe("supplier spellings", () => {
     // The model's own number is not a capacity, and two possible ones say nothing.
     expect(matchLine(line("iPhone 16 128")).variant).toEqual({ storage: "128GB" });
     expect(matchLine(line("iPhone 15 128 256")).variant).toEqual({});
+    // A bare "2T" is the model's when the storage is given in gigabytes, terabytes otherwise.
+    expect(matchLine(line("OnePlus Nord 2T 128GB")).variant).toEqual({ storage: "128GB" });
+    expect(matchLine(line("Latitude 5420 i5-1145G7 16GB 1T")).variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "1TB" });
   });
 });
 

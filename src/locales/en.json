@@ -25,7 +25,7 @@
   },
   "quote": {
     "title": "New quote",
-    "desc": "Import a list of laptops and phones: the tool recognises each device, groups identical lines and has the agents look up a buy price and a resale price."
+    "desc": "Import a list of laptops, phones and tablets: the tool recognises each device, groups identical lines and has the agents look up a buy price and a resale price."
   },
   "import": {
     "client": "Client",
@@ -107,6 +107,7 @@
     "agents": "Price agents",
     "running": "Searching…",
     "rerun": "Run the agents again",
+    "backend_down": "Price server unreachable ({{url}}): the agents could not search. Start the backend (pnpm dev in B2C-Backend), then \"Run the agents again\".",
     "unpriced_one": "{{count}} line without a price: no agent found an offer. Enter a buy price by hand or check the configuration.",
     "unpriced_other": "{{count}} lines without a price: no agent found an offer. Enter a buy price by hand or check the configuration.",
     "market_buy": "Market buyback",
@@ -187,7 +188,7 @@
     "released": "Released",
     "sizes": "Sizes",
     "tradein_from": "Trade-in from",
-    "tradein_only": "Tablets and watches: trade-in price history only for now (not recognised in quotes yet)."
+    "tradein_only": "Monthly trade-in prices. Tablets are recognised in quotes; watches not yet."
   },
   "settings": {
     "title": "Settings",

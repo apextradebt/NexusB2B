@@ -81,7 +81,8 @@ const Ctx = createContext<Store | null>(null);
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettingsState] = useState<PricingSettings>(() => {
     const s = load("b2b-pricing-settings", DEFAULT_SETTINGS);
-    return { ...s, costs: normalizeCosts(s.costs, DEFAULT_SETTINGS.costs) };
+    // Settings saved before tablets were quoted have no tablet refurbishment cost.
+    return { ...s, refurbCost: { ...DEFAULT_SETTINGS.refurbCost, ...s.refurbCost }, costs: normalizeCosts(s.costs, DEFAULT_SETTINGS.costs) };
   });
   const [quotes, setQuotes] = useState<SavedQuote[]>(() => loadList("b2b-quotes"));
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);

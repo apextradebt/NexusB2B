@@ -86,7 +86,7 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {(["laptop", "phone"] as QuoteCategory[]).map((c) => (
+              {(["laptop", "phone", "tablet"] as QuoteCategory[]).map((c) => (
                 <tr key={c}>
                   <td className="p-2 font-semibold whitespace-nowrap">{t(`reference.${c}`)}</td>
                   {GRADES.map((g) => (

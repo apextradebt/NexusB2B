@@ -5,7 +5,7 @@ import { Button, Chip, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
 import RouteFields from "@/components/quote/RouteFields";
 import CostPanel from "@/components/quote/CostPanel";
-import { agentsFor, pool, runAgents } from "@/lib/agents";
+import { agentsFor, BACKEND_DOWN, LEGACY_API, pool, runAgents } from "@/lib/agents";
 import { defaultRoute, eur, lotSize, marginRate, marketGap, priceLine, totals, unitMargin } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
 import { EU_MIX } from "@/lib/costs";
@@ -86,6 +86,7 @@ export default function PricingStep() {
 
   const marginPct = tot.sell > 0 ? Math.round((tot.margin / tot.sell) * 100) : undefined;
   const unpriced = lines.filter((l) => priceable(l) && l.priceState === "done" && l.buyPrice === undefined);
+  const backendDown = unpriced.some((l) => l.agentResults.some((r) => r.status === "error" && r.message === BACKEND_DOWN));
   const excluded = lines.filter((l) => !priceable(l));
   const onList = lines.filter((l) => priceable(l) && l.listPrice !== undefined);
 
@@ -117,7 +118,7 @@ export default function PricingStep() {
 
       {unpriced.length > 0 && (
         <p className="text-sm text-warn font-semibold bg-sand/15 rounded-2xl px-5 py-3">
-          {t("pricing.unpriced", { count: unpriced.length })}
+          {backendDown ? t("pricing.backend_down", { url: LEGACY_API }) : t("pricing.unpriced", { count: unpriced.length })}
         </p>
       )}
 

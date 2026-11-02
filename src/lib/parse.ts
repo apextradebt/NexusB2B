@@ -259,7 +259,50 @@ export function parseText(text: string): Table {
   if (data.every((r) => r.length === 1) && data.filter((r) => / {2,}/.test(r[0])).length > data.length / 2) {
     data = data.map((r) => r[0].split(/ {2,}/));
   }
+  if (data.every((r) => r.length === 1)) data = foldStacked(data);
   return toTable(data);
+}
+
+// "RAM : 16GB", "Qté: 2", "État - B": a labelled attribute on its own line.
+const ATTRIBUTE_LABEL = /^(?:cpu|processeur|processor|proc|ram|m[ée]moire|memory|stockage|storage|ssd|hdd|disque|disk|capacit[ée]|grade|classe|class|[ée]tat|condition|qt[ée]|qty|quantit[ée]|quantity|nb)\s*[:=-]/i;
+const SPEC_WORDS_ONLY = (s: string) =>
+  !/[a-z]{3,}/i.test(s.replace(/\b(?:intel|amd|core|ryzen|pro|celeron|pentium|ultra|ram|ssd|hdd|nvme|emmc|ddr\d|lpddr\d\w?|gen|ghz|cpu)\b/gi, ""));
+
+/**
+ * One device written over several lines ("Dell Precision 3570" / "i5-1235U" / "16GB" / "256GB" / "Grade C"):
+ * lines that only hold a CPU, RAM, storage, grade or count are joined to the device line above them.
+ */
+function foldStacked(data: string[][]): string[][] {
+  const kinds = data.map((r) => {
+    if (ATTRIBUTE_LABEL.test(r[0])) return "label";
+    const k = classifyCell(r[0]);
+    // "i5 / 16 / 256", "16Go 512Go SSD" count; "ExpertBook B9 i7 16GB" names another device.
+    return k === "specs" && SPEC_WORDS_ONLY(r[0]) ? "label" : k;
+  });
+  const attribute = (k?: string) => k === "label" || k === "cpu" || k === "ram" || k === "storage" || k === "grade" || k === "number";
+  if (!kinds.some((k) => k === "model") || !kinds.some(attribute)) return data;
+  const out: string[][] = [];
+  data.forEach((r, i) => {
+    const prev = out[out.length - 1];
+    if (!prev || !attribute(kinds[i])) return out.push([r[0]]);
+    prev[0] += ` ${attributeText(r[0], kinds[i]!)}`;
+  });
+  return out;
+}
+
+/** An attribute line as text extractInline and parseSpecs read: "État: B" → "Grade B", "Qté: 4" or "4" → "qty: 4". */
+function attributeText(line: string, kind: string): string {
+  const label = line.match(ATTRIBUTE_LABEL);
+  const value = label ? line.slice(label[0].length).trim() : line;
+  const name = label ? normHeader(label[0]) : "";
+  if (/^(grade|classe|class|etat|condition)$/.test(name)) {
+    const g = parseGrade(value);
+    return g ? `Grade ${g}` : value;
+  }
+  const n = parseQuantity(value);
+  // A bare count ("3") is the quantity; "256" alone is a capacity.
+  if (n && (/^(qte|qty|quantite|quantity|nb)$/.test(name) || (kind === "number" && !(STORAGE_SIZES.has(n) && n >= 120)))) return `qty: ${n}`;
+  return value;
 }
 
 // ---------------------------------------------------------------------------------------------

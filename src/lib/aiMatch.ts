@@ -1,6 +1,6 @@
 import { CATALOG, getRef } from "@/lib/catalog";
 import { identifierIn } from "@/lib/identify";
-import { matchLine, modelTokens, normalize, rematch } from "@/lib/match";
+import { matchLine, modelTokens, namesExactly, normalize, rematch } from "@/lib/match";
 import { extractInline } from "@/lib/parse";
 import { postJson } from "@/lib/api";
 import type { Dispatch, SetStateAction } from "react";
@@ -35,7 +35,8 @@ type Indexed = { ref: RefModel; toks: string[]; grams: Set<string> };
 let index: Indexed[] | null = null;
 const getIndex = () =>
   (index ??= CATALOG.map((ref) => {
-    const name = normalize(`${ref.brand} ${ref.model}`);
+    // With the names suppliers use ("iPad 9th Gen"), so a line written that way finds the model.
+    const name = normalize([`${ref.brand} ${ref.model}`, ...(ref.aliases ?? [])].join(" "));
     return { ref, toks: name.split(" "), grams: trigrams(name) };
   }));
 
@@ -167,6 +168,12 @@ export function applyAi(lines: QuoteLine[], picks: Map<string, string | null>): 
     const auto = { ...l.auto!, ai: { refId: pick } };
     const rulesPick = l.refId ? `${l.brand} ${l.model}` : undefined;
     if (pick === l.refId) return { ...l, auto, aiNote: l.refId && l.status !== "matched" ? "confirmed" : undefined };
+    // A line that names the rules' model word for word keeps it: the AI was trained on names with their
+    // year, and drops "MacBook Air 15 M3 2024" for "MacBook Air 15 M3 16GB 512GB".
+    const rulesRef = l.refId ? getRef(l.refId) : undefined;
+    if (rulesRef && namesExactly(extractInline(text).text, rulesRef)) return { ...l, auto };
+    // Nor was it trained on tablets: its "none of them" for an iPad or a Galaxy Tab says nothing.
+    if (rulesRef?.category === "tablet" && !pick) return { ...l, auto };
     const ref = pick ? getRef(pick) : undefined;
     if (pick && !ref) return { ...l, auto }; // not a catalogue id: ignore the answer
     if (!ref) {

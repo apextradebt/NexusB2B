@@ -25,7 +25,7 @@
   },
   "quote": {
     "title": "Nouveau devis",
-    "desc": "Importez une liste de PC et de téléphones : l'outil reconnaît chaque appareil, regroupe les lignes identiques et fait chercher un prix d'achat et un prix de revente par les agents."
+    "desc": "Importez une liste de PC, de téléphones et de tablettes : l'outil reconnaît chaque appareil, regroupe les lignes identiques et fait chercher un prix d'achat et un prix de revente par les agents."
   },
   "import": {
     "client": "Client",
@@ -107,6 +107,7 @@
     "agents": "Agents de prix",
     "running": "Recherche en cours…",
     "rerun": "Relancer les agents",
+    "backend_down": "Serveur de prix injoignable ({{url}}) : les agents n'ont pas pu chercher. Lancez le backend (pnpm dev dans B2C-Backend) puis « Relancer les agents ».",
     "unpriced_one": "{{count}} ligne sans prix : aucun agent n'a trouvé d'offre. Saisissez un prix d'achat à la main ou vérifiez la configuration.",
     "unpriced_other": "{{count}} lignes sans prix : aucun agent n'a trouvé d'offre. Saisissez un prix d'achat à la main ou vérifiez la configuration.",
     "market_buy": "Rachat marché",
@@ -187,7 +188,7 @@
     "released": "Sortie",
     "sizes": "Tailles",
     "tradein_from": "Reprise dès",
-    "tradein_only": "Tablettes et montres : historique des prix de reprise uniquement pour l'instant (pas encore reconnues dans les devis)."
+    "tradein_only": "Prix de reprise mensuels. Les tablettes sont reconnues dans les devis ; les montres, pas encore."
   },
   "settings": {
     "title": "Paramètres",

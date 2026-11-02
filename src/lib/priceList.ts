@@ -1,6 +1,7 @@
 import type { Grade, Match, PriceListEntry, PricingSettings, QuoteLine, RawLine } from "@/types";
 import { buildLines, detectLayout, parseGrade, parsePrice, type Layout, type Table } from "@/lib/parse";
 import { matchLine } from "@/lib/match";
+import { byCapacity } from "@/lib/catalog";
 
 type Variant = PriceListEntry["variant"];
 // Watch prices are per case size: a 41mm price never stands in for the 45mm.
@@ -105,7 +106,7 @@ export function rowsToEntries(rows: ImportRow[]): PriceListEntry[] {
   const out: PriceListEntry[] = [];
   for (const r of rows) {
     if (r.problem || !r.match.ref || r.price === undefined) continue;
-    const variant: Variant = r.match.ref.category === "phone" ? { storage: r.match.variant.storage } : { ...r.match.variant };
+    const variant: Variant = byCapacity(r.match.ref.category) ? { storage: r.match.variant.storage } : { ...r.match.variant };
     out.push({
       id: newEntryId(),
       refId: r.match.ref.id,

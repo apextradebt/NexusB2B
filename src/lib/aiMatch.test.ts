@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { applyAi, askAi, candidatesFor, needsAi, startAi } from "@/lib/aiMatch";
-import { getRef } from "@/lib/catalog";
+import { getRef, TABLETS } from "@/lib/catalog";
 import { groupLines } from "@/lib/group";
 import { matchLine } from "@/lib/match";
 import type { Draft } from "@/lib/store";
@@ -184,6 +184,29 @@ describe("applyAi", () => {
     expect(byText(out, "Dell 5550 i7 32/512").warnings).toContain("Les règles proposaient Dell Latitude 5550");
     expect(byText(out, "Coque iPhone 7 silicone")).toMatchObject({ status: "unmatched", aiNote: "rejected" });
     expect(byText(out, "Latitude 5420 i5-1145G7 16GB 256GB")).toMatchObject({ status: "matched", aiNote: undefined, refId: lat.refId });
+  });
+
+  it("keeps the rules' model when the line names it word for word", () => {
+    const texts = ["Apple MacBook Air 15 M3 Apple M3 16GB 512GB", "Google Pixel 2 / 64GB", "HP EliteBook x360 1040 G6 i7 16GB 512GB", "Carte mère ThinkPad T480"];
+    const named = linesOf(...texts);
+    expect(texts.map((t) => byText(named, t).refId)).not.toContain(undefined);
+    const { lines: out, rejected } = applyAi(named, new Map(texts.map((t) => [t, null])));
+    // The year left out is still the same model…
+    expect(byText(out, texts[0])).toMatchObject({ model: "MacBook Air 15 M3 2024", status: "matched", auto: { ai: { refId: undefined } } });
+    expect(byText(out, texts[0]).aiNote).toBeUndefined();
+    // …but a word the name lacks (the 2 of "Pixel 2", x360) or a part for the model leaves the AI the last word.
+    expect(rejected).toBe(3);
+  });
+
+  it("keeps a tablet the AI finds no candidate for (it was not trained on tablets), not one it corrects", () => {
+    const texts = ["Apple iPad 9th Gen (Wi-Fi) A13 Bionic 3GB 64GB", "Samsung Galaxy Tab A8 Unisoc T618 3GB 32GB"];
+    const tablets = linesOf(...texts);
+    const { lines: out, rejected } = applyAi(tablets, new Map(texts.map((t) => [t, null])));
+    expect(rejected).toBe(0);
+    expect(texts.map((t) => byText(out, t).model)).toEqual(["iPad 10.2 (2021)", "Galaxy Tab A8 10.5 (2021)"]);
+    expect(candidatesFor(texts[0])[0].model).toBe("iPad 10.2 (2021)");
+    const eighth = TABLETS.find((r) => r.model === "iPad 10.2 (2020)")!.id;
+    expect(byText(applyAi(tablets, new Map([[texts[0], eighth]])).lines, texts[0])).toMatchObject({ model: "iPad 10.2 (2020)", status: "review", aiNote: "picked", variant: { storage: "64GB" } });
   });
 });
 

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { Check, Laptop, Plus, Smartphone, Tag } from "lucide-react";
+import { Check, Laptop, Plus, Smartphone, Tablet, Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Input, Select } from "@/components/ui";
-import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
+import { byCapacity, CATALOG, getRef, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
 import { eur } from "@/lib/pricing";
 import { findListPrice, newEntryId } from "@/lib/priceList";
@@ -56,7 +56,7 @@ export default function AddDeviceForm({ onAdded, mode = "quote" }: { onAdded?: (
       if (priceValue === undefined) return;
       addPrices([{
         id: newEntryId(), refId: ref.id, category: ref.category, brand: ref.brand, model: ref.model,
-        variant: ref.category === "phone" ? { storage: variant.storage } : variant,
+        variant: byCapacity(ref.category) ? { storage: variant.storage } : variant,
         grade: grade || undefined, price: Math.round(priceValue), updatedAt: new Date().toISOString(), source: "manual",
       }]);
       setPrice("");
@@ -78,7 +78,7 @@ export default function AddDeviceForm({ onAdded, mode = "quote" }: { onAdded?: (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-bold">{mode === "price" ? t("prices.add_title") : t("add.title")}</h3>
         <div role="radiogroup" className="flex gap-2">
-          {([["laptop", Laptop], ["phone", Smartphone]] as const).map(([c, Icon]) => (
+          {([["laptop", Laptop], ["phone", Smartphone], ["tablet", Tablet]] as const).map(([c, Icon]) => (
             <button
               key={c}
               role="radio"

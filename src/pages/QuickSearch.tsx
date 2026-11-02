@@ -1,13 +1,13 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, Bot, Check, FilePlus2, History, Laptop, LineChart, Loader2, RefreshCw, Search, Smartphone, Tag, X } from "lucide-react";
+import { AlertTriangle, Bot, Check, FilePlus2, History, Laptop, LineChart, Loader2, RefreshCw, Search, Smartphone, Tablet, Tag, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, Chip, Input, PageHeader, Select, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
 import TradeInChart from "@/components/TradeInChart";
 import { agentsFor, runAgents } from "@/lib/agents";
 //import { useAuth } from "@/lib/auth";
-import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
+import { byCapacity, CATALOG, getRef, KIND_LABEL, phoneStorage } from "@/lib/catalog";
 import { manualLine, mergeDuplicates } from "@/lib/group";
 import { factoryVariant, identifierIn, identify, refOf, specsSummary, useIdentification, type Identification, type IdentifyState } from "@/lib/identify";
 import { matchAgainst, matchLine } from "@/lib/match";
@@ -25,7 +25,7 @@ const HISTORY_KEY = "b2b-quick-history";
 
 const MODEL_OPTIONS = [
   { value: "", label: "—" },
-  ...CATALOG.map((r) => ({ value: r.id, label: `${r.category === "laptop" ? "PC" : "Tél."} · ${r.brand} ${r.model}` })),
+  ...CATALOG.map((r) => ({ value: r.id, label: `${KIND_LABEL[r.category]} · ${r.brand} ${r.model}` })),
 ];
 
 function loadHistory(): Recent[] {
@@ -54,7 +54,7 @@ function understand(text: string, fallback: Grade) {
 /** Configuration typed in the query, resolved against the chosen model's factory options. */
 function variantFor(r: RefModel, text: string): Variant {
   const m = matchAgainst({ row: 0, text: gradeIn(text).rest, quantity: 1 }, r);
-  return r.category === "phone" ? (m.variant.storage ? { storage: m.variant.storage } : {}) : m.variant;
+  return byCapacity(r.category) ? (m.variant.storage ? { storage: m.variant.storage } : {}) : m.variant;
 }
 
 /**
@@ -170,7 +170,7 @@ export default function QuickSearch() {
       setLine(null);
       return;
     }
-    const v = match.ref.category === "phone" ? { storage: match.variant.storage } : match.variant;
+    const v = byCapacity(match.ref.category) ? { storage: match.variant.storage } : match.variant;
     pick(match.ref, v, g);
     setAlternatives(match.status === "review" ? match.alternatives.filter((a) => a.ref.id !== match.ref!.id).slice(0, 4).map((a) => a.ref) : []);
     search(match.ref, v, g, text.trim());
@@ -232,7 +232,7 @@ export default function QuickSearch() {
                       onMouseDown={(e) => { e.preventDefault(); choose(s); }}
                       onMouseEnter={() => setActive(i)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer ${i === active ? "bg-lime/20" : "hover:bg-line/40"}`}>
-                      {r.category === "laptop" ? <Laptop className="w-4 h-4 text-muted shrink-0" /> : <Smartphone className="w-4 h-4 text-muted shrink-0" />}
+                      {r.category === "laptop" ? <Laptop className="w-4 h-4 text-muted shrink-0" /> : r.category === "tablet" ? <Tablet className="w-4 h-4 text-muted shrink-0" /> : <Smartphone className="w-4 h-4 text-muted shrink-0" />}
                       <span className="min-w-0 flex-1 truncate">
                         <span className="text-muted">{r.brand} </span><span className="font-semibold">{r.model}</span>
                         {s.variant.storage && <span className="font-bold text-primary ml-2 tabular-nums">{s.variant.storage}</span>}
@@ -263,7 +263,7 @@ export default function QuickSearch() {
                 <Select ariaLabel={t("fields.storage")} value={variant.storage ?? ""} onChange={(v) => setVariant((x) => ({ ...x, storage: v || undefined }))} options={opt(ref.storage)} />
               </>
             )}
-            {ref?.category === "phone" && (
+            {ref && byCapacity(ref.category) && (
               <Select ariaLabel={t("add.capacity")} value={variant.storage ?? ""} onChange={(v) => setVariant({ storage: v || undefined })} options={opt(phoneStorage(ref))} />
             )}
             <Select ariaLabel={t("fields.grade")} value={grade} onChange={(v) => setGrade(v as Grade)} options={GRADES.map((g) => ({ value: g, label: `Grade ${g}` }))} />

@@ -1,5 +1,5 @@
 import type { Match, ParsedSpecs, QuoteLine, RawLine, RefModel } from "@/types";
-import { CATALOG, phoneStorage } from "@/lib/catalog";
+import { byCapacity, CATALOG, phoneStorage } from "@/lib/catalog";
 
 /**
  * Normalise free text so supplier spellings line up with catalog names:
@@ -29,8 +29,11 @@ const NOISE = new Set(["notebook", "laptop", "pc", "portable", "ordinateur", "sm
 const LINE_WORDS = new Set(["iphone", "galaxy", "pixel", "thinkpad", "elitebook", "probook", "latitude", "lifebook", "chromebook", "redmi"]);
 // Words that turn one model into its sibling ("15 Pro" vs "15 Pro Max").
 const SIBLING_WORDS = new Set(["pro", "max", "plus", "ultra", "mini", "lite", "fe", "carbon", "fortis"]);
-// Devices quotes do not cover: "Apple Watch Series 7" is no iPhone 7, "Galaxy Tab S7" no Galaxy S7.
-const OTHER_KINDS = new Set(["ipad", "tab", "tablet", "tablette", "watch", "montre", "airpods", "buds", "earbuds", "ecouteurs", "pencil", "stylus"]);
+// Devices quotes do not cover: "Apple Watch Series 7" is no iPhone 7.
+const OTHER_KINDS = new Set(["watch", "montre", "airpods", "buds", "earbuds", "ecouteurs", "pencil", "stylus"]);
+// Words a tablet's name carries: "Galaxy Tab S7" is no Galaxy S7, "iPad Pro 11" no MacBook Pro.
+const TABLET_NAMES = new Set(["ipad", "tab"]);
+const TABLET_WORDS = new Set([...TABLET_NAMES, "tablet", "tablette"]);
 
 const isYear = (t: string) => /^20[0-3]\d$/.test(t);
 // Tokens with a digit identify the model ("5420", "g8", "s23"); a release year only helps tell siblings apart.
@@ -38,12 +41,13 @@ const isKey = (t: string) => /\d/.test(t) && !isYear(t);
 const weight = (t: string) => (isKey(t) ? 3 : isYear(t) ? 1 : LINE_WORDS.has(t) ? 0.5 : 1);
 
 type Indexed = { ref: RefModel; toks: string[]; brand: string };
-const INDEX: Indexed[] = CATALOG.map((ref) => ({
+// One entry per name of a model: its own and the ones suppliers use ("iPad 9th Gen").
+const INDEX: Indexed[] = CATALOG.flatMap((ref) => [ref.model, ...(ref.aliases ?? [])].map((name) => ({
   ref,
   // Brand is scored separately so "HP" or "Dell" missing from a line does not sink the score.
-  toks: tokens(ref.model).filter((t) => !NOISE.has(t)),
+  toks: tokens(name).filter((t) => !NOISE.has(t)),
   brand: normalize(ref.brand),
-}));
+})));
 
 // Words that name a maker: its brand, or a product line only that maker sells.
 const TEXT_BRANDS = new Map<string, string>(([
@@ -126,13 +130,46 @@ function reglue(ts: string[]): string[] {
 
 /** The words of a line that can name its model: no configuration, glued words apart, shorthand and typos fixed. */
 export function modelTokens(text: string): string[] {
-  const words = reglue(tokens(stripSpecs(text)).flatMap(unglue).map(spellCheck)).join(" ");
+  return wordsOf(stripSpecs(text));
+}
+
+function wordsOf(text: string): string[] {
+  const words = reglue(tokens(text).flatMap(unglue).map(spellCheck)).join(" ");
   return SHORTHAND.reduce((s, [rx, to]) => s.replace(rx, to), words).split(" ").filter((t) => t && !NOISE.has(t));
+}
+
+// Sizes a line gives as bare numbers (RAM, storage): not a sign of another model.
+const CAPACITY = /^(?:4|6|8|12|16|18|24|32|36|48|64|96|128|256|512|1000|1024|2048)$/;
+// A part or an accessory for the model, not the model itself.
+const PARTS = new Set(["carte", "mere", "motherboard", "clavier", "keyboard", "coque", "case", "housse", "sleeve", "sacoche", "chargeur", "charger", "adaptateur", "adapter", "dock", "station", "batterie", "battery", "ecran", "screen", "display", "stylet", "pen", "cable", "piece", "pieces", "parts", "verre", "film"]);
+
+/**
+ * The line names this model and no other: every word of its name is there (the brand and the year may
+ * be left out), and no other catalogue word is ("MacBook Air 15 M3 16GB 512GB" names "MacBook Air 15 M3
+ * 2024"; "EliteBook x360 1040 G6" does not name "EliteBook 1040 G6", nor "iPhone 13 Pro Max" "iPhone 13 Pro").
+ * The words are read before the configuration is taken out: in "Pixel 2 / 64GB" the 2 is the model's.
+ * Expects a text without its grade and quantity ("Grade A+" would read as a Plus).
+ */
+export function namesExactly(text: string, ref: RefModel): boolean {
+  const brand = normalize(ref.brand);
+  const line = new Set(wordsOf(text));
+  for (const t of line) if (PARTS.has(t)) return false;
+  return [ref.model, ...(ref.aliases ?? [])].some((model) => {
+    const name = new Set(normalize(`${ref.brand} ${model}`).split(" "));
+    for (const t of name) if (t !== brand && !/^20\d\d$/.test(t) && !line.has(t)) return false;
+    for (const t of line) if (!name.has(t) && VOCAB.has(t) && !CAPACITY.test(t) && !/^(?:i[3579]|[345]g)$/.test(t)) return false;
+    return true;
+  });
 }
 
 /** Score one catalog model against a line's tokens (0–1). */
 function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   for (const t of input) if (OTHER_KINDS.has(t) && !ix.toks.includes(t)) return 0;
+  // A tablet's word ("iPad", "Tab") on one side only: a tablet and a phone or a laptop. "Tablette" rules out phones.
+  for (const t of input) if (TABLET_NAMES.has(t) && !ix.toks.includes(t)) return 0;
+  const saysTablet = [...input].some((t) => TABLET_WORDS.has(t));
+  if (!saysTablet && ix.toks.some((t) => TABLET_NAMES.has(t))) return 0;
+  if (saysTablet && ix.ref.category === "phone") return 0;
   let total = 0;
   let hit = 0;
   let keyMissing = false;
@@ -173,22 +210,35 @@ const up = (s: string) => s.toUpperCase();
 const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].includes(n);
 
 /**
+ * A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names. And only
+ * when the line gives no storage in gigabytes: in "OnePlus Nord 2T 128GB" the 2T is the model's.
+ */
+const BARE_T_OK = (text: string) => !/\b(?:3[2-9]|[4-9]\d|\d{3,4})\s?(?:gb|go|g)\b(?!\s*(?:de\s*)?(?:ram|ddr|lpddr|memory|m[eé]moire))/i.test(text);
+
+/**
  * Remove configuration fragments (CPU, RAM, storage, "16/512") so their numbers do not
  * pass for model numbers ("MacBook Air M1 8/256" is not an iPhone 8).
  */
 export function stripSpecs(text: string): string {
+  const bareT = BARE_T_OK(text) ? "|[124]\\s?t" : "";
   return ` ${text} `
     // "EliteBook 840 G 6": the generation, not an "840 G" capacity.
     .replace(/\b(\d{3,4}) ?g (\d{1,2})\b/gi, "$1 g$2")
     .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
-    // A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names.
-    .replace(/\b(?:\d{1,4}\s?(?:gb|go|g|tb|to)|[124]\s?t)\b(\s*(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|m\.2|pcie))?/gi, " ")
+    .replace(new RegExp(`\\b(?:\\d{1,4}\\s?(?:gb|go|g|tb|to)${bareT})\\b(\\s*(?:ssd|hdd|nvme|emmc|ram|ddr\\d?|lpddr\\d?x?|m\\.2|pcie))?`, "gi"), " ")
     // "M2 Pro" / "M1 Ultra" name the chip, not a "Pro" or "Ultra" model; the "M2" stays ("MacBook Air M2").
     .replace(/\b(m[1-5])\s+(?:pro|max|ultra)\b/gi, "$1")
     .replace(/\b(?:intel\s*)?(?:core\s*)?i[3579][\s-]*\d{4,5}[a-z]{0,2}\d?\b/gi, " ")
     .replace(/\b(?:intel\s*)?core\s*ultra\s*[579]\s*\d{3}[a-z]\b/gi, " ")
     .replace(/\b(?:amd\s*)?ryzen\s*[3579]\s*(?:pro\s*)?\d{4}[a-z]{1,2}\b/gi, " ")
     .replace(/\b(?:celeron|pentium(?:\s+(?:silver|gold))?)\s*n?\d{4}[a-z]?\b/gi, " ")
+    // Phone and tablet chips: "Snapdragon 8 Gen 1" is no 1st generation, "Dimensity 8200-Ultra" no Ultra,
+    // "A15 Bionic" no Galaxy A15. Apple's "A12" counts as a chip only when "Bionic" or "Apple" says so.
+    .replace(/\b(?:qualcomm\s*)?snapdragon\s*(?:\d{3}\+?|\d\+?(?:\s*gen\s*\d)?(?:\s*elite)?)(?:\s*for\s*galaxy)?(?=\s|$)/gi, " ")
+    .replace(/\b(?:mediatek\s*)?(?:dimensity\s*\d{3,4}(?:[\s-]*(?:ultra|plus|\+))?|helio\s*[a-z]\d{2,3})(?=\s|$)/gi, " ")
+    .replace(/\b(?:unisoc\s*[a-z]?\d{3,4}|exynos\s*\d{3,4}|kirin\s*\d{3,4}|(?:google\s*)?tensor\s*g\d)\b/gi, " ")
+    .replace(/\b(?:apple\s*)?a\d{1,2}[xz]?(?:\s*(?:pro|fusion))?\s*bionic\b|\bapple\s*a\d{1,2}[xz]?(?:\s*(?:pro|fusion))?\b/gi, " ")
+    .replace(/\b(?:mediatek|qualcomm|bionic)\b/gi, " ")
     .replace(/\b(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|intel|amd|core|win(?:dows)?\s*1[01](?:\s*pro)?|azerty|qwerty|qwertz|french|fr|uk|us|de)\b/gi, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -247,11 +297,12 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
     } else {
       // A lone capacity ("iPhone 13 128GB") or two ("i5 16GB 256GB"): the large one is storage, the small one RAM.
       // "4G" / "5G" are the mobile network, not a capacity.
-      const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5) && !(x[2] === "t" && ![1, 2, 4].includes(Number(x[1]))));
+      const bareT = BARE_T_OK(txt);
+      const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5) && !(x[2] === "t" && (!bareT || ![1, 2, 4].includes(Number(x[1])))));
       const cap = caps.find((x) => (/^t/i.test(x[2]) && Number(x[1]) <= 8) || Number(x[1]) >= 32);
       if (cap) {
         specs.storage = gb(cap[1], cap[2]);
-        const ram = caps.find((x) => x !== cap && !/^t/i.test(x[2]) && RAM_OK(Number(x[1])) && Number(x[1]) < Number(cap[1]));
+        const ram = caps.find((x) => x !== cap && !/^t/i.test(x[2]) && RAM_OK(Number(x[1])) && Number(x[1]) < Number(cap[1]) * (/^t/i.test(cap[2]) ? 1024 : 1));
         if (ram && !specs.ram && !line.ram) specs.ram = `${ram[1]}GB`;
       }
     }
@@ -267,11 +318,11 @@ const eqCpu = (a: string, b: string) => normalize(a).replace(/\s/g, "") === norm
  * of the model's own numbers; on a laptop, a smaller bare number among its RAM options is then the RAM.
  */
 function bareCapacities(line: Pick<RawLine, "text" | "ram" | "storage">, ref: RefModel, specs: ParsedSpecs): ParsedSpecs {
-  if (specs.storage && (specs.ram || ref.category === "phone")) return specs;
+  if (specs.storage && (specs.ram || byCapacity(ref.category))) return specs;
   const own = new Set(tokens(ref.model));
   const bare = (s?: string) => (s ? tokens(stripSpecs(s)).filter((t) => /^\d{1,4}$/.test(t) && !own.has(t)).map(Number) : []);
   const nums = [...bare(line.text), ...bare(line.storage), ...bare(line.ram)];
-  const storageOptions = ref.category === "phone" ? phoneStorage(ref) : ref.storage ?? [];
+  const storageOptions = byCapacity(ref.category) ? phoneStorage(ref) : ref.storage ?? [];
   const out = { ...specs };
   if (!out.storage) {
     const hits = nums.filter((n) => n >= 16 && storageOptions.some((s) => s.startsWith(`${n}GB`)));
@@ -289,7 +340,7 @@ function bareCapacities(line: Pick<RawLine, "text" | "ram" | "storage">, ref: Re
 /** Resolve parsed specs against the options the model was actually sold with. */
 function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
   const variant: Match["variant"] = {};
-  if (ref.category === "phone") {
+  if (byCapacity(ref.category)) {
     if (specs.storage) variant.storage = specs.storage;
     return variant;
   }
@@ -336,6 +387,9 @@ export function matchLine(line: RawLine): Match {
     return { ref: ix.ref, score: base > 0.3 ? Math.min(1, Math.max(0, base + cpuFit(ix.ref))) : base, found, full: found === words.length };
   })
     .filter((r) => r.score > 0.3)
+    // A model under its best name only (its own or a supplier's: "iPad 10.2 (2021)" or "iPad 9th Gen").
+    .sort((a, b) => b.score - a.score || b.found - a.found)
+    .filter((r, i, all) => all.findIndex((x) => x.ref === r.ref) === i)
     // Ties go to the model with more of its words in the text ("Nord N10" over "OnePlus Nord", whose
     // "OnePlus" is only the brand), then to the more specific one ("iPhone 15 Pro Max" over "iPhone 15").
     .sort((a, b) => b.score - a.score || b.found - a.found || b.ref.model.length - a.ref.model.length);

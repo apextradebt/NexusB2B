@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS: PricingSettings = {
   refurbCost: {
     phone: { A: 10, B: 20, C: 35, D: 55, E: 80 },
     laptop: { A: 25, B: 40, C: 60, D: 90, E: 130 },
+    tablet: { A: 15, B: 30, C: 45, D: 70, E: 100 },
   },
   gradeCoef: { A: 1, B: 0.85, C: 0.7, D: 0.5, E: 0.3 },
   defaultGrade: "C",
@@ -37,9 +38,9 @@ export function lotSize(s: PricingSettings, lines: QuoteLine[]): { lotUnits: num
 /** Ce que le devis sait du lot : trajet et nombre d'appareils (pour répartir les forfaits par envoi). */
 export type QuoteContext = { route: Route; lotUnits: number; lotPallets?: number };
 
-/** Refurbishment cost per unit. Quotes only hold phones and laptops; any other category costs nothing here. */
+/** Refurbishment cost per unit. Quotes hold phones, laptops and tablets; any other category costs nothing here. */
 export const refurbCostFor = (s: PricingSettings, category: Category, grade: Grade) =>
-  category === "phone" || category === "laptop" ? s.refurbCost[category][grade] : 0;
+  category === "watch" ? 0 : s.refurbCost[category]?.[grade] ?? 0;
 
 const median = (xs: number[]) => {
   if (xs.length === 0) return undefined;

@@ -1,7 +1,10 @@
 import type { AgentOffer, AgentResult, Grade, QuoteLine } from "@/types";
 import { getRef } from "@/lib/catalog";
+import { latestFor, loadTradeIn, monthLabel, tradeInKey } from "@/lib/tradein";
 
-const LEGACY_API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+export const LEGACY_API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+/** Message of a result whose request never reached the backend (PricingStep tells the user to start it). */
+export const BACKEND_DOWN = "Backend Nexus injoignable";
 
 type Agent = {
   name: string;
@@ -33,6 +36,9 @@ async function askMarket(line: QuoteLine, completer: boolean): Promise<{ results
                 brand: line.brand,
                 model: `${line.brand} ${line.model}`.replace(/\b(i[3579]-\w+)\b/gi, '').replace(/\b(ryzen\s+\d+\s+(pro\s+)?\w+)\b/gi, '').replace(/\b\d+\s*GB\b/gi, '').replace(/\s+/g, ' ').trim(),
                 storage: (line.variant.storage || "0").replace(/[^0-9]/g, ""),
+                // The backend's PC agents search "<model> <cpu> <ram>" (B2C-Backend relance.ts)
+                cpu: line.variant.cpu,
+                ram: line.variant.ram,
                 color: "",
                 grade: B2C_GRADE[line.grade]
               }
@@ -64,7 +70,7 @@ async function askMarket(line: QuoteLine, completer: boolean): Promise<{ results
       ],
     };
   } catch {
-    return { pending: false, results: [{ agent: MARKET, kind: "buyback", status: "error", offers: [], message: "Backend Nexus injoignable" }] };
+    return { pending: false, results: [{ agent: MARKET, kind: "buyback", status: "error", offers: [], message: BACKEND_DOWN }] };
   }
 }
 
@@ -98,8 +104,37 @@ const catalogEstimate = (gradeCoef: Record<Grade, number>): Agent => ({
   },
 });
 
+const TRADE_IN = "Reprise (historique)";
+
+/**
+ * Tablets have no market agent on the server yet: the latest monthly trade-in price of the model and
+ * capacity stands in for the competitors' buyback. Wi-Fi unless the line says cellular. The trade-in
+ * price is for a device in good condition (grade B), scaled by the grade coefficients.
+ */
+const tradeInAgent = (gradeCoef: Record<Grade, number>): Agent => ({
+  name: TRADE_IN,
+  supports: (l) => l.category === "tablet" && !!l.refId,
+  async run(line) {
+    const ref = getRef(line.refId)!;
+    const data = await loadTradeIn().catch(() => undefined);
+    const model = data?.models[tradeInKey(ref.brand, ref.model)];
+    const cellular = /\b(?:cellular|lte|4g|5g|wi-?fi\s*\+\s*cell)/i.test(line.sampleText);
+    const variants = (model?.variants ?? []).filter((v) => !line.variant.storage || v.storage === line.variant.storage);
+    const network = variants.filter((v) => (v.network === "Wi-Fi") !== cellular);
+    const last = model && latestFor({ ...model, variants: network.length ? network : variants }, {});
+    if (!data || !last) return [{ agent: TRADE_IN, kind: "buyback", status: "empty", offers: [] }];
+    return [{
+      agent: TRADE_IN,
+      kind: "buyback",
+      status: "ok",
+      offers: [{ source: `Reprise ${data.market} · ${monthLabel(last.month)}`, price: Math.round(last.price * gradeCoef[line.grade] / gradeCoef.B) }],
+      message: "Prix de reprise, pas un prix de revente",
+    }];
+  },
+});
+
 export function agentsFor(gradeCoef: Record<Grade, number>): Agent[] {
-  return [nexusMarketAgent, catalogEstimate(gradeCoef)];
+  return [nexusMarketAgent, catalogEstimate(gradeCoef), tradeInAgent(gradeCoef)];
 }
 
 /** onUpdate reçoit les résultats déjà connus de tous les agents quand l'un d'eux en livre une première partie. */

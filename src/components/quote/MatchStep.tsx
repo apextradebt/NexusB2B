@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, AlertTriangle, Plus, Sparkles, Trash2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Select, StatusBadge } from "@/components/ui";
-import { CATALOG, getRef, phoneStorage } from "@/lib/catalog";
+import { byCapacity, CATALOG, getRef, KIND_LABEL, phoneStorage } from "@/lib/catalog";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
 import { rematch } from "@/lib/match";
 import { mergeDuplicates } from "@/lib/group";
@@ -17,7 +17,7 @@ type Filter = "all" | MatchStatus;
 // Catalog as select options, grouped by category then brand.
 const MODEL_OPTIONS = [
   { value: "", label: "— Non reconnu —" },
-  ...CATALOG.map((r) => ({ value: r.id, label: `${r.category === "laptop" ? "PC" : "Tél."} · ${r.brand} ${r.model}` })),
+  ...CATALOG.map((r) => ({ value: r.id, label: `${KIND_LABEL[r.category]} · ${r.brand} ${r.model}` })),
 ];
 
 export default function MatchStep() {
@@ -145,7 +145,7 @@ export default function MatchStep() {
                         <Select ariaLabel="RAM" value={l.variant.ram || ""} onChange={(v) => setVariant(l, "ram", v)} options={opt(ramOptions)} className={!l.variant.ram ? "text-warn" : ""} />
                         <Select ariaLabel="Stockage" value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)} options={opt(ref.storage)} className={!l.variant.storage ? "text-warn" : ""} />
                       </div>
-                    ) : ref?.category === "phone" ? (
+                    ) : byCapacity(ref?.category) ? (
                       <Select ariaLabel="Capacité" value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)}
                         options={opt(phoneStorage(ref))} className={!l.variant.storage ? "text-warn" : ""} />
                     ) : (

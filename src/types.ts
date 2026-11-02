@@ -1,7 +1,7 @@
 import type { CostBreakdown, CostSettings, Route } from "@/lib/costs";
 
-/** Quotes cover phones and laptops; tablets and watches are priced (Mes prix) and tracked (history) only, for now. */
-export type QuoteCategory = "phone" | "laptop";
+/** Quotes cover phones, laptops and tablets; watches are priced (Mes prix) and tracked (history) only, for now. */
+export type QuoteCategory = "phone" | "laptop" | "tablet";
 export type Category = QuoteCategory | "tablet" | "watch";
 
 /** B2B supply grades (same Class A–E scale as the supplier pivot). */
@@ -16,6 +16,8 @@ export type RefModel = {
   model: string;
   family?: string;
   year?: number;
+  /** Other names suppliers give the model ("iPad 9th Gen" for "iPad 10.2 (2021)"), read by the matcher. */
+  aliases?: string[];
   /** Laptop option lists (from the spec-verified catalog). */
   cpu?: string[];
   ram?: string[];

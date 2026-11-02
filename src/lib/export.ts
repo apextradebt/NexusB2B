@@ -24,7 +24,7 @@ function rowOf(l: QuoteLine) {
   const transport = (c.inbound ?? 0) + (c.outbound ?? 0) + (c.duty ?? 0);
   const other = (c.refurb ?? 0) + (c.eco ?? 0) + (c.handling ?? 0) + (c.fees ?? 0);
   return [
-    l.category === "laptop" ? "PC portable" : l.category === "phone" ? "Téléphone" : "Non reconnu",
+    l.category === "laptop" ? "PC portable" : l.category === "phone" ? "Téléphone" : l.category === "tablet" ? "Tablette" : "Non reconnu",
     l.brand, l.model, l.variant.cpu ?? "", l.variant.ram ?? "", l.variant.storage ?? "", l.grade, l.quantity,
     l.marketBuy, l.marketSell, l.listPrice, l.sellPrice, l.buyPrice,
     l.costs ? r2(transport) : undefined, l.costs ? r2(c.levy ?? 0) : undefined, l.costs ? r2(c.vat ?? 0) : undefined, l.costs ? r2(other) : undefined, margin,
