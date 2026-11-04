@@ -25,7 +25,9 @@ export default function MappingStep() {
   const { table, layout } = draft;
   if (!table || !layout) return null;
 
-  const pivot = Object.keys(layout.gradeColumns).length > 0;
+  const capacityColumns = layout.capacityColumns ?? {};
+  const pivotColumns = [...Object.values(layout.gradeColumns), ...Object.values(capacityColumns)];
+  const pivot = pivotColumns.length > 0;
   // A list of serial numbers or IMEIs alone is enough: the backend names the devices.
   const hasModel = Object.values(layout.mapping).some((f) => f === "model" || f === "description" || f === "serial");
 
@@ -55,7 +57,7 @@ export default function MappingStep() {
         <span className="text-muted">· {t("mapping.rows", { count: table.rows.length })}</span>
         {pivot && (
           <span className="inline-flex items-center gap-1.5 bg-lime/25 text-sell text-xs font-bold px-3 py-1 rounded-full">
-            <Grid3x3 className="w-3.5 h-3.5" /> {t("mapping.pivot", { grades: Object.values(layout.gradeColumns).join(", ") })}
+            <Grid3x3 className="w-3.5 h-3.5" /> {t("mapping.pivot", { grades: pivotColumns.join(", ") })}
           </span>
         )}
       </div>
@@ -69,6 +71,8 @@ export default function MappingStep() {
                   <div className="font-semibold mb-2 truncate" title={h}>{h}</div>
                   {layout.gradeColumns[h] ? (
                     <div className="text-xs font-bold text-sell bg-lime/20 rounded-xl px-3 py-2">{t("mapping.grade_col", { grade: layout.gradeColumns[h] })}</div>
+                  ) : capacityColumns[h] ? (
+                    <div className="text-xs font-bold text-sell bg-lime/20 rounded-xl px-3 py-2">{t("fields.quantity")} · {capacityColumns[h]}</div>
                   ) : (
                     <Select
                       ariaLabel={h}
@@ -86,7 +90,7 @@ export default function MappingStep() {
             {table.rows.slice(0, 6).map((r, i) => (
               <tr key={i}>
                 {r.map((c, j) => (
-                  <td key={j} className={`p-2 border-t border-line font-mono text-xs truncate max-w-56 ${layout.mapping[table.headers[j]] === "ignore" && !layout.gradeColumns[table.headers[j]] ? "text-muted/60" : ""}`} title={c}>
+                  <td key={j} className={`p-2 border-t border-line font-mono text-xs truncate max-w-56 ${layout.mapping[table.headers[j]] === "ignore" && !layout.gradeColumns[table.headers[j]] && !capacityColumns[table.headers[j]] ? "text-muted/60" : ""}`} title={c}>
                     {c || <span className="text-muted/40">—</span>}
                   </td>
                 ))}

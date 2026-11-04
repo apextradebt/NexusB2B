@@ -27,7 +27,7 @@ const SYNONYMS: [Field, string[]][] = [
 ];
 
 // Identifier columns (SKU, part number, EAN…): recognised as headers, left out of the matching.
-const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "total price", "prix total", "line total", "total", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse", "asset", "asset id", "asset tag", "asset number", "hddcount", "work order"];
+const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "total price", "prix total", "line total", "total", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse", "emplacement", "depot", "lager", "lagerort", "magazzino", "almacen", "armazem", "magazyn", "sklad", "locatie", "bin", "rack", "shelf", "asset", "asset id", "asset tag", "asset number", "hddcount", "work order"];
 
 // Measurements that only look like a field: "CPU Speed (MHz)" is no CPU, "Curr. mAh/OEM (%)" (battery) no brand.
 const MEASURE_HEADER = /\b(?:mhz|ghz|speed|frequency|mah|battery|batterie|akku|health|cycles?|monitor|screen|ecran|display|bildschirm|pantalla|inch|inches|zoll|pouces)\b/;
@@ -59,11 +59,11 @@ export function parseGrade(raw?: string): Grade | undefined {
   const g = gradeFromLabel(raw);
   if (g) return g;
   const h = normHeader(raw);
-  if (/(parfait|excellent|like new|comme neuf|mint|neuf|new|wie neu|como nuevo)/.test(h)) return "A";
-  if (/(tres bon|very good|sehr gut|muy bueno)/.test(h)) return "B";
-  if (/(bon|good|gut|bueno)/.test(h)) return "C";
-  if (/(correct|fair|moyen|acceptable|poor|usure|worn)/.test(h)) return "D";
-  if (/(hs|broken|defect|casse|for parts|pour pieces|faulty|defekt|dead)/.test(h)) return "E";
+  if (/(parfait|excellent|excelente|eccellente|uitstekend|like new|comme neuf|mint|neuf|new|sealed|open box|scelle|wie neu|como nuevo|como novo|come nuovo|goed als nieuw|jak nowy)/.test(h)) return "A";
+  if (/(tres bon|very good|sehr gut|muy bueno|ottimo|zeer goed|muito bom|bardzo dobry)/.test(h)) return "B";
+  if (/(bon|good|gut|bueno|buono|goed|\bbom\b|\bdobry\b)/.test(h)) return "C";
+  if (/(correct|fair|moyen|acceptable|aceptable|akzeptabel|discreto|redelijk|razoavel|dostateczny|poor|usure|worn)/.test(h)) return "D";
+  if (/(hs|broken|defect|casse|for parts|pour pieces|faulty|defekt|dead|averiado|avariado|guasto|uszkodzony)/.test(h)) return "E";
   // Testers' scales go down to F (fail): the lowest grade here.
   if (h === "f") return "E";
   const letter = h.match(/\b([a-e])\b/);
@@ -102,7 +102,7 @@ const isPriceCell = (s: string) => PRICE_CELL.test(s) && (/[€$£]|eur|usd|gbp/
 /** "12", "12 pcs", "1 234", "1.234", "x3", "3.0" → integer; undefined when the cell is not a count. */
 export function parseQuantity(raw?: string): number | undefined {
   if (!raw) return undefined;
-  let s = raw.toLowerCase().replace(/\s*(pcs?|pieces?|pièces?|units?|unites?|unités?|u|ea|stk|uds?|x)\.?\s*$/i, "").trim();
+  let s = raw.toLowerCase().replace(/^\s*[x×]\s*/, "").replace(/\s*(pcs?|pieces?|pièces?|units?|unites?|unités?|u|ea|stk|stück|stuks?|pz|uds?|x)\.?\s*$/i, "").trim();
   if (/^\d{1,3}([ .,']\d{3})+$/.test(s)) s = s.replace(/[ .,']/g, "");
   s = s.replace(",", ".");
   if (!/^\d+(\.\d+)?$/.test(s)) return undefined;
@@ -177,7 +177,7 @@ function dataCells(row: string[]) {
     return /\d/.test(c) || isBrand(c) || matchLine({ row: 0, text: c, quantity: 1 }).status !== "unmatched";
   }).length;
 }
-const isHeaderWord = (c: string) => guessField(c) !== "ignore" || !!gradeFromLabel(c) || GENERIC_HEADER.test(normHeader(c)) || isIdHeader(normHeader(c));
+const isHeaderWord = (c: string) => guessField(c) !== "ignore" || !!gradeFromLabel(c) || GENERIC_HEADER.test(normHeader(c)) || isIdHeader(normHeader(c)) || CAPACITY_HEADER.test(c.trim());
 function headerCells(row: string[]) {
   return row.filter((c) => c && isHeaderWord(c)).length;
 }
@@ -189,9 +189,13 @@ function headerCells(row: string[]) {
 function findHeaderRow(rows: string[][]): number {
   let best = -1;
   let bestScore = 0;
-  rows.slice(0, 20).forEach((row, i) => {
+  // Data starts at the first device: nothing below it is the header ("Prix sur demande" closing an email).
+  const firstDevice = rows.slice(0, 20).findIndex((row) => row.some((c) => c && !GENERIC_HEADER.test(normHeader(c)) && matchLine({ row: 0, text: c, quantity: 1 }).status === "matched"));
+  rows.slice(0, firstDevice < 0 ? 20 : firstDevice).forEach((row, i) => {
     const filled = row.filter(Boolean).length;
-    if (filled < 2 && !(filled === 1 && rows[i + 1] && headerCells(row) === 1)) return;
+    // A lone cell is a header only when it is one word or two, not a sentence, and no section title ("GRADE A").
+    const lone = row.find(Boolean)?.trim() ?? "";
+    if (filled < 2 && !(filled === 1 && rows[i + 1] && headerCells(row) === 1 && lone.split(/\s+/).length <= 2 && !gradeFromLabel(lone))) return;
     const hits = headerCells(row);
     const data = dataCells(row);
     const nextData = rows[i + 1] ? dataCells(rows[i + 1]) : 0;
@@ -221,7 +225,31 @@ export function toTable(matrix: string[][]): Table {
     return k ? `${base} (${k + 1})` : base;
   });
   const body = rows.slice(h + 1).map((r) => keep.map((i) => r[i] ?? ""));
-  return { headers, rows: body };
+  return h >= 0 ? stackTables(headers, body) : { headers, rows: body };
+}
+
+/** A second table further down, with its own header row: its columns join the first table's, by name. */
+function stackTables(headers: string[], body: string[][]): Table {
+  const all = [...headers];
+  let columns = headers.map((_, i) => i);
+  const rows: string[][] = [];
+  for (const r of body) {
+    // "… 256GB SSD;B;42 pcs" reads like headers too: a header row counts nothing and names no device.
+    if (headerCells(r) >= 2 && dataCells(r) === 0 && !r.some((c) => /^\d/.test(c) || (c && matchLine({ row: 0, text: c, quantity: 1 }).status === "matched"))) {
+      columns = r.map((c) => {
+        if (!c) return -1;
+        const at = all.findIndex((h) => normHeader(h) === normHeader(c));
+        return at >= 0 ? at : all.push(c) - 1;
+      });
+      continue;
+    }
+    const out: string[] = [];
+    r.forEach((c, i) => {
+      if (columns[i] >= 0) out[columns[i]] = c;
+    });
+    rows.push(out);
+  }
+  return { headers: all, rows: rows.map((r) => all.map((_, i) => r[i] ?? "")) };
 }
 
 /** Decode a text file: UTF-8 (with or without BOM), UTF-16 (Excel "Unicode text"), else Windows-1252 (Excel "CSV"). */
@@ -250,7 +278,27 @@ export async function readFile(file: File): Promise<Table> {
   return parseText(decode(await file.arrayBuffer()));
 }
 
-export function parseText(text: string): Table {
+// The sender and time of an exported chat: "[14:02, 03/11/2026] Karim: ", "03/11/2026, 14:02 - Karim: ".
+const CHAT_PREFIX = /^(?:\[[^\]\n]*\d{1,2}:\d{2}[^\]\n]*\]\s*|\d{1,2}\/\d{1,2}\/\d{2,4},?\s+\d{1,2}:\d{2}(?:\s?[ap]m)?\s+-\s+)[^:\n]{1,40}:\s*/gim;
+
+/** A JSON array of objects, as an API or a script exports: its keys are the headers. */
+function jsonTable(s: string): Table | undefined {
+  if (!/^\s*\[\s*\{/.test(s)) return undefined;
+  try {
+    const items = JSON.parse(s) as Record<string, unknown>[];
+    const headers = [...new Set(items.flatMap((o) => Object.keys(o)))];
+    return { headers, rows: items.map((o) => headers.map((h) => clean(o[h]))) };
+  } catch {
+    return undefined;
+  }
+}
+
+export function parseText(raw: string): Table {
+  const json = jsonTable(raw);
+  if (json) return json;
+  let text = raw.replace(CHAT_PREFIX, "");
+  // Tabs on some lines, runs of spaces on the others: one fixed-width list.
+  if (/\t/.test(text) && text.split(/\r?\n/).some((l) => l.trim() && !l.includes("\t") && / {2,}/.test(l))) text = text.replace(/\t/g, "  ");
   const res = Papa.parse<string[]>(text.replace(/^﻿/, "").trim(), { skipEmptyLines: true, delimiter: "", delimitersToGuess: [";", ",", "\t", "|"] });
   let data = res.data;
   // A free-text list where only some lines hold a comma ("899,90 €") is not comma-separated:
@@ -259,7 +307,9 @@ export function parseText(text: string): Table {
   if (res.meta.delimiter === ",") {
     const multi = data.map((r) => r.length).filter((w) => w > 1);
     const common = multi.filter((w) => w === multi[multi.length - 1]).length;
-    if (multi.length < data.length / 2 || common < multi.length * 0.8) {
+    // A line or two without headers is a sentence, not a table.
+    const sentence = data.length <= 3 && !data[0].some((c) => c && isHeaderWord(c.trim()));
+    if (sentence || multi.length < data.length / 2 || common < multi.length * 0.8) {
       data = text.replace(/^﻿/, "").trim().split(/\r?\n/).filter((l) => l.trim()).map((l) => [l]);
     }
   }
@@ -289,6 +339,8 @@ function foldStacked(data: string[][]): string[][] {
   });
   const attribute = (k?: string) => k === "label" || k === "cpu" || k === "ram" || k === "storage" || k === "grade" || k === "number";
   if (!kinds.some((k) => k === "model") || !kinds.some(attribute)) return data;
+  // A list opening on a grade has grades for section titles, not one per device.
+  if (kinds[0] === "grade") return data;
   const out: string[][] = [];
   data.forEach((r, i) => {
     const prev = out[out.length - 1];
@@ -316,9 +368,18 @@ function attributeText(line: string, kind: string): string {
 // ---------------------------------------------------------------------------------------------
 // Column roles
 
+const CAPACITY_HEADER = /^\d{1,4}\s?(?:gb|go|tb|to)$/i;
+const LOCATION_HEADER = /\b(?:location|warehouse|emplacement|depot|lager|lagerort|magazzino|almacen|armazem|magazyn|sklad|locatie|bin|rack|shelf)\b/;
+
 /** What the file is: a supplier lot to quote, or the customer's own price list. */
 export type Expect = "quote" | "prices";
-export type Layout = { mapping: ColumnMapping; gradeColumns: Record<string, Grade>; expect?: Expect };
+export type Layout = {
+  mapping: ColumnMapping;
+  gradeColumns: Record<string, Grade>;
+  /** Pivots with one count column per capacity ("64GB", "128GB"): header → capacity. */
+  capacityColumns?: Record<string, string>;
+  expect?: Expect;
+};
 
 type Profile = { share: Partial<Record<Kind, number>>; model: number; unique: number; filled: number };
 
@@ -388,10 +449,21 @@ export function detectLayout(table: Table, expect: Expect = "quote"): Layout {
   const gradeColumns: Record<string, Grade> = {};
   const colValues = (i: number) => table.rows.map((r) => r[i] ?? "");
   const profiles = table.headers.map((_, i) => profileColumn(colValues(i)));
+  // Two or more columns named after a capacity, holding counts.
+  const capacityHeaders = expect === "quote" ? table.headers.filter((h, i) => CAPACITY_HEADER.test(h.trim()) && colValues(i).every((v) => !v || parseQuantity(v) !== undefined)) : [];
+  const capacityColumns: Record<string, string> = capacityHeaders.length >= 2 ? Object.fromEntries(capacityHeaders.map((h) => [h, h.replace(/\s/g, "").toUpperCase().replace("GO", "GB").replace("TO", "TB")])) : {};
+  // Grades named in words ("Comme neuf", "Très bon", "Bon"): only as a set, one column could mean anything.
+  const counted = (i: number) => colValues(i).some(Boolean) && colValues(i).every((v) => !v || parseQuantity(v) !== undefined);
+  const worded = expect === "quote" ? table.headers.filter((h, i) => !gradeFromLabel(h) && !/\d/.test(h) && parseGrade(h) && counted(i)) : [];
+  const wordGrades = new Set(worded.map((h) => parseGrade(h))).size >= 2 ? worded : [];
 
   table.headers.forEach((header, i) => {
     const values = colValues(i);
-    const g = gradeFromLabel(header) ?? (expect === "prices" ? gradeFromPriceHeader(header) : null);
+    if (capacityColumns[header]) {
+      mapping[header] = "ignore";
+      return;
+    }
+    const g = gradeFromLabel(header) ?? (wordGrades.includes(header) ? parseGrade(header)! : null) ?? (expect === "prices" ? gradeFromPriceHeader(header) : null);
     const numeric = values.slice(0, 50).every((v) => !v || parseQuantity(v) !== undefined || (expect === "prices" && !!parsePrice(v)));
     if (g && numeric) {
       gradeColumns[header] = g;
@@ -399,7 +471,8 @@ export function detectLayout(table: Table, expect: Expect = "quote"): Layout {
       return;
     }
     const byHeader = guessField(header);
-    if (byHeader === "ignore" && isIdHeader(normHeader(header)) && profiles[i].model < 0.3) {
+    // A few "A-12" shelves look like Galaxy A12s: it takes more to turn a location or a code into a model column.
+    if (byHeader === "ignore" && isIdHeader(normHeader(header)) && (profiles[i].model < 0.6 || LOCATION_HEADER.test(normHeader(header)))) {
       mapping[header] = "ignore";
       return;
     }
@@ -446,7 +519,7 @@ export function detectLayout(table: Table, expect: Expect = "quote"): Layout {
       .sort((a, b) => b.t - a.t)[0];
     if (text) mapping[text.h] = "model";
   }
-  return { mapping, gradeColumns, expect };
+  return { mapping, gradeColumns, capacityColumns, expect };
 }
 
 /** Price-list pivots label their columns "Prix A", "Price grade B", "A (€)"… */
@@ -458,15 +531,21 @@ function gradeFromPriceHeader(header: string): Grade | null {
 // ---------------------------------------------------------------------------------------------
 // Lines
 
-const SKIP = /^(grand total|total|totals|sum|somme|\(blank\)|\(vide\)|-+|—|sous-total|subtotal|sub-total|gesamt|summe)(?=\s|:|$)/i;
+const SKIP = /^(grand total|total|totals|sum|somme|\(blank\)|\(vide\)|-+|—|sous-total|subtotal|sub-total|gesamt|summe|frais de port|shipping|versand|transport|assurance|insurance|remise|discount|tva|vat|mwst)(?=\s|:|$)/i;
 
+const UNIT_WORDS = "pcs|pc|pieces?|pièces?|units?|unités?|unites?|stk|stück|stueck|stuks?|pz|pezzi|unidades|unidad|uds?|szt|ea|each";
 // Quantity and grade written into the text itself: "3x Latitude 5420", "iPhone 13 x 5", "qty: 2", "Grade B".
 const QTY_IN_TEXT = [
   /^\s*(\d{1,5})\s*[x×*]\s+/i,
-  // "… x 5" or "… ×5", never "x5" glued: that is a model name ("Nokia X20", "Xperia X10").
+  /^\s*lot\s+(?:of|de)\s+(\d{1,5})\s+/i,
+  new RegExp(`^\\s*(\\d{1,5})\\s*(?:${UNIT_WORDS})\\b\\.?\\s+`, "i"),
+  // "… x 5" or "… ×5"; "x5" glued is a model name ("Nokia X20", "Xperia X10")…
   /\s(?:x\s+|[×*]\s*)(\d{1,5})\s*$/i,
+  // …unless it follows a capacity or a grade ("128GB x10", "Grade B x10"), or sits in brackets ("(x10)").
+  /(?<=(?:\d\s?(?:gb|go|tb|to)|\/\d{2,4}|\bssd|\bgrade\s*[a-e]\+?|\b[a-e]\+?)\s+)x(\d{1,5})\s*$/i,
+  /\(\s*x\s*(\d{1,5})\s*\)\s*$/i,
   /\b(?:qty|qte|quantit[eé]|quantity|nb|menge|cantidad)\s*[:=]?\s*(\d{1,5})\b/i,
-  /\b(\d{1,5})\s*(?:pcs|pc|pieces|pièces|units|unités|unites|stk|uds)\b\.?/i,
+  new RegExp(`\\b(\\d{1,5})\\s*(?:${UNIT_WORDS})\\b\\.?`, "i"),
 ];
 // An amount next to a currency: "520 €", "529€", "899,90 €", "1.189 EUR", "€ 1,049.00", "289 EUR HT".
 const PRICE_IN_TEXT = /(?:[€$£]\s*(\d[\d.,]*\d|\d)|(?<![\d.,/])(\d[\d.,]*\d|\d)\s*(?:€|eur(?:os?)?\b|\$|usd\b|£|gbp\b))(?:\s*(?:ht|ttc)\b)?/gi;
@@ -494,11 +573,13 @@ export function priceInText(text: string): { price: string; rest: string } | und
   const rest = (text.slice(0, start) + " " + text.slice(m.index + m[0].length)).replace(/\s*[-–:|]\s*$/, "").replace(/\s+/g, " ").trim();
   return { price, rest };
 }
-const GRADE_IN_TEXT =/\b(?:grade|class|classe|cat|klasse|grado)\s*[:=]?\s*([a-e])\+?(?![a-z0-9])/i;
+const GRADE_WORDS = "grade|grado|gr\\.?|class|classe|clase|klasse|cat\\.?|zustand|estado|[ée]tat|stan|condition";
+const GRADE_IN_TEXT = new RegExp(`(?<![a-z0-9])(?:${GRADE_WORDS})\\s*[:=]?\\s*([a-e])\\+?(?![a-z0-9])`, "i");
 
 /** Pull a quantity and a grade out of free text, returning the text without them. */
 export function extractInline(text: string): { text: string; quantity?: number; grade?: string } {
-  let t = ` ${text} `;
+  // "iphone12pro256gb", "16GB256GB": capacities glued to what is around them.
+  let t = ` ${text} `.replace(/([a-z])(\d{2,4}(?:gb|go|tb|to))\b/gi, "$1 $2").replace(/(\d(?:gb|go|tb|to))(?=\d)/gi, "$1 ");
   let quantity: number | undefined;
   for (const rx of QTY_IN_TEXT) {
     const m = t.match(rx);
@@ -509,7 +590,8 @@ export function extractInline(text: string): { text: string; quantity?: number; 
     }
   }
   let grade: string | undefined;
-  const g = t.match(GRADE_IN_TEXT);
+  // "Grade B", or "A-grade" the other way round.
+  const g = t.match(GRADE_IN_TEXT) ?? t.match(/(?<![a-z0-9])([a-e])\+?[- ]grade\b/i);
   if (g) {
     grade = g[1].toUpperCase();
     t = t.replace(g[0], " ");
@@ -517,15 +599,181 @@ export function extractInline(text: string): { text: string; quantity?: number; 
   return { text: t.replace(/\s*[-–|,;]\s*(?=[-–|,;]|$)/g, " ").replace(/\s+/g, " ").trim(), quantity, grade };
 }
 
+// ---------------------------------------------------------------------------------------------
+// Free text: an email, a chat, a list typed by hand, one line per device among lines that hold none.
+
+// Bullets, emojis and "1)" at the start of a line.
+const cleanFree = (s: string) =>
+  s.replace(/\p{Extended_Pictographic}|️/gu, " ").replace(/^[\s\-–—•*·▪►➤→>]+/, "").replace(/^\d{1,3}[.)]\s+/, "").replace(/\s+/g, " ").trim();
+
+const LABEL_LINE = /^(?:from|to|cc|bcc|de|date|sent|envoy[ée]|subject|objet|sujet|betreff|von|an|tel|t[ée]l|t[ée]l[ée]phone|phone|mobile|fax|e-?mail|mail|web|site|adresse|address|payment|paiement|delivery|livraison|incoterms?|validity|validit[ée]|conditions?|terms?|iban|siret|client|customer|facture|invoice)\s*:/i;
+const CONTACT = /@[\w.-]+\.[a-z]{2,}|https?:\/\/|www\.|\b0\d(?:[ .]\d{2}){4}\b|\+\d{2}[ .\d]{8,}/i;
+// Common words of a sentence: a line with several of them is prose, whatever numbers it holds.
+const STOP_WORDS = new Set("le la les de des du et pour sur sous avec nos notre votre vous nous est sont the and for of our we are is with this these your you all der die das und mit fur unser ihr el los las para con este esta di per questa questo il het een voor van onze".split(" "));
+
+const brandWord = (s: string) => s.split(/[\s,;:/()-]+/).some(isBrand);
+const namesDevice = (s: string) => brandWord(s) || matchLine({ row: 0, text: s, quantity: 1 }).status !== "unmatched";
+
+function isProse(s: string): boolean {
+  if (CONTACT.test(s)) return true;
+  const named = brandWord(s);
+  if (LABEL_LINE.test(s) && !named) return true;
+  // No figure and no maker: nothing that can name a device ("Cordialement", "Marc Durand", "tu me dis").
+  if (!/\d/.test(s) && !named) return true;
+  const stops = normHeader(s).split(" ").filter((w) => STOP_WORDS.has(w)).length;
+  return stops >= 2 && !named && matchLine({ row: 0, text: s, quantity: 1 }).status !== "matched";
+}
+
+// "iPhone 12 128GB A:10 B:20 C:5", "iPhone 12 128GB B: 25": a count per grade.
+const GRADE_COUNTS = /^(.*?)\s+((?:[a-e]\+?\s*[:=]\s*\d{1,5}[\s,;/]*)+)$/i;
+// "iPhone 12: 64GB x10, 128GB x5": a count per capacity.
+const CAPACITY_COUNTS = /^(.*?)\s*[:–-]\s*((?:\d{1,4}\s?(?:gb|go|tb|to)\s*[x×]\s*\d{1,5}[\s,;/]*)+)$/i;
+
+// "iPhone 12/128GB/B/10", "iPhone 12 - 128GB - B - 10": name, capacity, grade and count, one separator.
+const FIELD_LINE = /^(.+?)\s*([/–-])\s*(\d{1,4}\s?(?:gb|go|tb|to))\s*\2\s*([a-e])\+?\s*\2\s*(\d{1,5})$/i;
+// Where a new device starts in a sentence: "…, 40 iPhone 12", "… + 5x iPhone 13", "… and 10 Galaxy S21".
+const NEXT_DEVICE = /(?:\s*[,;]|\s\+|\s&|\sand|\set|\sund|\splus)\s+(?=\d{1,4}\s*x?\s*[a-z])(?!\d{1,4}\s?(?:gb|go|tb|to)\b)/i;
+// ", all grade A", "tous grade B": said once for the whole line.
+const SHARED_GRADE = new RegExp(`[,;]?\\s*(?:all|tous|toutes|alle|todos)\\s+(?:in\\s+|en\\s+)?(?:${GRADE_WORDS})\\s*[:=]?\\s*([a-e])\\+?\\.?$`, "i");
+
+type FreeLine = { text: string; quantity?: number; grade?: string };
+
+/** The devices of one line of text: usually one. */
+function splitCounts(raw: string): FreeLine[] {
+  const shared = raw.match(SHARED_GRADE);
+  const s = (shared ? raw.slice(0, shared.index) : raw).replace(/[.;,]\s*$/, "").trim();
+  const grade = shared?.[1].toUpperCase();
+  const g = s.match(GRADE_COUNTS);
+  if (g) return [...g[2].matchAll(/([a-e])\+?\s*[:=]\s*(\d{1,5})/gi)].map((m) => ({ text: g[1], grade: m[1].toUpperCase(), quantity: Number(m[2]) }));
+  const c = s.match(CAPACITY_COUNTS);
+  if (c) return [...c[2].matchAll(/(\d{1,4}\s?(?:gb|go|tb|to))\s*[x×]\s*(\d{1,5})/gi)].map((m) => ({ text: `${c[1]} ${m[1]}`, grade, quantity: Number(m[2]) }));
+  const f = s.match(FIELD_LINE);
+  if (f) return [{ text: `${f[1]} ${f[3]}`, grade: f[4].toUpperCase(), quantity: Number(f[5]) }];
+  const parts = s.split(NEXT_DEVICE);
+  if (parts.length > 1 && parts.every((p) => namesDevice(p))) {
+    // "We can offer you 25 iPhone 13…": the words before the first count go.
+    parts[0] = parts[0].replace(/^\D*?(?=\d{1,4}\s*x?\s*[a-z])/i, "");
+    return parts.map((text) => ({ text, grade }));
+  }
+  return [{ text: s, grade }];
+}
+
+const TIMES_COUNT = new RegExp(`^(.*\\d.*?)\\sx(\\d{1,5})(\\s+(?:${GRADE_WORDS})\\s*[:=]?\\s*[a-e]\\+?)?$`, "i");
+const CAPACITY_LINE = /^\d{1,4}\s?(?:gb|go|tb|to)\s*[-–:x×]\s*\d{1,5}$/i;
+const GRADE_LINE = new RegExp(`^(?:${GRADE_WORDS})\\s*[a-e]\\+?\\s*[-–:=x×]\\s*\\d{1,5}$`, "i");
+const BRACKET_GRADE = /^\[([a-e])\+?\]\s*/i;
+// "128GB A", "128 A", "128GB - B": a lone letter after the capacity.
+const BARE_GRADE = /(\b\d{2,4}\s?(?:gb|go|tb|to)?|\b[124]\s?(?:tb|to)|\bssd)(?:\s+[-–/])?\s+([a-e])[+-]?(?=\s|$)/i;
+const GRADE_THEN_COUNT = new RegExp(`((?<![a-z0-9])(?:${GRADE_WORDS})\\s*[:=]?\\s*[a-e]\\+?|\\s[a-e]\\+?)\\s+(\\d{1,5})\\s*$`, "i");
+
+/** Quantity, grade and price of a free line, which writes them in more ways than a table's cell. */
+function readFree(line: FreeLine): FreeLine & { price?: string } {
+  let s = line.text;
+  let grade = line.grade;
+  let quantity = line.quantity;
+  let price: string | undefined;
+  const found = priceInText(s);
+  if (found) {
+    price = found.price;
+    s = found.rest.replace(/\s@(?=\s|$)/g, " ").trim();
+  }
+  const bracket = s.match(BRACKET_GRADE);
+  if (bracket) {
+    grade ??= bracket[1].toUpperCase();
+    s = s.slice(bracket[0].length);
+  }
+  const count = s.match(GRADE_THEN_COUNT);
+  if (count && quantity === undefined) {
+    quantity = Number(count[2]);
+    s = `${s.slice(0, count.index)}${count[1]}`;
+  }
+  // "… 256GB Grade A (12)": a count in brackets, once the line has a capacity or a grade ("Phone (2)" is a name).
+  const bracketCount = s.match(/^(.*(?:\d\s?(?:gb|go|tb|to)|ssd|grade\s*[a-e]).*?)\s*\((\d{1,5})\)$/i);
+  if (bracketCount && quantity === undefined) {
+    quantity = Number(bracketCount[2]);
+    s = bracketCount[1];
+  }
+  // "20 iphone 11", "30: iPhone 11".
+  const lead = s.match(/^(\d{1,4})(\s*:)?\s+(\S+)/);
+  if (lead && quantity === undefined && (lead[2] || isBrand(lead[3]))) {
+    quantity = Number(lead[1]);
+    s = s.slice(lead[0].length - lead[3].length).trim();
+  }
+  // "Nokia 3310 x10", "iPhone 12 x10 grade B": a line that has its model number counts; "Nokia X10" alone is the model.
+  const times = s.match(TIMES_COUNT);
+  if (times && quantity === undefined) {
+    quantity = Number(times[2]);
+    s = `${times[1]}${times[3] ?? ""}`;
+  }
+  const inline = extractInline(s);
+  s = inline.text;
+  quantity ??= inline.quantity;
+  grade ??= inline.grade;
+  if (!grade) {
+    const bare = s.match(BARE_GRADE);
+    if (bare) {
+      grade = bare[2].toUpperCase();
+      s = s.replace(bare[0], bare[1]);
+    }
+  }
+  // "S21 128GB - 7", "iPhone 12 128GB : 10": a count after a dash, once the line has named its model.
+  const dash = s.match(/^(.*\d.*?)\s[-–:]\s*(\d{1,5})$/);
+  if (dash && quantity === undefined) {
+    quantity = Number(dash[2]);
+    s = dash[1];
+  }
+  return { text: s, quantity, grade, price };
+}
+
+function freeLines(table: Table): RawLine[] {
+  const lines: RawLine[] = [];
+  // A grade or a maker given once, for the lines that follow ("GRADE B", "All units Grade B:", "SAMSUNG").
+  let sectionGrade: string | undefined;
+  let sectionBrand: string | undefined;
+  // A model named once, its capacities or grades on the lines below ("iPhone 13" / "128GB - 7", "Grade A: 10").
+  let sectionModel: string | undefined;
+  const under = (s: string) => CAPACITY_LINE.test(s) || GRADE_LINE.test(s);
+  table.rows.forEach((row, i) => {
+    const raw = cleanFree(row[0] ?? "");
+    if (sectionModel && !under(raw)) sectionModel = undefined;
+    const next = cleanFree(table.rows[i + 1]?.[0] ?? "");
+    if (!sectionModel && under(next) && !under(raw) && namesDevice(raw)) {
+      sectionModel = raw;
+      return;
+    }
+    const cell = sectionModel ? `${sectionModel} ${raw}` : raw;
+    if (!cell || SKIP.test(cell) || isProse(cell) && !extractInline(cell).grade) return;
+    if (isBrand(cell)) {
+      sectionBrand = cell;
+      return;
+    }
+    const inline = extractInline(cell);
+    if (inline.grade && !namesDevice(inline.text)) {
+      sectionGrade = inline.grade;
+      return;
+    }
+    if (isProse(cell)) return;
+    for (const part of splitCounts(cell)) {
+      const l = readFree(part);
+      const brand = sectionBrand && !normHeader(l.text).includes(normHeader(sectionBrand)) ? sectionBrand : undefined;
+      lines.push({ row: i + 1, brand, model: l.text, text: [brand, l.text].filter(Boolean).join(" "), quantity: l.quantity ?? 1, gradeRaw: l.grade ?? sectionGrade, price: l.price });
+    }
+  });
+  return lines;
+}
+
 export function buildLines(table: Table, layout: Layout): RawLine[] {
   const idx = new Map(table.headers.map((h, i) => [h, i]));
   const col = (f: Field) => table.headers.filter((h) => layout.mapping[h] === f);
+  const only = table.headers.length === 1 ? layout.mapping[table.headers[0]] : undefined;
+  if (layout.expect !== "prices" && (only === "model" || only === "description")) return freeLines(table);
   // Test-bench exports write 0 for what a phone has no figure for (CPU speed, RAM).
   const blank = (f: Field, v: string) => !v || ((f === "cpu" || f === "ram" || f === "storage") && /^0+(?:[.,]0+)?$/.test(v));
   const get = (row: string[], f: Field) =>
     col(f).map((h) => row[idx.get(h)!]).filter((v) => !blank(f, v)).join(" ").trim() || undefined;
   const gradeCols = Object.entries(layout.gradeColumns);
-  const structured = col("quantity").length + col("grade").length + gradeCols.length > 0;
+  const capacityCols = Object.entries(layout.capacityColumns ?? {});
+  const structured = col("quantity").length + col("grade").length + gradeCols.length + capacityCols.length > 0;
   const lines: RawLine[] = [];
 
   table.rows.forEach((row, i) => {
@@ -565,6 +813,14 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
     const gb = (v?: string) => (v && /^\d{1,4}$/.test(v) ? `${v}GB` : v);
     const text = [brandInText ? undefined : base.brand, inline.text, base.cpu, gb(base.ram), gb(base.storage)].filter(Boolean).join(" ");
 
+    if (capacityCols.length > 0) {
+      // Pivot layout: one line per non-empty capacity cell.
+      for (const [header, capacity] of capacityCols) {
+        const n = parseQuantity(row[idx.get(header)!]);
+        if (n) lines.push({ ...base, text: `${text} ${capacity}`, storage: capacity, quantity: n, gradeRaw: get(row, "grade") ?? inline.grade });
+      }
+      return;
+    }
     if (gradeCols.length > 0) {
       // Pivot layout: one line per non-empty grade cell — a count, or in a price list, the price for that grade.
       for (const [header, grade] of gradeCols) {

@@ -171,31 +171,33 @@ describe("applyAi", () => {
   });
 
   it("corrects lines the rules were sure of, and stays quiet when it agrees", () => {
-    const sure = linesOf("Dell 5550 i7 32/512", "Coque iPhone 7 silicone", "Latitude 5420 i5-1145G7 16GB 256GB");
+    const sure = linesOf("Dell 5550 i7 32/512", "iPhone 7 coque silicone", "Latitude 5420 i5-1145G7 16GB 256GB");
     expect(sure.map((l) => [l.status, l.model]).sort()).toEqual([["matched", "Latitude 5420"], ["matched", "Latitude 5550"], ["matched", "iPhone 7"]]);
     const precision = candidatesFor("Dell 5550 i7 32/512").find((r) => r.model === "Precision 5550")!.id;
     const lat = byText(sure, "Latitude 5420 i5-1145G7 16GB 256GB");
     const { lines: out, changed, rejected } = applyAi(sure, new Map([
-      ["Dell 5550 i7 32/512", precision], ["Coque iPhone 7 silicone", null], ["Latitude 5420 i5-1145G7 16GB 256GB", lat.refId!],
+      ["Dell 5550 i7 32/512", precision], ["iPhone 7 coque silicone", null], ["Latitude 5420 i5-1145G7 16GB 256GB", lat.refId!],
     ]));
     expect([changed, rejected]).toEqual([1, 1]);
     // The configuration is read again for the new model.
     expect(byText(out, "Dell 5550 i7 32/512")).toMatchObject({ model: "Precision 5550", status: "review", aiNote: "picked", variant: { ram: "32GB", storage: "512GB" } });
     expect(byText(out, "Dell 5550 i7 32/512").warnings).toContain("Les règles proposaient Dell Latitude 5550");
-    expect(byText(out, "Coque iPhone 7 silicone")).toMatchObject({ status: "unmatched", aiNote: "rejected" });
+    expect(byText(out, "iPhone 7 coque silicone")).toMatchObject({ status: "unmatched", aiNote: "rejected" });
     expect(byText(out, "Latitude 5420 i5-1145G7 16GB 256GB")).toMatchObject({ status: "matched", aiNote: undefined, refId: lat.refId });
   });
 
   it("keeps the rules' model when the line names it word for word", () => {
-    const texts = ["Apple MacBook Air 15 M3 Apple M3 16GB 512GB", "Google Pixel 2 / 64GB", "HP EliteBook x360 1040 G6 i7 16GB 512GB", "Carte mère ThinkPad T480"];
+    const texts = ["Apple MacBook Air 15 M3 Apple M3 16GB 512GB", "Google Pixel 2 / 64GB", "HP EliteBook x360 1040 G6 i7 16GB 512GB", "ThinkPad T480 carte mère"];
     const named = linesOf(...texts);
     expect(texts.map((t) => byText(named, t).refId)).not.toContain(undefined);
     const { lines: out, rejected } = applyAi(named, new Map(texts.map((t) => [t, null])));
     // The year left out is still the same model…
     expect(byText(out, texts[0])).toMatchObject({ model: "MacBook Air 15 M3 2024", status: "matched", auto: { ai: { refId: undefined } } });
     expect(byText(out, texts[0]).aiNote).toBeUndefined();
-    // …but a word the name lacks (the 2 of "Pixel 2", x360) or a part for the model leaves the AI the last word.
-    expect(rejected).toBe(3);
+    // The 2 of "Pixel 2 / 64GB" is the model's, so the rules name it too…
+    expect(byText(out, texts[1])).toMatchObject({ model: "Pixel 2", status: "matched" });
+    // …but a word the name lacks (x360) or a part for the model leaves the AI the last word.
+    expect(rejected).toBe(2);
   });
 
   it("keeps a tablet the AI finds no candidate for (it was not trained on tablets), not one it corrects", () => {

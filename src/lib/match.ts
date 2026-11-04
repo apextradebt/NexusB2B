@@ -36,12 +36,15 @@ const LINE_WORDS = new Set(["iphone", "galaxy", "pixel", "thinkpad", "elitebook"
 // Words that turn one model into its sibling ("15 Pro" vs "15 Pro Max").
 const SIBLING_WORDS = new Set(["pro", "max", "plus", "ultra", "mini", "lite", "fe", "carbon", "fortis"]);
 // Devices quotes do not cover: "Apple Watch Series 7" is no iPhone 7.
-const OTHER_KINDS = new Set(["watch", "montre", "airpods", "buds", "earbuds", "ecouteurs", "pencil", "stylus"]);
+const OTHER_KINDS = new Set(["watch", "montre", "airpods", "buds", "earbuds", "ecouteurs", "pencil", "stylus", "playstation", "ps4", "ps5", "xbox", "nintendo", "console", "tv", "television", "kindle", "gopro", "drone", "printer", "imprimante", "monitor", "moniteur"]);
 // Words a tablet's name carries: "Galaxy Tab S7" is no Galaxy S7, "iPad Pro 11" no MacBook Pro.
 const TABLET_NAMES = new Set(["ipad", "tab"]);
 const TABLET_WORDS = new Set([...TABLET_NAMES, "tablet", "tablette"]);
 // A computer's line: "MacBook Pro … 16GB" is no iPhone 16 Pro.
 const COMPUTER_NAMES = new Set(["macbook", "imac", "thinkpad", "latitude", "elitebook", "probook", "zbook", "lifebook", "chromebook"]);
+const MAIN_BRANDS = new Set(["Apple", "Samsung"]);
+// A maker's second line: a "Xiaomi Redmi 12" is no "Xiaomi 12".
+const SUB_BRANDS = new Set(["redmi", "poco"]);
 
 const isYear = (t: string) => /^20[0-3]\d$/.test(t);
 // Tokens with a digit identify the model ("5420", "g8", "s23"); a release year only helps tell siblings apart.
@@ -77,8 +80,24 @@ const SHORTHAND: [RegExp, string][] = [
   [/\blat\b/g, "latitude"],
   [/\bprec\b/g, "precision"],
   [/\bsgs ?(\d)/g, "galaxy s$1"],
+  // Traders' "IP13PM", "IP13P": Pro Max and Pro.
+  [/\bip ?(x[rs]?|[4-9]|1\d) ?pm\b/g, "iphone $1 pro max"],
+  [/\bip ?(x[rs]?|[4-9]|1\d) ?p\b/g, "iphone $1 pro"],
   [/\bip ?([4-9]|1\d)\b/g, "iphone $1"],
 ];
+
+// Samsung's model codes ("SM-G991B/DS"), which wholesale lists often give instead of the name.
+const SAMSUNG_CODES: Record<string, string> = {
+  g950: "s8", g955: "s8 plus", g960: "s9", g965: "s9 plus", g970: "s10e", g973: "s10", g975: "s10 plus",
+  g980: "s20", g981: "s20", g985: "s20 plus", g986: "s20 plus", g988: "s20 ultra", g780: "s20 fe", g781: "s20 fe",
+  g990: "s21 fe", g991: "s21", g996: "s21 plus", g998: "s21 ultra", s901: "s22", s906: "s22 plus", s908: "s22 ultra",
+  s711: "s23 fe", s911: "s23", s916: "s23 plus", s918: "s23 ultra", s721: "s24 fe", s921: "s24", s926: "s24 plus", s928: "s24 ultra",
+  s931: "s25", s936: "s25 plus", s938: "s25 ultra", n970: "note 10", n975: "note 10 plus", n980: "note 20", n981: "note 20", n985: "note 20 ultra", n986: "note 20 ultra",
+  f711: "z flip 3", f721: "z flip 4", f731: "z flip 5", f741: "z flip 6", f926: "z fold 3", f936: "z fold 4", f946: "z fold 5", f956: "z fold 6",
+  a125: "a12", a127: "a12", a135: "a13", a145: "a14", a146: "a14", a156: "a15", a256: "a25", a326: "a32", a336: "a33", a346: "a34", a356: "a35",
+  a515: "a51", a516: "a51", a525: "a52", a526: "a52", a528: "a52s", a536: "a53", a546: "a54", a556: "a55", a715: "a71", a716: "a71",
+};
+const samsungCodes = (s: string) => s.replace(/\bsm ([a-z]\d{3})[a-z0-9]*\b/g, (m, code) => (SAMSUNG_CODES[code] ? `galaxy ${SAMSUNG_CODES[code]}` : m));
 
 // Every word of the catalogue's names, and the longer plain words a typo can be checked against.
 const VOCAB = new Set(INDEX.flatMap((ix) => [...ix.toks, ix.brand]));
@@ -143,7 +162,7 @@ export function modelTokens(text: string): string[] {
 
 function wordsOf(text: string): string[] {
   const words = reglue(tokens(text).flatMap(unglue).map(spellCheck)).join(" ");
-  return SHORTHAND.reduce((s, [rx, to]) => s.replace(rx, to), words).split(" ").filter((t) => t && !NOISE.has(t));
+  return samsungCodes(SHORTHAND.reduce((s, [rx, to]) => s.replace(rx, to), words)).split(" ").filter((t) => t && !NOISE.has(t));
 }
 
 // Sizes a line gives as bare numbers (RAM, storage): not a sign of another model.
@@ -179,6 +198,7 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   if (!saysTablet && ix.toks.some((t) => TABLET_NAMES.has(t))) return 0;
   if (saysTablet && ix.ref.category === "phone") return 0;
   if (ix.ref.category !== "laptop" && [...input].some((t) => COMPUTER_NAMES.has(t))) return 0;
+  for (const t of input) if (SUB_BRANDS.has(t) && !ix.toks.includes(t)) return 0;
   let total = 0;
   let hit = 0;
   let keyMissing = false;
@@ -196,6 +216,8 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   }
   let score = total ? hit / total : 0;
   if (keyMissing) score = Math.min(score, 0.55);
+  // A bare number is all that fits ("Dock 5" against "Pixel 5"): no line word, no maker, not enough to be sure.
+  if (ix.toks.every((t) => !input.has(t) || /^\d+$/.test(t)) && !input.has(ix.brand)) score = Math.min(score, 0.6);
 
   // Sibling words or a generation in the input that this model does not have mean a different model.
   const extra = [...input].filter((t) => (SIBLING_WORDS.has(t) || /^g\d+$/.test(t)) && !ix.toks.includes(t));
@@ -210,13 +232,13 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   } else {
     // A brand named in the text itself ("Nokia 3310") rules out other brands' models ("Latitude 3310").
     const named = [...input].map((t) => TEXT_BRANDS.get(t)).filter(Boolean);
-    if (named.length && !named.includes(ix.brand)) score -= 0.4;
+    if (named.length && !named.includes(ix.brand)) score -= 0.6;
   }
   return Math.max(0, score);
 }
 
 const up = (s: string) => s.toUpperCase();
-const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].includes(n);
+const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 18, 20, 24, 32, 36, 40, 48, 64, 96, 128, 192].includes(n);
 
 /**
  * A bare "T" is terabytes only for 1/2/4 ("1T"): "Xiaomi 13T" or "OnePlus 8T" are model names. And only
@@ -224,16 +246,21 @@ const RAM_OK = (n: number) => [2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 48, 64].in
  */
 const BARE_T_OK = (text: string) => !/\b(?:3[2-9]|[4-9]\d|\d{3,4})\s?(?:gb|go|g)\b(?!\s*(?:de\s*)?(?:ram|ddr|lpddr|memory|m[eé]moire))/i.test(text);
 
+// "16/512", "8GB/256GB". The start of "6.2 / 64GB" is a model number, never a RAM size.
+const RAM_SLASH_STORAGE = /(?<![\d.])\b(\d{1,2})(\s?(?:gb|go|g))?(\s*)\/(\s*)(\d{1,4})(\s?(?:gb|go|g|tb|to|t))?\b/gi;
+// "Galaxy Z Fold 6 / 512GB / Black": a slash between the fields of a list, the 6 belongs to the model.
+const listSlash = (ramUnit: string | undefined, before: string, after: string, unit: string | undefined) => !ramUnit && !!before && !!after && !!unit;
+
 /**
  * Remove configuration fragments (CPU, RAM, storage, "16/512") so their numbers do not
  * pass for model numbers ("MacBook Air M1 8/256" is not an iPhone 8).
  */
 export function stripSpecs(text: string): string {
   const bareT = BARE_T_OK(text) ? "|[124]\\s?t" : "";
-  return ` ${text} `
+  return ` ${text.replace(/_/g, " ")} `
     // "EliteBook 840 G 6": the generation, not an "840 G" capacity.
     .replace(/\b(\d{3,4}) ?g (\d{1,2})\b/gi, "$1 g$2")
-    .replace(/\b\d{1,2}\s?(?:gb|go|g)?\s*\/\s*\d{1,4}\s?(?:gb|go|g|tb|to|t)?\b/gi, " ")
+    .replace(RAM_SLASH_STORAGE, (m, ram, ramUnit, before, after, _storage, unit) => (listSlash(ramUnit, before, after, unit) ? `${ram} ` : " "))
     .replace(new RegExp(`\\b(?:\\d{1,4}\\s?(?:gb|go|g|tb|to)${bareT})\\b(\\s*(?:ssd|hdd|nvme|emmc|ram|ddr\\d?|lpddr\\d?x?|m\\.2|pcie))?`, "gi"), " ")
     // "M2 Pro" / "M1 Ultra" name the chip, not a "Pro" or "Ultra" model; the "M2" stays ("MacBook Air M2").
     .replace(/\b(m[1-5])\s+(?:pro|max|ultra)\b/gi, "$1")
@@ -248,7 +275,8 @@ export function stripSpecs(text: string): string {
     .replace(/\b(?:unisoc\s*[a-z]?\d{3,4}|exynos\s*\d{3,4}|kirin\s*\d{3,4}|(?:google\s*)?tensor\s*g\d)\b/gi, " ")
     .replace(/\b(?:apple\s*)?a\d{1,2}[xz]?(?:\s*(?:pro|fusion))?\s*bionic\b|\bapple\s*a\d{1,2}[xz]?(?:\s*(?:pro|fusion))?\b/gi, " ")
     .replace(/\b(?:mediatek|qualcomm|bionic)\b/gi, " ")
-    .replace(/\b(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|intel|amd|core|win(?:dows)?\s*1[01](?:\s*pro)?|azerty|qwerty|qwertz|french|fr|uk|us|de)\b/gi, " ")
+    // "Core" alone is Intel's; "Core-X5" is a Crosscall.
+    .replace(/\b(?:ssd|hdd|nvme|emmc|ram|ddr\d?|lpddr\d?x?|intel|amd|core(?![- ][xmz]\d)|win(?:dows)?\s*1[01](?:\s*pro)?|azerty|qwerty|qwertz|french|fr|uk|us|de)\b/gi, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -256,7 +284,7 @@ export function stripSpecs(text: string): string {
 /** Pull CPU / RAM / storage out of free text. Explicit spec columns are tried first by the caller. */
 export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage">): ParsedSpecs {
   const specs: ParsedSpecs = {};
-  const txt = ` ${line.text} `.toLowerCase();
+  let txt = ` ${line.text.replace(/_/g, " ")} `.toLowerCase();
   const cpuTxt = (line.cpu || txt).toLowerCase();
 
   // Desktop chips have no suffix ("i5-10500"), but "i5 2019" is a year.
@@ -264,7 +292,9 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   const ryzen = cpuTxt.match(/ryzen\s*([3579])\s*(pro\s*)?(\d{4}[a-z]{1,2})\b/);
   const low = cpuTxt.match(/\b(celeron|pentium(?:\s+(?:silver|gold))?)\s*(n?\d{4}[a-z]?)\b/);
   const ultra = cpuTxt.match(/\bultra\s*([579])\s*(\d{3}[a-z])\b/);
-  const apple = cpuTxt.match(/\b(?:apple\s+)?m([1-5])(?:\s+(pro|max|ultra))?\b(?!\.\d)/);
+  // "Mac mini M2 2023 Apple M2 Pro": the fullest name of the chip, not the model's "M2".
+  const chips = [...cpuTxt.matchAll(/\b(?:apple\s+)?m([1-5])(?:\s+(pro|max|ultra))?\b(?!\.\d)/g)];
+  const apple = chips.find((c) => c[2]) ?? chips[0];
   if (ultra) specs.cpu = `Core Ultra ${ultra[1]} ${up(ultra[2])}`;
   else if (apple && /apple|mac|\bm[1-5]\b/.test(cpuTxt) && !/m\.2/.test(cpuTxt.slice(apple.index!, apple.index! + 4))) specs.cpu = `Apple M${apple[1]}${apple[2] ? " " + apple[2][0].toUpperCase() + apple[2].slice(1) : ""}`;
   else if (intel) specs.cpu = `${intel[1]}-${up(intel[2])}`;
@@ -273,19 +303,24 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   const tier = cpuTxt.match(/\b(i[3579]|ryzen\s*[3579])\b/);
   if (tier) specs.cpuTier = tier[1].replace(/\s+/, " ");
 
-  const gb = (n: string, unit: string) => (/^t/i.test(unit) ? `${n}TB` : `${n}GB`);
+  // 1000GB and 1024GB are how tools write 1TB.
+  const gb = (n: string, unit: string) => (/^t/i.test(unit) ? `${n}TB` : /^(?:1000|1024)$/.test(n) ? "1TB" : /^(?:2000|2048)$/.test(n) ? "2TB" : `${n}GB`);
   // "16/512", "8GB/256GB", "i5/16/256": RAM then storage.
-  const slash = txt.match(/\b(\d{1,2})\s?(?:gb|go|g)?\s*\/\s*(\d{2,4}|[12])\s?(gb|go|g|tb|to|t)?\b/);
-  if (slash && RAM_OK(Number(slash[1])) && (slash[3] ? true : Number(slash[2]) >= 64 || Number(slash[2]) <= 2)) {
+  const slash = txt.match(/(?<![\d.])\b(\d{1,2})(\s?(?:gb|go|g))?(\s*)\/(\s*)(\d{2,4}|[12]|[48](?=\s?t))\s?(gb|go|g|tb|to|t)?\b/);
+  if (slash && !listSlash(slash[2], slash[3], slash[4], slash[6]) && RAM_OK(Number(slash[1])) && (slash[6] ? true : Number(slash[5]) >= 64 || Number(slash[5]) <= 2)) {
     if (!line.ram) specs.ram = `${slash[1]}GB`;
-    if (!line.storage) specs.storage = gb(slash[2], slash[3] || (Number(slash[2]) <= 2 ? "tb" : "gb"));
+    if (!line.storage) specs.storage = gb(slash[5], slash[6] || (Number(slash[5]) <= 2 ? "tb" : "gb"));
   }
   if (line.ram) {
-    const m = line.ram.match(/(\d{1,2})/);
+    const m = line.ram.match(/(\d{1,3})/);
     if (m) specs.ram = `${m[1]}GB`;
   } else if (!specs.ram) {
-    const m = txt.match(/\b(\d{1,2})\s?(?:gb|go|g)\s*(?:de\s*)?(?:ram|ddr\d?|lpddr\d?x?|memory|memoire|mémoire)\b/) || txt.match(/\b(?:ram|memory|memoire|mémoire)\s*:?\s*(\d{1,2})\s?(?:gb|go|g)\b/);
-    if (m) specs.ram = `${m[1]}GB`;
+    const m = txt.match(/\b(\d{1,3})\s?(?:gb|go|g)\s*(?:de\s*)?(?:ram|ddr\d?|lpddr\d?x?|memory|memoire|mémoire)\b/) || txt.match(/\b(?:ram|memory|memoire|mémoire)\s*:?\s*(\d{1,3})\s?(?:gb|go|g)\b/);
+    if (m) {
+      specs.ram = `${m[1]}GB`;
+      // "RAM 16GB SSD 1TB": the 16GB is spoken for, not a "16GB SSD".
+      txt = txt.replace(m[0], " ");
+    }
   }
 
   if (line.storage) {
@@ -308,7 +343,9 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
       // "4G" / "5G" are the mobile network, not a capacity.
       const bareT = BARE_T_OK(txt);
       const caps = [...txt.matchAll(/\b(\d{1,4})\s?(gb|go|g|tb|to|t)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5) && !(x[2] === "t" && (!bareT || ![1, 2, 4].includes(Number(x[1])))));
-      const cap = caps.find((x) => (/^t/i.test(x[2]) && Number(x[1]) <= 8) || Number(x[1]) >= 32);
+      const inGb = (x: RegExpExecArray | RegExpMatchArray) => Number(x[1]) * (/^t/i.test(x[2]) ? 1024 : 1);
+      // "32GB 1TB": the largest of the two.
+      const cap = caps.filter((x) => (/^t/i.test(x[2]) && Number(x[1]) <= 8) || Number(x[1]) >= 32).sort((a, b) => inGb(b) - inGb(a))[0];
       if (cap) {
         specs.storage = gb(cap[1], cap[2]);
         const ram = caps.find((x) => x !== cap && !/^t/i.test(x[2]) && RAM_OK(Number(x[1])) && Number(x[1]) < Number(cap[1]) * (/^t/i.test(cap[2]) ? 1024 : 1));
@@ -333,14 +370,17 @@ function bareCapacities(line: Pick<RawLine, "text" | "ram" | "storage">, ref: Re
   const nums = [...bare(line.text), ...bare(line.storage), ...bare(line.ram)];
   const storageOptions = byCapacity(ref.category) ? phoneStorage(ref) : ref.storage ?? [];
   const out = { ...specs };
+  // "8Go 256": the RAM has its unit, the storage none, so parseSpecs could not tell them apart. "5G" is the network.
+  const sized = (s?: string) => (s ? [...s.toLowerCase().replace(/_/g, " ").matchAll(/\b(\d{1,3})\s?(gb|go|g)\b/g)].filter((x) => !(x[2] === "g" && Number(x[1]) <= 5)).map((x) => Number(x[1])) : []);
   if (!out.storage) {
-    const hits = nums.filter((n) => n >= 16 && storageOptions.some((s) => s.startsWith(`${n}GB`)));
+    // A phone's lone "16GB" is its storage: nothing else on the line could be.
+    const hits = [...nums, ...(byCapacity(ref.category) ? sized(line.text) : [])].filter((n) => n >= 16 && storageOptions.some((s) => s.startsWith(`${n}GB`)));
     // Two different candidates ("64 128") say nothing for sure.
     if (new Set(hits).size === 1) out.storage = `${hits[0]}GB`;
   }
   if (ref.category === "laptop" && !out.ram && out.storage) {
     const cap = Number(out.storage.match(/^\d+/)![0]) * (/TB/.test(out.storage) ? 1024 : 1);
-    const rams = nums.filter((n) => n < cap && RAM_OK(n) && (ref.ram ?? []).includes(`${n}GB`));
+    const rams = [...nums, ...sized(line.text), ...sized(line.ram)].filter((n) => n < cap && RAM_OK(n) && (ref.ram ?? []).includes(`${n}GB`));
     if (new Set(rams).size === 1) out.ram = `${rams[0]}GB`;
   }
   return out;
@@ -381,15 +421,20 @@ function resolveVariant(ref: RefModel, specs: ParsedSpecs, warnings: string[]) {
 }
 
 export function matchLine(line: RawLine): Match {
-  const input = new Set(modelTokens(line.text));
+  const words = modelTokens(line.text);
+  const input = new Set(words);
   const specs = parseSpecs(line);
+  // "Ecran iPhone 12", "Batterie iPhone 11": a part for the model, not the model.
+  if (PARTS.has(words[0])) return { score: 0, status: "unmatched", specs, variant: {}, warnings: ["Aucun modèle du référentiel ne correspond"], alternatives: [] };
+  const saysLaptop = /\blaptop\b/i.test(line.text);
   // The CPU pins down the generation when the name does not ("EliteBook 840" + i5-8265U → G6 only).
   const cpuFit = (ref: RefModel) => {
     if (!specs.cpu || ref.category !== "laptop" || !ref.cpu) return 0;
     return ref.cpu.some((c) => eqCpu(c, specs.cpu!)) ? 0.1 : -0.1;
   };
   const ranked = INDEX.map((ix) => {
-    const base = scoreRef(ix, input, line.brand);
+    // "Laptop" is a noise word, but it tells a "Surface Go 2" from a "Surface Laptop Go 2".
+    const base = scoreRef(ix, input, line.brand) - (!saysLaptop && /\blaptop\b/i.test(ix.ref.model) ? 0.15 : 0);
     // Model words present in the text, and whether all of them are (brand words don't count).
     const words = ix.toks.filter((t) => TEXT_BRANDS.get(t) !== ix.brand);
     const found = words.filter((t) => input.has(t)).length;
@@ -404,6 +449,10 @@ export function matchLine(line: RawLine): Match {
     .sort((a, b) => b.score - a.score || b.found - a.found || b.ref.model.length - a.ref.model.length);
 
   const warnings: string[] = [];
+  // A bare "A54" is a Samsung and an Oppo: no maker named, two makers fit, so it is a close call, led by the wider seller.
+  const noMaker = !line.brand && ![...input].some((t) => TEXT_BRANDS.has(t));
+  const sharedName = noMaker && ranked.length > 1 && ranked[0].full && ranked[1].full && ranked[0].found === ranked[1].found && ranked[0].ref.brand !== ranked[1].ref.brand;
+  if (sharedName && MAIN_BRANDS.has(ranked[1].ref.brand) && !MAIN_BRANDS.has(ranked[0].ref.brand)) ranked.unshift(ranked.splice(1, 1)[0]);
   const best = ranked[0];
   if (!best) return { score: 0, status: "unmatched", specs, variant: {}, warnings: ["Aucun modèle du référentiel ne correspond"], alternatives: [] };
 
@@ -411,7 +460,7 @@ export function matchLine(line: RawLine): Match {
   // Not a close call when the text spells out every word of the best model and more of them than the
   // runner-up's ("Galaxy S25 Edge" vs "Galaxy S25", "Pixel 9 Pro XL" vs "Pixel 9 Pro").
   const spelledOut = !!runnerUp && best.full && (!runnerUp.full || best.found > runnerUp.found);
-  const close = !!runnerUp && runnerUp.score >= 0.5 && best.score - runnerUp.score < 0.1 && !spelledOut;
+  const close = sharedName || (!!runnerUp && runnerUp.score >= 0.5 && best.score - runnerUp.score < 0.1 && !spelledOut);
   const bestSpecs = bareCapacities(line, best.ref, specs);
   const variant = resolveVariant(best.ref, bestSpecs, warnings);
   const specConflict = warnings.some((w) => w.includes("jamais proposé"));

@@ -56,12 +56,12 @@ type TradeInDevicesJson = { devices: { category: "tablet" | "watch"; brand: stri
  * screen size ("Galaxy Tab A8"). An iPad Air or Pro without a size is the 11-inch one.
  */
 const TABLET_ALIASES: Record<string, string[]> = {
-  "Apple::iPad 9.7 (2017)": ["iPad 5th Gen"],
-  "Apple::iPad 9.7 (2018)": ["iPad 6th Gen"],
-  "Apple::iPad 10.2 (2019)": ["iPad 7th Gen"],
-  "Apple::iPad 10.2 (2020)": ["iPad 8th Gen"],
-  "Apple::iPad 10.2 (2021)": ["iPad 9th Gen"],
-  "Apple::iPad 10.9 (2022)": ["iPad 10th Gen"],
+  "Apple::iPad 9.7 (2017)": ["iPad 5th Gen", "iPad 5"],
+  "Apple::iPad 9.7 (2018)": ["iPad 6th Gen", "iPad 6"],
+  "Apple::iPad 10.2 (2019)": ["iPad 7th Gen", "iPad 7"],
+  "Apple::iPad 10.2 (2020)": ["iPad 8th Gen", "iPad 8"],
+  "Apple::iPad 10.2 (2021)": ["iPad 9th Gen", "iPad 9"],
+  "Apple::iPad 10.9 (2022)": ["iPad 10th Gen", "iPad 10"],
   "Apple::iPad 11 (2025)": ["iPad 11th Gen", "iPad A16"],
   "Apple::iPad Air 2": ["iPad Air 2nd Gen"],
   "Apple::iPad Air (2019)": ["iPad Air 3rd Gen", "iPad Air 3"],
