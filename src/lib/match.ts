@@ -15,6 +15,12 @@ export function normalize(s: string): string {
     .replace(/\bgen(?:eration)?\.?\s*(\d+)\b/g, "g$1")
     .replace(/\bg\s+(\d+)\b/g, "g$1")
     .replace(/\bhewlett[- ]packard\b/g, "hp")
+    // Apple part numbers ("MTV13 ZD/A", "MK2K3FD/A") name a region SKU; their digits are no model number.
+    .replace(/\b[a-z0-9]{4,5}\s?[a-z]{1,2}\/a\b/g, " ")
+    // Mac model identifiers ("MacBookPro15,2"): the line, not a 15-inch model.
+    .replace(/\b(macbook|imac)(pro|air)?\d{1,2},\d{1,2}\b/g, "$1 $2")
+    // "GSM+CDMA", "Wi-Fi + Cellular" join two networks; only "S21+", "Note 10+" mean Plus.
+    .replace(/\b(wi-?fi|wlan|gsm|cdma|lte|umts|[345]g)\s*\+\s*(?=cellular|cdma|gsm|lte|umts|[345]g\b)/g, "$1 ")
     .replace(/\+/g, " plus ")
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
@@ -34,6 +40,8 @@ const OTHER_KINDS = new Set(["watch", "montre", "airpods", "buds", "earbuds", "e
 // Words a tablet's name carries: "Galaxy Tab S7" is no Galaxy S7, "iPad Pro 11" no MacBook Pro.
 const TABLET_NAMES = new Set(["ipad", "tab"]);
 const TABLET_WORDS = new Set([...TABLET_NAMES, "tablet", "tablette"]);
+// A computer's line: "MacBook Pro … 16GB" is no iPhone 16 Pro.
+const COMPUTER_NAMES = new Set(["macbook", "imac", "thinkpad", "latitude", "elitebook", "probook", "zbook", "lifebook", "chromebook"]);
 
 const isYear = (t: string) => /^20[0-3]\d$/.test(t);
 // Tokens with a digit identify the model ("5420", "g8", "s23"); a release year only helps tell siblings apart.
@@ -170,6 +178,7 @@ function scoreRef(ix: Indexed, input: Set<string>, brandHint?: string): number {
   const saysTablet = [...input].some((t) => TABLET_WORDS.has(t));
   if (!saysTablet && ix.toks.some((t) => TABLET_NAMES.has(t))) return 0;
   if (saysTablet && ix.ref.category === "phone") return 0;
+  if (ix.ref.category !== "laptop" && [...input].some((t) => COMPUTER_NAMES.has(t))) return 0;
   let total = 0;
   let hit = 0;
   let keyMissing = false;

@@ -14,11 +14,11 @@ export const normHeader = (s: string) =>
 
 // Header synonyms (FR, EN, DE, ES, IT, NL, PT). Order matters: first match wins.
 const SYNONYMS: [Field, string[]][] = [
-  ["serial", ["serial", "serial number", "serial no", "sn", "s n", "imei", "imei1", "imei 1", "numero de serie", "n de serie", "no de serie", "service tag", "asset", "asset tag", "seriennummer", "numero de serie", "numero serie", "serienummer", "matricola"]],
+  ["serial", ["serial", "serial number", "serial no", "sn", "s n", "imei", "imei1", "imei 1", "numero de serie", "n de serie", "no de serie", "service tag", "seriennummer", "numero de serie", "numero serie", "serienummer", "matricola"]],
   ["price", ["price", "prices", "prix", "prix de vente", "prix vente", "prix de revente", "prix revente", "selling price", "sell price", "sale price", "sales price", "resale", "resale price", "revente", "pv", "pvp", "pvc", "tarif", "tarifs", "preis", "verkaufspreis", "vk preis", "vk", "precio", "precio de venta", "precio venta", "prezzo", "prezzo di vendita", "prijs", "verkoopprijs", "preco", "unit price", "prix unitaire", "pu", "amount", "montant", "cost", "cout", "value", "valeur", "eur", "euro", "euros"]],
   ["quantity", ["qty", "qte", "qt", "quantity", "quantite", "nb", "nbr", "nombre", "count", "units", "unites", "pcs", "pieces", "stock", "available", "avail", "dispo", "disponible", "menge", "anzahl", "stuck", "cantidad", "uds", "unidades", "quantita", "aantal", "quantidade", "volume", "total qty", "total quantity"]],
   ["grade", ["grade", "grading", "class", "classe", "condition", "etat", "cosmetic", "cosmetique", "cosmetic grade", "zustand", "klasse", "estado", "grado", "condizione", "staat", "conditie", "categorie"]],
-  ["brand", ["brand", "marque", "manufacturer", "fabricant", "make", "constructeur", "oem", "vendor", "hersteller", "marke", "marca", "fabricante", "produttore", "merk", "fabrikant"]],
+  ["brand", ["brand", "marque", "manufacturer", "mfg", "mfr", "fabricant", "make", "constructeur", "oem", "vendor", "hersteller", "marke", "marca", "fabricante", "produttore", "merk", "fabrikant"]],
   ["cpu", ["cpu", "processor", "processeur", "proc", "prozessor", "procesador", "processore", "processador", "chip", "chipset"]],
   ["ram", ["ram", "memory", "memoire", "memoire vive", "arbeitsspeicher", "speicher ram", "memoria ram", "memoria", "geheugen", "werkgeheugen"]],
   ["storage", ["storage", "stockage", "ssd", "hdd", "disk", "disque", "disque dur", "capacity", "capacite", "rom", "hard drive", "drive", "festplatte", "speicher", "speicherplatz", "almacenamiento", "disco", "archiviazione", "opslag", "armazenamento", "gb", "go"]],
@@ -27,16 +27,19 @@ const SYNONYMS: [Field, string[]][] = [
 ];
 
 // Identifier columns (SKU, part number, EAN…): recognised as headers, left out of the matching.
-const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "total price", "prix total", "line total", "total", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse"];
+const ID_HEADERS = ["sku", "part number", "part no", "part", "pn", "p n", "mpn", "ean", "upc", "gtin", "code", "code article", "article code", "product code", "item code", "item number", "id", "lot", "lot number", "po", "order", "total price", "prix total", "line total", "total", "color", "colour", "couleur", "farbe", "keyboard", "clavier", "layout", "os", "notes", "note", "comment", "comments", "commentaire", "remarks", "location", "warehouse", "asset", "asset id", "asset tag", "asset number", "hddcount", "work order"];
+
+// Measurements that only look like a field: "CPU Speed (MHz)" is no CPU, "Curr. mAh/OEM (%)" (battery) no brand.
+const MEASURE_HEADER = /\b(?:mhz|ghz|speed|frequency|mah|battery|batterie|akku|health|cycles?|monitor|screen|ecran|display|bildschirm|pantalla|inch|inches|zoll|pouces)\b/;
 
 // Headers that name nothing ("Column 3", "Col1", "Field 2"): still a header row, never data.
 const GENERIC_HEADER = /^(col|column|colonne|columna|spalte|field|champ|campo|f)\s*\d{1,3}$/;
 
-const isIdHeader = (h: string) => ID_HEADERS.some((w) => h === w || h.startsWith(w + " ") || h.endsWith(" " + w));
+const isIdHeader = (h: string) => ID_HEADERS.some((w) => h === w || h.startsWith(w + " ") || h.endsWith(" " + w)) || MEASURE_HEADER.test(h);
 
 export function guessField(header: string): Field {
   const h = normHeader(header);
-  if (!h || ID_HEADERS.includes(h)) return "ignore";
+  if (!h || ID_HEADERS.includes(h) || MEASURE_HEADER.test(h)) return "ignore";
   for (const [field, words] of SYNONYMS) {
     if (words.some((w) => h === w || h.startsWith(w + " ") || h.endsWith(" " + w))) return field;
   }
@@ -61,6 +64,8 @@ export function parseGrade(raw?: string): Grade | undefined {
   if (/(bon|good|gut|bueno)/.test(h)) return "C";
   if (/(correct|fair|moyen|acceptable|poor|usure|worn)/.test(h)) return "D";
   if (/(hs|broken|defect|casse|for parts|pour pieces|faulty|defekt|dead)/.test(h)) return "E";
+  // Testers' scales go down to F (fail): the lowest grade here.
+  if (h === "f") return "E";
   const letter = h.match(/\b([a-e])\b/);
   return letter && GRADES.includes(letter[1].toUpperCase() as Grade) ? (letter[1].toUpperCase() as Grade) : undefined;
 }
@@ -121,6 +126,7 @@ const RAM_SIZES = new Set([2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 36, 40, 48, 64, 96
 const STORAGE_SIZES = new Set([16, 32, 64, 120, 128, 180, 240, 250, 256, 480, 500, 512, 1000, 1024, 2000, 2048]);
 
 const CPU_RX = /\b(i[3579][\s-]*\d{4,5}[a-z]{0,2}\d?|core\s*(?:i[3579]|ultra)|ryzen\s*[3579]|celeron|pentium|xeon|apple\s*m[1-4]|\bm[1-4]\s*(?:pro|max)?\b|snapdragon|athlon)/i;
+const CPU_WORDS = /\b(?:intel|amd|apple|core|tm|r|cpu|processor|processeur|vpro|with|gen|\d+(?:[.,]\d+)?\s*(?:ghz|mhz)?)\b|[()®™@,.\-]/gi;
 const IMEI_RX = /^\d{14,16}$/;
 // Serials / part numbers: one token of 6–20 letters and digits mixed, no spaces.
 const CODE_RX = /^(?=.*\d)(?=.*[a-z])[a-z0-9-]{6,20}$/i;
@@ -150,6 +156,8 @@ export function classifyCell(v: string): Kind | undefined {
   if (gradeFromLabel(s) || (s.length <= 24 && parseGrade(s) && !/\d/.test(s))) return "grade";
   if (isBrand(s)) return "brand";
   if (CODE_RX.test(s) && !CPU_RX.test(s) && matchLine({ row: 0, text: s, quantity: 1 }).status === "unmatched") return "serial";
+  // "Intel(R) Core(TM) i7-8559U CPU @ 2.70GHz": a CPU and its marketing words, nothing that names a device.
+  if (CPU_RX.test(s) && !s.replace(CPU_RX, " ").replace(CPU_WORDS, " ").trim()) return "cpu";
   if (CPU_RX.test(s) && s.length <= 40 && matchLine({ row: 0, text: s, quantity: 1 }).status === "unmatched") return "cpu";
   const status = matchLine({ row: 0, text: s, quantity: 1 }).status;
   // A lone short code ("X2", "A7") is a stock number unless it names a model for sure — not a guess at "Find X2 Pro".
@@ -349,7 +357,9 @@ function fieldFromContent(p: Profile, values: string[], expect: Expect): Field |
     // Row numbers / item codes (1001, 1002, 1003…) count nothing.
     if (nums.length >= 3 && nums.every((n, k) => k === 0 || n === nums[k - 1] + 1)) return undefined;
     // In a price list, a column of plain amounts is the price.
-    return expect === "prices" ? "price" : "quantity";
+    if (expect === "prices") return "price";
+    // Counts are whole: "6.1", "13.3" are sizes or ratings.
+    return values.some((v) => /^\d+[.,]\d*[1-9]\d*$/.test(v.trim())) ? undefined : "quantity";
   }
   if (top("specs", 0.5) || (s.specs ?? 0) + (s.cpu ?? 0) + (s.ram ?? 0) + (s.storage ?? 0) >= 0.6) return "description";
   if ((s.model ?? 0) >= 0.2) return "description";
@@ -394,6 +404,12 @@ export function detectLayout(table: Table, expect: Expect = "quote"): Layout {
       return;
     }
     const byContent = fieldFromContent(profiles[i], values, expect);
+    // "Class" holding "SYSTEMS", "COMMUNICATION": a product class, not the grade (that one has its own column).
+    const filledValues = values.filter(Boolean).slice(0, 40);
+    if (byHeader === "grade" && filledValues.length && filledValues.filter((v) => parseGrade(v)).length < filledValues.length / 2) {
+      mapping[header] = byContent ?? "ignore";
+      return;
+    }
     mapping[header] = byHeader !== "ignore" && compatible(byHeader, byContent, profiles[i]) ? byHeader : byContent ?? (byHeader === "ignore" ? "ignore" : byHeader);
   });
 
@@ -504,8 +520,10 @@ export function extractInline(text: string): { text: string; quantity?: number; 
 export function buildLines(table: Table, layout: Layout): RawLine[] {
   const idx = new Map(table.headers.map((h, i) => [h, i]));
   const col = (f: Field) => table.headers.filter((h) => layout.mapping[h] === f);
+  // Test-bench exports write 0 for what a phone has no figure for (CPU speed, RAM).
+  const blank = (f: Field, v: string) => !v || ((f === "cpu" || f === "ram" || f === "storage") && /^0+(?:[.,]0+)?$/.test(v));
   const get = (row: string[], f: Field) =>
-    col(f).map((h) => row[idx.get(h)!]).filter(Boolean).join(" ").trim() || undefined;
+    col(f).map((h) => row[idx.get(h)!]).filter((v) => !blank(f, v)).join(" ").trim() || undefined;
   const gradeCols = Object.entries(layout.gradeColumns);
   const structured = col("quantity").length + col("grade").length + gradeCols.length > 0;
   const lines: RawLine[] = [];
@@ -543,7 +561,9 @@ export function buildLines(table: Table, layout: Layout): RawLine[] {
       price,
     };
     const brandInText = base.brand && normHeader(inline.text).includes(normHeader(base.brand));
-    const text = [brandInText ? undefined : base.brand, inline.text, base.cpu, base.ram, base.storage].filter(Boolean).join(" ");
+    // "Memory (GB)" = 16, "HDD (GB)" = 1000: give the bare figure its unit, or "16" reads as a model number.
+    const gb = (v?: string) => (v && /^\d{1,4}$/.test(v) ? `${v}GB` : v);
+    const text = [brandInText ? undefined : base.brand, inline.text, base.cpu, gb(base.ram), gb(base.storage)].filter(Boolean).join(" ");
 
     if (gradeCols.length > 0) {
       // Pivot layout: one line per non-empty grade cell — a count, or in a price list, the price for that grade.

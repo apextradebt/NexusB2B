@@ -16,6 +16,12 @@ const slug = (s: string) => s.toUpperCase().replace(/\+/g, "PLUS").replace(/[^A-
 const extraPhones = (phonesExtra as PhoneExtraJson).phones;
 const extraByKey = new Map(extraPhones.map((p) => [`${p.brand}::${p.model}`, p]));
 
+// Names suppliers give phones that the catalogue names by year ("iPhone SE 2nd Gen" is the "iPhone SE (2020)").
+const PHONE_ALIASES: Record<string, string[]> = {
+  "Apple::iPhone SE (2020)": ["iPhone SE 2nd Gen", "iPhone SE 2"],
+  "Apple::iPhone SE (2022)": ["iPhone SE 3rd Gen", "iPhone SE 3"],
+};
+
 // Phones with a B2C reference price, enriched with their storage options…
 const pricedPhones: RefModel[] = (phonesData as PhoneJson).brands.flatMap((b) =>
   b.models.map((m) => ({
@@ -26,12 +32,13 @@ const pricedPhones: RefModel[] = (phonesData as PhoneJson).brands.flatMap((b) =>
     basePrice: m.basePrice,
     storage: extraByKey.get(`${b.name}::${m.model}`)?.storage,
     year: extraByKey.get(`${b.name}::${m.model}`)?.year,
+    aliases: PHONE_ALIASES[`${b.name}::${m.model}`],
   }))
 );
 // …plus the B2B-only phones (priced by the agents only).
 const pricedIds = new Set(pricedPhones.map((p) => p.id));
 const extraOnly: RefModel[] = extraPhones
-  .map((p) => ({ id: slug(`${p.brand}${p.model}`), category: "phone" as const, brand: p.brand, model: p.model, storage: p.storage, year: p.year }))
+  .map((p) => ({ id: slug(`${p.brand}${p.model}`), category: "phone" as const, brand: p.brand, model: p.model, storage: p.storage, year: p.year, aliases: PHONE_ALIASES[`${p.brand}::${p.model}`] }))
   .filter((p) => !pricedIds.has(p.id));
 
 export const PHONES: RefModel[] = [...pricedPhones, ...extraOnly].sort((a, b) => a.brand.localeCompare(b.brand) || (b.year ?? 0) - (a.year ?? 0) || a.model.localeCompare(b.model));
