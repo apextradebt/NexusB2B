@@ -1,12 +1,14 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Bot, ChevronDown, Download, Loader2, RefreshCw, Save, FilePlus2, Check, ExternalLink, Tag, AlertTriangle } from "lucide-react";
+import { Bot, ChevronDown, Download, Info, Loader2, RefreshCw, Save, FilePlus2, Check, ExternalLink, Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { tm } from "@/lib/messages";
 import { Button, Chip, Stat } from "@/components/ui";
 import SourcesPanel from "@/components/quote/SourcesPanel";
 import RouteFields from "@/components/quote/RouteFields";
 import CostPanel from "@/components/quote/CostPanel";
+import MarketSignal from "@/components/quote/MarketSignal";
 import { agentsFor, BACKEND_DOWN, LEGACY_API, pool, runAgents } from "@/lib/agents";
-import { defaultRoute, eur, lotSize, marginRate, marketGap, priceLine, totals, unitMargin } from "@/lib/pricing";
+import { buyGap, costSplit, defaultRoute, eur, lotSize, MARKET_GAP, marginRate, marketGap, marketVerdict, priceLine, totals, unitMargin } from "@/lib/pricing";
 import { exportCsv, exportXlsx } from "@/lib/export";
 import { EU_MIX } from "@/lib/costs";
 import { useStore } from "@/lib/store";
@@ -14,12 +16,25 @@ import type { AgentResult, QuoteLine } from "@/types";
 
 const priceable = (l: QuoteLine) => l.status !== "unmatched" && !!l.refId;
 
+// The header sits in its own table so it can stick to the top of the page while the rows
+// scroll sideways on small screens; both tables share these fixed column widths.
+const TABLE = "w-full min-w-[72rem] table-fixed text-sm";
+const COLS = (
+  <colgroup>
+    <col />
+    {[64, 64, 96, 116, 124, 130, 136, 96, 100, 44].map((w, i) => <col key={i} style={{ width: w }} />)}
+  </colgroup>
+);
+/** Tint of the agents' columns, to keep market prices apart from ours. */
+const MARKET_BAND = "bg-whisper/30 dark:bg-hunter/20";
+
 export default function PricingStep() {
   const { t } = useTranslation();
   const { draft, setDraft, settings, saveQuote, resetDraft, priceList } = useStore();
   const [open, setOpen] = useState<string | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
   const abort = useRef<AbortController | null>(null);
+  const stickyHead = useRef<HTMLDivElement>(null);
   const inFlight = useRef(new Map<string, Promise<AgentResult[]>>());
 
   // Prices are derived at render time so changing margin/refurb settings or the route updates the quote instantly.
@@ -89,6 +104,39 @@ export default function PricingStep() {
   const backendDown = unpriced.some((l) => l.agentResults.some((r) => r.status === "error" && r.message === BACKEND_DOWN));
   const excluded = lines.filter((l) => !priceable(l));
   const onList = lines.filter((l) => priceable(l) && l.listPrice !== undefined);
+  const verdicts = lines.filter((l) => priceable(l) && l.priceState === "done")
+    .flatMap((l) => [marketGap(l), buyGap(l)])
+    .filter((g) => g !== undefined)
+    .map(marketVerdict);
+  const tooHigh = verdicts.filter((v) => v === "high").length;
+  const tooLow = verdicts.filter((v) => v === "low").length;
+
+  const head = (
+    <>
+      <tr className="text-xs">
+        <th colSpan={3} />
+        <th colSpan={2} className={`${MARKET_BAND} rounded-t-xl px-3 pt-2 pb-0.5 text-center font-bold`} title={t("pricing.market_note")}>
+          {t("pricing.market_group")}
+          <div className="text-[10px] font-medium text-muted">{t("pricing.market_group_hint")}</div>
+        </th>
+        <th colSpan={5} className="px-3 pt-2 pb-0.5 text-center font-bold">{t("pricing.quote_group")}</th>
+        <th />
+      </tr>
+      <tr className="text-left text-xs uppercase tracking-wider text-muted">
+        <th className="p-3 font-semibold">{t("match.device")}</th>
+        <th className="p-3 font-semibold text-center">{t("match.grade")}</th>
+        <th className="p-3 font-semibold text-right">{t("match.qty")}</th>
+        <th className={`p-3 font-semibold text-right ${MARKET_BAND}`}>{t("pricing.market_buy")}</th>
+        <th className={`p-3 font-semibold text-right ${MARKET_BAND}`}>{t("pricing.market_sell")}</th>
+        <th className="p-3 font-semibold text-right">{t("pricing.sell")}</th>
+        <th className="p-3 font-semibold text-right">{t("pricing.buy")}</th>
+        <th className="p-3 font-semibold text-right">{t("pricing.unit_costs")}</th>
+        <th className="p-3 font-semibold text-right">{t("pricing.unit_margin")}</th>
+        <th className="p-3 font-semibold text-right">{t("pricing.line_total")}</th>
+        <th className="p-3" />
+      </tr>
+    </>
+  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -122,22 +170,29 @@ export default function PricingStep() {
         </p>
       )}
 
-      <div className="overflow-x-auto -mx-2 px-2">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs uppercase tracking-wider text-muted">
-              <th className="p-3 font-semibold min-w-64">{t("match.device")}</th>
-              <th className="p-3 font-semibold text-center">{t("match.grade")}</th>
-              <th className="p-3 font-semibold text-right">{t("match.qty")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.market_buy")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.sell")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.buy")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.unit_costs")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.unit_margin")}</th>
-              <th className="p-3 font-semibold text-right">{t("pricing.line_total")}</th>
-              <th className="p-3" />
-            </tr>
-          </thead>
+      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2 rounded-2xl bg-whisper/30 dark:bg-hunter/20 px-5 py-3 text-sm">
+        <p className="flex gap-2 min-w-0 flex-1 basis-96">
+          <Info className="w-4 h-4 shrink-0 mt-0.5 text-muted" />
+          <span>{t("pricing.market_note")} {t("pricing.market_rule", { pct: MARKET_GAP * 100 })}</span>
+        </p>
+        {verdicts.length > 0 && (
+          <p className={`font-semibold whitespace-nowrap ${tooHigh + tooLow > 0 ? "text-warn" : "text-muted"}`}>
+            {tooHigh + tooLow > 0 ? t("pricing.market_summary", { high: tooHigh, low: tooLow }) : t("pricing.market_all_ok")}
+          </p>
+        )}
+      </div>
+
+      <div>
+       <div ref={stickyHead} aria-hidden="true" className="sticky top-18 md:top-0 z-20 overflow-hidden bg-surface border-b border-line">
+        <table className={TABLE}>
+          {COLS}
+          <thead>{head}</thead>
+        </table>
+       </div>
+       <div className="overflow-x-auto" onScroll={(e) => { if (stickyHead.current) stickyHead.current.scrollLeft = e.currentTarget.scrollLeft; }}>
+        <table className={TABLE}>
+          {COLS}
+          <thead className="sr-only">{head}</thead>
           <tbody>
             {lines.filter(priceable).map((l) => {
               const margin = unitMargin(l);
@@ -155,27 +210,9 @@ export default function PricingStep() {
                     </td>
                     <td className="p-3 text-center font-bold">{l.grade}</td>
                     <td className="p-3 text-right tabular-nums">{l.quantity.toLocaleString("fr-FR")}</td>
-                    <td className="p-3 text-right tabular-nums text-muted">{l.priceState === "done" ? eur(l.marketBuy) : ""}</td>
-                    <td className="p-3 text-right tabular-nums font-semibold text-sell">
-                      {l.priceState === "done" || l.listPrice !== undefined ? eur(l.sellPrice) : <Loader2 className={`w-4 h-4 inline ${l.priceState === "running" ? "animate-spin" : "opacity-30"}`} />}
-                      {l.listPrice !== undefined && (
-                        <div className="flex flex-col items-end gap-0.5 mt-0.5">
-                          <span title={l.listPriceNote} className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-sell bg-lime/20 rounded-full px-2 py-0.5 whitespace-nowrap">
-                            <Tag className="w-3 h-3" /> {l.priceBasis?.startsWith("Votre") ? t("pricing.your_price") : t("pricing.your_price_is", { price: eur(l.listPrice) })}
-                          </span>
-                          {l.listPriceNote && <span className="text-[10px] text-muted font-medium">{l.listPriceNote}</span>}
-                          {l.priceState === "done" && l.marketSell !== undefined && (() => {
-                            const gap = marketGap(l)!;
-                            const far = Math.abs(gap) >= 0.15;
-                            return (
-                              <span className={`text-[10px] font-medium whitespace-nowrap ${far ? "text-warn font-bold" : "text-muted"}`} title={far ? t("pricing.gap_hint") : undefined}>
-                                {far && <AlertTriangle className="w-3 h-3 inline mr-0.5 -mt-0.5" />}
-                                {t("pricing.market", { price: eur(l.marketSell) })} · {gap > 0 ? "+" : ""}{Math.round(gap * 100)} %
-                              </span>
-                            );
-                          })()}
-                        </div>
-                      )}
+                    <td className={`p-3 text-right tabular-nums text-muted ${MARKET_BAND}`}>{l.priceState === "done" ? eur(l.marketBuy) : ""}</td>
+                    <td className={`p-3 text-right tabular-nums text-muted ${MARKET_BAND}`}>
+                      {l.priceState === "done" ? eur(l.marketSell) : <Loader2 className={`w-4 h-4 inline ${l.priceState === "running" ? "animate-spin" : "opacity-30"}`} />}
                       {l.priceBasis?.startsWith("Estimation") && <div className="text-[10px] font-bold uppercase tracking-wider text-warn">{t("pricing.kind_estimate")}</div>}
                       {(() => {
                         const resale = l.agentResults.filter((r) => r.kind === "resale" && r.status === "ok");
@@ -187,7 +224,7 @@ export default function PricingStep() {
                         <button
                           onClick={() => setOpen(isOpen ? null : l.key)}
                           aria-expanded={isOpen}
-                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary hover:underline whitespace-nowrap"
+                          className="flex items-center justify-end gap-1 w-full text-[10px] font-semibold text-primary hover:underline whitespace-nowrap"
                         >
                           <ExternalLink className="w-3 h-3" />
                           {t("pricing.source_counts", {
@@ -196,6 +233,20 @@ export default function PricingStep() {
                           })}
                         </button>
                       )}
+                    </td>
+                    <td className="p-3 text-right tabular-nums font-semibold text-sell">
+                      {l.sellPrice !== undefined ? eur(l.sellPrice) : l.priceState === "done" ? "—" : ""}
+                      <div className="flex flex-col items-end gap-0.5 mt-0.5">
+                        {l.listPrice !== undefined ? (
+                          <span title={tm(l.listPriceNote)} className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-sell bg-lime/20 rounded-full px-2 py-0.5 whitespace-nowrap">
+                            <Tag className="w-3 h-3" /> {l.priceBasis?.startsWith("Votre") ? t("pricing.your_price") : t("pricing.your_price_is", { price: eur(l.listPrice) })}
+                          </span>
+                        ) : l.sellPrice !== undefined && (
+                          <span title={t("pricing.market_suggestion_hint")} className="text-[10px] leading-tight font-bold uppercase tracking-wider text-muted">{t("pricing.market_suggestion")}</span>
+                        )}
+                        {l.listPriceNote && <span className="text-[10px] text-muted font-medium">{tm(l.listPriceNote)}</span>}
+                        {l.priceState === "done" && <MarketSignal gap={marketGap(l)} market={l.marketSell} kind="sell" />}
+                      </div>
                     </td>
                     <td className="p-3 text-right">
                       <input
@@ -209,12 +260,13 @@ export default function PricingStep() {
                         }}
                         className={`w-24 text-right bg-surface shadow-inner-soft rounded-xl px-3 py-1.5 font-bold tabular-nums text-buy focus:outline-none focus:ring-2 focus:ring-primary/40 ${l.buyOverride !== undefined ? "ring-2 ring-sand/60" : ""}`}
                       />
+                      {l.priceState === "done" && <div className="mt-1"><MarketSignal gap={buyGap(l)} market={l.marketBuy} kind="buy" /></div>}
                     </td>
                     <td className="p-3 text-right tabular-nums text-muted">
                       {l.costs ? (
                         <button onClick={() => setOpen(isOpen ? null : l.key)} className="hover:underline" title={t("pricing.costs_hint")}>
                           {eur(l.costs.total)}
-                          {l.costs.items.levy ? <div className="text-[10px] font-semibold whitespace-nowrap">{t("pricing.levy_short", { eur: l.costs.items.levy.toLocaleString("fr-FR") })}</div> : null}
+                          <div className="text-[10px] font-semibold whitespace-nowrap">{t("pricing.costs_split", { taxes: eur(costSplit(l.costs).taxes), other: eur(costSplit(l.costs).other) })}</div>
                         </button>
                       ) : "—"}
                     </td>
@@ -236,9 +288,11 @@ export default function PricingStep() {
                   </tr>
                   {isOpen && (
                     <tr>
-                      <td colSpan={10} className="px-3 pb-5">
-                        {l.costs && <CostPanel line={l} route={route} />}
-                        <SourcesPanel line={l} />
+                      <td colSpan={11} className="px-3 py-4">
+                        <div className="grid xl:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] gap-4 items-start">
+                          {l.costs && <CostPanel line={l} route={route} />}
+                          <SourcesPanel line={l} />
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -247,6 +301,7 @@ export default function PricingStep() {
             })}
           </tbody>
         </table>
+       </div>
       </div>
 
       {excluded.length > 0 && (

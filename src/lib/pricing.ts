@@ -1,6 +1,6 @@
 import type { AgentResult, Category, Grade, PriceListEntry, PricingSettings, QuoteLine } from "@/types";
 import { findListPrice } from "@/lib/priceList";
-import { buyForNet, costBreakdown, DEFAULT_COSTS, palletsFor, type CostCategory, type CostInput, type Route } from "@/lib/costs";
+import { buyForNet, costBreakdown, DEFAULT_COSTS, palletsFor, type CostBreakdown, type CostCategory, type CostInput, type CostItem, type Route } from "@/lib/costs";
 
 export const DEFAULT_SETTINGS: PricingSettings = {
   targetMarginPct: 25,
@@ -103,6 +103,33 @@ export function priceLine(line: QuoteLine, s: PricingSettings, list: PriceListEn
 export function marketGap(l: QuoteLine): number | undefined {
   if (l.listPrice === undefined || l.marketSell === undefined || l.marketSell === 0) return undefined;
   return (l.listPrice - l.marketSell) / l.marketSell;
+}
+
+/** Gap between our buy price and what buyback sites pay (e.g. -0.2 = we offer 20 % less than the market). */
+export function buyGap(l: QuoteLine): number | undefined {
+  if (l.buyPrice === undefined || !l.marketBuy) return undefined;
+  return (l.buyPrice - l.marketBuy) / l.marketBuy;
+}
+
+/** From this far from the market (share of it), one of our prices is flagged. */
+export const MARKET_GAP = 0.15;
+export type MarketVerdict = "high" | "low" | "ok";
+
+/** Is a price too high or too low against the market? Works on the shown percentage, so "15 %" is always flagged. */
+export function marketVerdict(gap: number): MarketVerdict {
+  const pct = Math.round(gap * 100);
+  const limit = MARKET_GAP * 100;
+  return pct >= limit ? "high" : pct <= -limit ? "low" : "ok";
+}
+
+/** The two families of costs the quote shows: what goes to the State, and what it takes to prepare and deliver. */
+export const TAX_ITEMS: CostItem[] = ["vat", "levy", "eco", "duty"];
+export const SERVICE_ITEMS: CostItem[] = ["refurb", "handling", "inbound", "outbound", "fees"];
+
+/** Both families in whole euros, adding up exactly to the rounded total shown in the quote. */
+export function costSplit(c: CostBreakdown): { taxes: number; other: number } {
+  const taxes = Math.round(TAX_ITEMS.reduce((a, k) => a + (c.items[k] ?? 0), 0));
+  return { taxes, other: Math.round(c.total) - taxes };
 }
 
 /** Margin per unit: net of every cost when known, else sell − buy. */

@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { tm } from "@/lib/messages";
 import { eur } from "@/lib/pricing";
 import type { AgentResult, QuoteLine } from "@/types";
 
@@ -29,12 +30,12 @@ function SourceList({ title, hint, results, tone }: { title: string; hint: strin
           return (
             <li key={`${r.agent}-${i}`} className="py-2 flex flex-col gap-1">
               <div className="flex items-baseline justify-between gap-3">
-                <span className="font-semibold text-sm truncate">{o.source}</span>
+                <span className="font-semibold text-sm truncate">{tm(o.source)}</span>
                 <span className={`font-bold tabular-nums whitespace-nowrap ${tone === "buy" ? "text-buy" : "text-sell"}`}>{eur(o.price)}</span>
               </div>
               {(r.message || o.grade) && (
                 <div className="text-[11px] text-muted">
-                  {[o.grade && !/grade/i.test(r.message ?? "") ? t("sources.grade_used", { grade: o.grade }) : undefined, r.message].filter(Boolean).join(" · ")}
+                  {[o.grade && !/grade/i.test(r.message ?? "") ? t("sources.grade_used", { grade: o.grade }) : undefined, tm(r.message)].filter(Boolean).join(" · ")}
                 </div>
               )}
               {links.length > 0 && (
@@ -72,7 +73,11 @@ export default function SourcesPanel({ line }: { line: QuoteLine }) {
 
   return (
     <div className="rounded-2xl shadow-inner-soft p-5 flex flex-col gap-5 text-xs">
-      <div className="font-semibold text-sm">{line.priceBasis ?? t("pricing.no_basis")}</div>
+      <div>
+        <div className="font-semibold text-sm">{t("sources.title")}</div>
+        <p className="text-[11px] text-muted">{t("sources.title_hint")}</p>
+        <p className="text-[11px] text-muted mt-1">{t("sources.basis")} {line.priceBasis ? tm(line.priceBasis) : t("pricing.no_basis")}</p>
+      </div>
       {line.agentResults.length === 0 ? (
         <div className="text-muted">{t("pricing.no_results")}</div>
       ) : (
@@ -83,7 +88,7 @@ export default function SourcesPanel({ line }: { line: QuoteLine }) {
       )}
       {estimates.length > 0 && (
         <p className="text-[11px] text-muted">
-          {estimates.map((r) => `${r.agent} : ${r.offers.map((o) => eur(o.price)).join(", ")} (${r.message ?? ""})`).join(" · ")}
+          {estimates.map((r) => `${tm(r.agent)} : ${r.offers.map((o) => eur(o.price)).join(", ")} (${tm(r.message)})`).join(" · ")}
         </p>
       )}
       {missing.length > 0 && (
@@ -91,7 +96,7 @@ export default function SourcesPanel({ line }: { line: QuoteLine }) {
           <summary className="cursor-pointer text-[11px] font-semibold text-muted">{t("sources.missing", { count: missing.length })}</summary>
           <ul className="mt-2 flex flex-col gap-0.5 text-[11px] text-muted">
             {missing.map((r, i) => (
-              <li key={i}><span className="font-semibold">{r.agent}</span> — {r.message ?? t(`pricing.status_${r.status}`)}</li>
+              <li key={i}><span className="font-semibold">{tm(r.agent)}</span> — {r.message ? tm(r.message) : t(`pricing.status_${r.status}`)}</li>
             ))}
           </ul>
         </details>

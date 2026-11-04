@@ -17,7 +17,7 @@ export default function App() {
         <HashRouter>
           <div className="flex flex-col md:flex-row min-h-screen bg-bg text-ink w-full">
             <Sidebar />
-            <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-10 overflow-y-auto">
+            <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-10">
               <Routes>
                 <Route path="/" element={<NewQuote />} />
                 <Route path="/recherche" element={<QuickSearch />} />
