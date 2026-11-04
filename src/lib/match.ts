@@ -281,6 +281,8 @@ export function stripSpecs(text: string): string {
     .trim();
 }
 
+const TB_IN_GB: Record<string, number> = { 1000: 1, 1024: 1, 2000: 2, 2048: 2, 4000: 4, 4096: 4, 8000: 8, 8192: 8 };
+
 /** Pull CPU / RAM / storage out of free text. Explicit spec columns are tried first by the caller. */
 export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage">): ParsedSpecs {
   const specs: ParsedSpecs = {};
@@ -304,7 +306,7 @@ export function parseSpecs(line: Pick<RawLine, "text" | "cpu" | "ram" | "storage
   if (tier) specs.cpuTier = tier[1].replace(/\s+/, " ");
 
   // 1000GB and 1024GB are how tools write 1TB.
-  const gb = (n: string, unit: string) => (/^t/i.test(unit) ? `${n}TB` : /^(?:1000|1024)$/.test(n) ? "1TB" : /^(?:2000|2048)$/.test(n) ? "2TB" : `${n}GB`);
+  const gb = (n: string, unit: string) => (/^t/i.test(unit) ? `${n}TB` : TB_IN_GB[n] ? `${TB_IN_GB[n]}TB` : `${n}GB`);
   // "16/512", "8GB/256GB", "i5/16/256": RAM then storage.
   const slash = txt.match(/(?<![\d.])\b(\d{1,2})(\s?(?:gb|go|g))?(\s*)\/(\s*)(\d{2,4}|[12]|[48](?=\s?t))\s?(gb|go|g|tb|to|t)?\b/);
   if (slash && !listSlash(slash[2], slash[3], slash[4], slash[6]) && RAM_OK(Number(slash[1])) && (slash[6] ? true : Number(slash[5]) >= 64 || Number(slash[5]) <= 2)) {

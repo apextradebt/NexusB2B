@@ -5919,6 +5919,30 @@
   {
    "brand": "Apple",
    "family": "MacBook",
+   "model": "MacBook Pro 13 2018 Intel",
+   "year": 2018,
+   "screen": "",
+   "cpu": [
+    "i5-8259U",
+    "i7-8559U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB",
+    "2TB"
+   ],
+   "platform": "apple",
+   "verified": "platform",
+   "id": "APPMACBOOKPRO132018INTEL"
+  },
+  {
+   "brand": "Apple",
+   "family": "MacBook",
    "model": "MacBook Pro 15 2018 Intel",
    "year": 2018,
    "screen": "",

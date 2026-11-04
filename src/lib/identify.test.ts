@@ -63,6 +63,7 @@ describe("catalogPhone (TAC database name → catalogue)", () => {
 describe("catalogMac (Apple's model name → catalogue)", () => {
   // Names as Apple's lookup (and its "Identify your Mac" pages) writes them.
   it("matches family, size, chip and year", () => {
+    expect(mac("MacBook Pro (13-inch, 2018, Four Thunderbolt 3 Ports)")).toBe("MacBook Pro 13 2018 Intel");
     expect(mac("MacBook Pro (13-inch, 2019, Two Thunderbolt 3 ports)")).toBe("MacBook Pro 13 2019 Intel");
     expect(mac("MacBook Pro (13-inch, 2020, Four Thunderbolt 3 ports)")).toBe("MacBook Pro 13 2020 Intel");
     expect(mac("MacBook Pro (13-inch, M1, 2020)")).toBe("MacBook Pro 13 M1 2020");
@@ -79,7 +80,6 @@ describe("catalogMac (Apple's model name → catalogue)", () => {
   });
 
   it("finds nothing for Macs the catalogue doesn't list", () => {
-    expect(mac("MacBook Pro (13-inch, 2018, Four Thunderbolt 3 ports)")).toBeUndefined();
     expect(mac("MacBook Air (13-inch, 2017)")).toBeUndefined();
     expect(mac("iMac Pro (2017)")).toBeUndefined();
     expect(mac("MacBook Pro (Retina, 13-inch, Early 2015)")).toBeUndefined();

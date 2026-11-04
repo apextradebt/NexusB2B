@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildLines, detectLayout, type Table } from "@/lib/parse";
-import { matchLine } from "@/lib/match";
+import { matchLine, parseSpecs } from "@/lib/match";
 import { groupLines } from "@/lib/group";
 
 // A test-bench export (Blancco-style): one row per unit, a product "Class" next to the real "Grade",
@@ -43,6 +43,10 @@ describe("tester export, one row per unit", () => {
     });
   });
 
+  it("reads terabytes written in gigabytes", () => {
+    expect(["1024", "2000", "4096", "8192"].map((storage) => parseSpecs({ text: "", storage }).storage)).toEqual(["1TB", "2TB", "4TB", "8TB"]);
+  });
+
   it("names each phone right and groups units by model, capacity and grade", () => {
     const raw = buildLines(table, layout);
     expect(raw.every((l) => l.quantity === 1)).toBe(true);
@@ -59,7 +63,7 @@ describe("tester export, one row per unit", () => {
         "matched iPhone 7 32GB E x1",
       ]),
     );
-    // A 2018 MacBook Pro is not in the catalogue: never an iPhone because of its 16 GB of RAM.
+    // "MacBookPro15,2" alone names no catalogue model (its serial number does): never an iPhone because of its 16 GB of RAM.
     expect(lines.find((l) => l.sourceRows.includes(1))?.category).not.toBe("phone");
   });
 });
