@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import type { MatchStatus } from "@/types";
 
 export function Card({ className = "", children }: { className?: string; children: ReactNode }) {
@@ -29,7 +30,7 @@ export function PageHeader({ title, desc, actions }: { title: string; desc?: str
         <h1 className="text-3xl font-bold tracking-tight mb-2">{title}</h1>
         {desc && <p className="text-muted font-medium text-sm max-w-2xl">{desc}</p>}
       </div>
-      {actions && <div className="flex flex-wrap gap-3">{actions}</div>}
+      {actions && <div className="flex flex-wrap gap-3 md:shrink-0">{actions}</div>}
     </header>
   );
 }
@@ -50,13 +51,12 @@ const STATUS_STYLE: Record<MatchStatus, string> = {
   review: "bg-sand/25 text-warn",
   unmatched: "bg-bokara/10 text-muted dark:bg-bright/10",
 };
-const STATUS_LABEL: Record<MatchStatus, string> = { matched: "Reconnu", review: "À vérifier", unmatched: "Non reconnu" };
-
 export function StatusBadge({ status }: { status: MatchStatus }) {
+  const { t } = useTranslation();
   return (
     <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider whitespace-nowrap ${STATUS_STYLE[status]}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${status === "matched" ? "bg-lime" : status === "review" ? "bg-sand" : "bg-muted"}`} />
-      {STATUS_LABEL[status]}
+      {t(`status_badge.${status}`)}
     </span>
   );
 }
@@ -70,8 +70,11 @@ export function Chip({ children, muted = false }: { children: ReactNode; muted?:
 }
 
 export function Select({ value, onChange, options, className = "", ariaLabel }: {
-  value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; className?: string; ariaLabel?: string;
+  value: string; onChange: (v: string) => void; options: { value: string; label: string; group?: string }[]; className?: string; ariaLabel?: string;
 }) {
+  const option = (o: { value: string; label: string }) => <option key={o.value} value={o.value}>{o.label}</option>;
+  // Options carrying a group go under an <optgroup>, in order of first appearance; the others stay on top.
+  const groups = [...new Set(options.flatMap((o) => (o.group ? [o.group] : [])))];
   return (
     <select
       aria-label={ariaLabel}
@@ -79,8 +82,9 @@ export function Select({ value, onChange, options, className = "", ariaLabel }: 
       onChange={(e) => onChange(e.target.value)}
       className={`bg-surface shadow-inner-soft rounded-xl px-3 py-2 text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-primary/40 ${className}`}
     >
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>{o.label}</option>
+      {options.filter((o) => !o.group).map(option)}
+      {groups.map((g) => (
+        <optgroup key={g} label={g}>{options.filter((o) => o.group === g).map(option)}</optgroup>
       ))}
     </select>
   );

@@ -387,6 +387,16 @@ describe("matchLine — tablets", () => {
     expect(matchLine(line("Pixel7a 128")).variant).toEqual({ storage: "128GB" });
     expect(matchLine(line("SGS21 Ultra 256 Phantom Black")).variant).toEqual({ storage: "256GB" });
     expect(matchLine(line("Latitude 5420 i5-1145G7 16 256")).variant).toEqual({ cpu: "i5-1145G7", ram: "16GB", storage: "256GB" });
+    // A ThinkBook is no ThinkPad, even one with the same size and generation.
+    const thinkbook = matchLine(line("Lenovo Thinkbook 15 G2 i5-1135G7 8/512"));
+    expect(thinkbook.ref?.model).toBe("ThinkBook 15 G2");
+    expect(thinkbook.variant).toEqual({ cpu: "i5-1135G7", ram: "8GB", storage: "512GB" });
+    expect(matchLine(line("ThinkBook 14-IIL i5-1035G1 8GB 256GB")).ref?.model).toBe("ThinkBook 14 G1");
+    expect(matchLine(line("Lenovo Thinkbook 13s G2 i5-1135G7")).alternatives.some((a) => /ThinkPad/.test(a.ref.model))).toBe(false);
+    // RAM with its unit, storage without one.
+    expect(matchLine(line("lenovo thinkpad e14 g2 i5-1135G7 8gb 256ssd")).variant).toEqual({ cpu: "i5-1135G7", ram: "8GB", storage: "256GB" });
+    expect(matchLine(line("Latitude 7420 i7-1185G7 16go 512")).variant).toEqual({ cpu: "i7-1185G7", ram: "16GB", storage: "512GB" });
+    expect(matchLine(line("Apple Macbook air 13 M2 2022 8Go 256")).variant).toEqual({ cpu: "Apple M2", ram: "8GB", storage: "256GB" });
     // The model's own number is not a capacity, and two possible ones say nothing.
     expect(matchLine(line("iPhone 16 128")).variant).toEqual({ storage: "128GB" });
     expect(matchLine(line("iPhone 15 128 256")).variant).toEqual({});

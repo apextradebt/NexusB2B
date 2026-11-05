@@ -206,3 +206,47 @@ describe("end to end: price lists + supplier lot", () => {
     }
   });
 });
+
+describe("demo price list", () => {
+  it("only prices catalogue models, cheaper at each grade down", async () => {
+    const { PRICE_CATALOG } = await import("@/lib/catalog");
+    const { demoEntries } = await import("@/lib/priceList");
+    const ids = new Set(PRICE_CATALOG.map((r) => r.id));
+    const entries = await demoEntries([]);
+    expect(entries.length).toBeGreaterThan(8000);
+    expect(entries.filter((e) => !ids.has(e.refId)).map((e) => e.model)).toEqual([]);
+    const byVariant = new Map<string, number[]>();
+    for (const e of entries) {
+      const k = [e.refId, e.variant.storage, e.variant.size].join("|");
+      byVariant.set(k, [...(byVariant.get(k) ?? []), e.price]);
+    }
+    for (const p of byVariant.values()) expect(p).toEqual([...p].sort((a, b) => b - a));
+  });
+
+  it("uses the capacity spellings quotes use, so a quote line finds its price", async () => {
+    const { demoEntries, findListPrice } = await import("@/lib/priceList");
+    const entries = await demoEntries([]);
+    const wrong = entries.filter((e) => e.variant.storage && !/^\d+(\.\d+)?(GB|TB)( HDD| eMMC)?$/.test(e.variant.storage));
+    expect(wrong.map((e) => `${e.model} ${e.variant.storage}`)).toEqual([]);
+    const e = entries.find((x) => x.model === "iPhone 13" && x.variant.storage === "128GB" && x.grade === "B")!;
+    expect(findListPrice({ refId: e.refId, variant: { storage: "128GB" }, grade: "B" }, entries, DEFAULT_SETTINGS.gradeCoef)?.price).toBe(e.price);
+  });
+
+  it("does not outrank a customer's price set for any grade", async () => {
+    const { demoEntries, findListPrice } = await import("@/lib/priceList");
+    const all = await demoEntries([]);
+    const demo = all.find((x) => x.model === "iPhone 18 Pro Max" && x.variant.storage === "256GB")!;
+    const mine = { ...demo, id: "mine", grade: undefined, price: 700, source: "manual" as const };
+    const list = [mine, ...(await demoEntries([mine]))];
+    for (const grade of ["A", "B", "C", "D"] as const) {
+      expect(findListPrice({ refId: demo.refId, variant: { storage: "256GB" }, grade }, list, DEFAULT_SETTINGS.gradeCoef)?.entry.id).toBe("mine");
+    }
+    expect(list.some((x) => x.refId === demo.refId && x.variant.storage === "512GB")).toBe(true);
+  });
+
+  it("leaves prices already in the list alone", async () => {
+    const { demoEntries } = await import("@/lib/priceList");
+    const all = await demoEntries([]);
+    expect((await demoEntries(all.slice(0, 4))).length).toBe(all.length - 4);
+  });
+});

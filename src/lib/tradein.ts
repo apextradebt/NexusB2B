@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import i18n from "@/i18n";
 
 /**
  * Monthly UK trade-in prices of phones, tablets and watches, one series per variant (capacity, network,
@@ -71,7 +72,7 @@ export function variantLabels(variants: TradeInVariant[]): string[] {
 }
 
 export const monthLabel = (month: string, style: "short" | "long" = "short") =>
-  new Date(`${month}-01T00:00:00Z`).toLocaleDateString("fr-FR", { month: style === "short" ? "short" : "long", year: "numeric", timeZone: "UTC" });
+  new Date(`${month}-01T00:00:00Z`).toLocaleDateString(i18n.language === "fr" ? "fr-FR" : "en-GB", { month: style === "short" ? "short" : "long", year: "numeric", timeZone: "UTC" });
 
 export const money = (n?: number | null) =>
   n === undefined || n === null ? "—" : n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });

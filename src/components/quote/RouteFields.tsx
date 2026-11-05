@@ -1,5 +1,6 @@
 import { ArrowRight, AlertTriangle, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { countryName } from "@/lib/messages";
 import { Select } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import { defaultRoute, lotSize } from "@/lib/pricing";
@@ -10,12 +11,14 @@ import {
 
 /** Fournisseur, pays d'achat, clientèle, pays de revente et régime de TVA du devis, avec les règles qui en découlent. */
 export default function RouteFields() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { draft, setDraft, settings } = useStore();
   const c = settings.costs;
   const route = draft.route ?? defaultRoute(settings);
   const set = (p: Partial<Route>) => setDraft((d) => ({ ...d, route: { ...route, ...p } }));
-  const countries = [...c.countries].sort((a, b) => a.name.localeCompare(b.name, "fr")).map((x) => ({ value: x.code, label: `${x.name} (${x.code})` }));
+  const countries = [...c.countries].map((x) => ({ value: x.code, label: `${countryName(x)} (${x.code})` })).sort((a, b) => a.label.localeCompare(b.label, i18n.language));
+  // Rules name countries as written in the settings: show them in the interface language.
+  const local = (p?: Record<string, unknown>) => p && Object.fromEntries(Object.entries(p).map(([k, v]) => { const x = c.countries.find((y) => y.name === v); return [k, x ? countryName(x) : v]; }));
   const home = findCountry(c, c.home);
   const missing = missingLanes(c, route);
   const rules = routeRules(c, route);
@@ -55,7 +58,7 @@ export default function RouteFields() {
         </label>
       </div>
       <p className="text-xs text-muted font-medium flex flex-wrap items-center gap-1.5">
-        {route.buyFrom} <ArrowRight className="w-3 h-3" /> {t("route.centre", { country: home?.name ?? c.home })} <ArrowRight className="w-3 h-3" />
+        {route.buyFrom} <ArrowRight className="w-3 h-3" /> {t("route.centre", { country: countryName(home, c.home) })} <ArrowRight className="w-3 h-3" />
         {route.sellTo === EU_MIX ? t("route.eu_mix_short") : route.sellTo}
         {lot.lotUnits > 0 && <><span>·</span>{t("route.lot_pallets", { count: lot.lotPallets, units: lot.lotUnits })}</>}
       </p>
@@ -63,7 +66,7 @@ export default function RouteFields() {
         {rules.map((r) => (
           <li key={r.key} className={`text-xs flex gap-2 ${r.warn ? "text-warn font-semibold" : "text-ink"}`}>
             {r.warn ? <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> : <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted" />}
-            <span>{t(`route.${r.key}`, r.params)}</span>
+            <span>{t(`route.${r.key}`, local(r.params))}</span>
           </li>
         ))}
       </ul>

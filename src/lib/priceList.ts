@@ -23,6 +23,35 @@ export function upsertEntries(list: PriceListEntry[], incoming: PriceListEntry[]
   return [...byKey.values()];
 }
 
+type DemoPrice = { r: string; c: PriceListEntry["category"]; b: string; m: string; s?: string; z?: string; p: number[] };
+
+/**
+ * The demo price list: market resale prices by grade (catalogue-prix/to_b2b.py writes the file).
+ * Loaded on demand, it stays out of the main bundle. Prices already in the list are left alone.
+ */
+export async function demoEntries(existing: PriceListEntry[]): Promise<PriceListEntry[]> {
+  const { prices } = (await import("@/data/demo-prices.json")).default as { prices: DemoPrice[] };
+  const now = new Date().toISOString();
+  // An exact grade or capacity outranks a broader price in findListPrice, so a demo price must also
+  // stay out wherever one of the customer's prices already applies ("Any grade", every capacity).
+  const covered = (e: PriceListEntry) =>
+    existing.some((x) => x.refId === e.refId && (!x.grade || x.grade === e.grade) && FIELDS.every((f) => !x.variant[f] || x.variant[f] === e.variant[f]));
+  return prices.flatMap((d) =>
+    (["A", "B", "C", "D"] as const).map((grade, i) => ({
+      id: newEntryId(),
+      refId: d.r,
+      category: d.c,
+      brand: d.b,
+      model: d.m,
+      variant: { ...(d.s ? { storage: d.s } : {}), ...(d.z ? { size: d.z } : {}) },
+      grade,
+      price: d.p[i],
+      updatedAt: now,
+      source: "import" as const,
+    })),
+  ).filter((e) => !covered(e));
+}
+
 export type ListPrice = { price: number; entry: PriceListEntry; note?: string };
 
 /**

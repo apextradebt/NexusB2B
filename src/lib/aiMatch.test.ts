@@ -31,6 +31,12 @@ describe("candidatesFor (catalogue models the AI chooses from)", () => {
     expect(list.length).toBeLessThanOrEqual(12);
   });
 
+  it("offers only models of the product line the text names", () => {
+    const list = models("Lenovo Thinkbook 15 G2 i5-1135G7 8/512");
+    expect(list[0]).toBe("ThinkBook 15 G2");
+    expect(list.filter((m) => m.startsWith("ThinkPad"))).toEqual([]);
+  });
+
   it("offers nothing for lines that name no device", () => {
     expect(candidatesFor("Total")).toEqual([]);
     expect(candidatesFor("Câble USB-C")).toEqual([]);
@@ -198,6 +204,15 @@ describe("applyAi", () => {
     expect(byText(out, texts[1])).toMatchObject({ model: "Pixel 2", status: "matched" });
     // …but a word the name lacks (x360) or a part for the model leaves the AI the last word.
     expect(rejected).toBe(2);
+  });
+
+  it("reads the name without the CPU, and under any of the model's names", () => {
+    // "i5-1035G1" is no G1 generation; "14-IIL" is Lenovo's own name for the ThinkBook 14 G1.
+    const texts = ["ThinkBook 14-IIL i5-1035G1 8GB 256GB", "Latitude 5420 i5-1145G7 16GB 256GB"];
+    const named = linesOf(...texts);
+    const { lines: out, rejected } = applyAi(named, new Map(texts.map((t) => [t, null])));
+    expect(rejected).toBe(0);
+    expect(texts.map((t) => byText(out, t).model)).toEqual(["ThinkBook 14 G1", "Latitude 5420"]);
   });
 
   it("keeps a tablet the AI finds no candidate for (it was not trained on tablets), not one it corrects", () => {

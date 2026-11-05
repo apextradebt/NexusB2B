@@ -1,6 +1,6 @@
 import { CATALOG, getRef } from "@/lib/catalog";
 import { identifierIn } from "@/lib/identify";
-import { matchLine, modelTokens, namesExactly, normalize, rematch } from "@/lib/match";
+import { matchLine, modelTokens, namesExactly, normalize, otherLine, rematch } from "@/lib/match";
 import { extractInline } from "@/lib/parse";
 import { postJson } from "@/lib/api";
 import type { Dispatch, SetStateAction } from "react";
@@ -54,7 +54,8 @@ export function candidatesFor(text: string, limit = MAX_CANDIDATES): RefModel[] 
   if (!q) return [];
   const words = q.split(" ");
   const grams = trigrams(q);
-  const scored = getIndex().map(({ ref, toks, grams: g }) => {
+  // A model of another product line is never a candidate (a ThinkBook line is offered no ThinkPad).
+  const scored = getIndex().filter(({ toks }) => !otherLine(new Set(words), toks)).map(({ ref, toks, grams: g }) => {
     let s = 0;
     for (const w of words) {
       const key = /\d/.test(w);

@@ -49,7 +49,7 @@ export default function ImportStep() {
         </label>
         <label className="flex flex-col gap-2 text-sm font-semibold">
           {t("import.reference")}
-          <Input value={draft.reference} onChange={(e) => setDraft((d) => ({ ...d, reference: e.target.value }))} placeholder="Lot 2026-09 / appel d'offres…" />
+          <Input value={draft.reference} onChange={(e) => setDraft((d) => ({ ...d, reference: e.target.value }))} placeholder={t("import.reference_placeholder")} />
         </label>
       </div>
       <RouteFields />

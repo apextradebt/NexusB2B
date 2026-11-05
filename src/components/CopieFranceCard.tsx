@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { bracketText } from "@/lib/messages";
 import { Download, FileSpreadsheet } from "lucide-react";
 import { Button, Card, Input } from "@/components/ui";
 import { useStore } from "@/lib/store";
@@ -80,7 +81,7 @@ export default function CopieFranceCard() {
           <tbody>
             {report.summary.map((s) => (
               <tr key={`${s.category}${s.bracket}`} className="border-t border-line">
-                <td className="p-2">{t(`costs.cat_${s.category}`)}</td><td className="p-2">{s.bracket}</td>
+                <td className="p-2">{t(`costs.cat_${s.category}`)}</td><td className="p-2">{bracketText(s.bracket)}</td>
                 <td className="p-2 text-right tabular-nums">{s.quantity}</td>
                 <td className="p-2 text-right tabular-nums">{s.unitLevy.toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}</td>
                 <td className="p-2 text-right tabular-nums font-semibold">{s.total.toLocaleString("fr-FR", { style: "currency", currency: "EUR" })}</td>

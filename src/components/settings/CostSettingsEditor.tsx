@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { countryName, countryNote } from "@/lib/messages";
 import { ArrowRight, Plus, Trash2 } from "lucide-react";
 import { Button, Card, Input, Select } from "@/components/ui";
 import { eur } from "@/lib/pricing";
@@ -16,9 +17,9 @@ const cell = "w-full text-center !px-2";
 
 /** Pays, TVA, copie privée, trajets de transport et frais de vente. */
 export default function CostSettingsEditor({ value: c, onChange }: { value: CostSettings; onChange: (c: CostSettings) => void }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const set = (p: Partial<CostSettings>) => onChange({ ...c, ...p });
-  const countryOptions = [...c.countries].sort((a, b) => a.name.localeCompare(b.name, "fr")).map((x) => ({ value: x.code, label: `${x.name} (${x.code})` }));
+  const countryOptions = [...c.countries].map((x) => ({ value: x.code, label: `${countryName(x)} (${x.code})` })).sort((a, b) => a.label.localeCompare(b.label, i18n.language));
   const codeOptions = [...c.countries].sort((a, b) => a.code.localeCompare(b.code)).map((x) => ({ value: x.code, label: x.code }));
   const setCountry = (code: string, p: Partial<Country>) => set({ countries: c.countries.map((x) => (x.code === code ? { ...x, ...p } : x)) });
   // Un trajet modifié n'est plus une estimation : les mises à jour des tarifs par défaut ne le touchent plus.
@@ -125,9 +126,9 @@ export default function CostSettingsEditor({ value: c, onChange }: { value: Cost
                     <td className="p-2">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs text-muted w-6">{x.code}</span>
-                        <Input aria-label={t("costs.country")} value={x.name} onChange={(e) => setCountry(x.code, { name: e.target.value })} className="!py-1.5 min-w-32" />
+                        <Input aria-label={t("costs.country")} value={countryName(x)} onChange={(e) => setCountry(x.code, { name: e.target.value })} className="!py-1.5 min-w-32" />
                       </div>
-                      {x.note && <p className="text-[11px] text-muted mt-1 ml-8 max-w-xs line-clamp-2" title={x.note}>{x.note}</p>}
+                      {x.note && <p className="text-[11px] text-muted mt-1 ml-8 max-w-xs line-clamp-2" title={countryNote(x)}>{countryNote(x)}</p>}
                     </td>
                     <td className="p-2 text-center">
                       <input type="checkbox" aria-label={`${x.code} ${t("costs.eu")}`} checked={x.eu} onChange={(e) => setCountry(x.code, { eu: e.target.checked })} className="accent-[var(--primary)] w-4 h-4 mt-2" />

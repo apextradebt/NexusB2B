@@ -7,7 +7,8 @@ import SourcesPanel from "@/components/quote/SourcesPanel";
 import TradeInChart from "@/components/TradeInChart";
 import { agentsFor, runAgents } from "@/lib/agents";
 //import { useAuth } from "@/lib/auth";
-import { byCapacity, CATALOG, getRef, KIND_LABEL, phoneStorage } from "@/lib/catalog";
+import { byCapacity, CATALOG, getRef, phoneStorage } from "@/lib/catalog";
+import { modelOptions, tm } from "@/lib/messages";
 import { manualLine, mergeDuplicates } from "@/lib/group";
 import { factoryVariant, identifierIn, identify, refOf, specsSummary, useIdentification, type Identification, type IdentifyState } from "@/lib/identify";
 import { matchAgainst, matchLine } from "@/lib/match";
@@ -23,10 +24,6 @@ type Variant = QuoteLine["variant"];
 type Recent = { text: string; refId: string; variant: Variant; grade: Grade; sell?: number; buy?: number; at: string };
 const HISTORY_KEY = "b2b-quick-history";
 
-const MODEL_OPTIONS = [
-  { value: "", label: "—" },
-  ...CATALOG.map((r) => ({ value: r.id, label: `${KIND_LABEL[r.category]} · ${r.brand} ${r.model}` })),
-];
 
 function loadHistory(): Recent[] {
   try {
@@ -255,7 +252,7 @@ export default function QuickSearch() {
           <span className="text-xs font-semibold uppercase tracking-wider text-muted">{t("quick.device")}</span>
           <div className="flex flex-wrap gap-2 items-center">
             <Select ariaLabel={t("match.device")} value={refId} className="min-w-64 max-w-full"
-              onChange={(v) => { const r = getRef(v); setRefId(v); setVariant({}); setLine(null); if (r) setAlternatives([]); }} options={MODEL_OPTIONS} />
+              onChange={(v) => { const r = getRef(v); setRefId(v); setVariant({}); setLine(null); if (r) setAlternatives([]); }} options={modelOptions("—")} />
             {ref?.category === "laptop" && (
               <>
                 <Select ariaLabel="CPU" value={variant.cpu ?? ""} onChange={(v) => setVariant((x) => ({ ...x, cpu: v || undefined }))} options={opt(ref.cpu)} />
@@ -302,7 +299,7 @@ export default function QuickSearch() {
               hint={priced.marketSell === undefined ? t("quick.no_market") : t("quick.sources", { count: line.agentResults.filter((r) => r.kind !== "buyback" && r.status === "ok").length })} />
             <Stat label={t("quick.market_buy")} tone="buy" value={waiting ? "…" : eur(priced.marketBuy)} hint={t("quick.market_buy_hint")} />
             <Stat label={t("quick.your_price")} value={eur(priced.listPrice)}
-              hint={priced.listPrice === undefined ? t("quick.no_list_price") : [priced.listPriceNote, gap !== undefined ? t("quick.vs_market", { pct: `${gap > 0 ? "+" : ""}${Math.round(gap * 100)}` }) : undefined].filter(Boolean).join(" · ")} />
+              hint={priced.listPrice === undefined ? t("quick.no_list_price") : [tm(priced.listPriceNote) || undefined, gap !== undefined ? t("quick.vs_market", { pct: `${gap > 0 ? "+" : ""}${Math.round(gap * 100)}` }) : undefined].filter(Boolean).join(" · ")} />
             <div className="rounded-[2rem] hero-gradient text-bright p-6 flex flex-col gap-1.5">
               <span className="text-xs font-bold uppercase tracking-wider">{t("quick.offer")}</span>
               <span className="text-3xl font-bold tabular-nums">{waiting && priced.listPrice === undefined ? "…" : eur(priced.buyPrice)}</span>
@@ -313,7 +310,7 @@ export default function QuickSearch() {
               </span>
             </div>
           </div>
-          {priced.priceBasis && <p className="text-xs text-muted -mt-4">{t("quick.basis")} : {priced.priceBasis}</p>}
+          {priced.priceBasis && <p className="text-xs text-muted -mt-4">{t("quick.basis")} : {tm(priced.priceBasis)}</p>}
           {!running && gap !== undefined && gap >= 0.15 && priced.priceBasis?.startsWith("Votre") && (
             <p role="alert" className="text-sm font-semibold text-warn bg-sand/15 rounded-2xl px-5 py-3 flex gap-2 -mt-2">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />

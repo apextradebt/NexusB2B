@@ -6659,6 +6659,413 @@
    "platform": "tgl",
    "verified": "platform",
    "id": "MICSURFACELAPTOPGO2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G1",
+   "year": 2019,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1005G1",
+    "i5-1035G1",
+    "i5-1035G4",
+    "i5-1035G7",
+    "i7-1065G7",
+    "i3-10110U",
+    "i5-10210U",
+    "i7-10510U",
+    "i7-10710U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "32GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "icl+cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_IIL/ThinkBook_14_IIL_Spec.pdf",
+   "id": "LENTHINKBOOK14G1",
+   "aliases": [
+    "ThinkBook 14 IIL",
+    "ThinkBook 14 IML"
+   ]
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 15 G1",
+   "year": 2019,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1005G1",
+    "i5-1035G1",
+    "i5-1035G4",
+    "i5-1035G7",
+    "i7-1065G7",
+    "i3-10110U",
+    "i5-10210U",
+    "i7-10510U",
+    "i7-10710U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "32GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "icl+cml",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_15_IIL/ThinkBook_15_IIL_Spec.pdf",
+   "id": "LENTHINKBOOK15G1",
+   "aliases": [
+    "ThinkBook 15 IIL",
+    "ThinkBook 15 IML"
+   ]
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G2",
+   "year": 2020,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i5-1145G7",
+    "i7-1165G7",
+    "Ryzen 3 4300U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 4600U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 4700U",
+    "Ryzen 7 4800U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r4000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_G2_ITL/ThinkBook_14_G2_ITL_Spec.pdf",
+   "id": "LENTHINKBOOK14G2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 15 G2",
+   "year": 2020,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1115G4",
+    "i5-1135G7",
+    "i7-1165G7",
+    "Ryzen 3 4300U",
+    "Ryzen 5 4500U",
+    "Ryzen 5 4600U",
+    "Ryzen 5 PRO 4650U",
+    "Ryzen 7 4700U",
+    "Ryzen 7 4800U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r4000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_15_G2_ITL/ThinkBook_15_G2_ITL_Spec.pdf",
+   "id": "LENTHINKBOOK15G2"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G3",
+   "year": 2021,
+   "screen": "14\"",
+   "cpu": [
+    "i5-1155G7",
+    "i7-1195G7",
+    "Ryzen 3 5300U",
+    "Ryzen 5 5500U",
+    "Ryzen 5 5600U",
+    "Ryzen 5 PRO 5650U",
+    "Ryzen 7 5700U",
+    "Ryzen 7 5800U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_G3_ITL/ThinkBook_14_G3_ITL_Spec.pdf",
+   "id": "LENTHINKBOOK14G3"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 15 G3",
+   "year": 2021,
+   "screen": "15.6\"",
+   "cpu": [
+    "i5-1155G7",
+    "i7-1195G7",
+    "Ryzen 3 5300U",
+    "Ryzen 5 5500U",
+    "Ryzen 5 5600U",
+    "Ryzen 7 5700U",
+    "Ryzen 7 5800U"
+   ],
+   "ram": [
+    "4GB",
+    "8GB",
+    "12GB",
+    "16GB",
+    "20GB",
+    "24GB",
+    "36GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "tgl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_15_G3_ITL/ThinkBook_15_G3_ITL_Spec.pdf",
+   "id": "LENTHINKBOOK15G3"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G4",
+   "year": 2022,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i7-1255U",
+    "i7-1260P",
+    "Ryzen 3 5425U",
+    "Ryzen 5 5625U",
+    "Ryzen 7 5825U"
+   ],
+   "ram": [
+    "8GB",
+    "12GB",
+    "16GB",
+    "24GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_G4_IAP/ThinkBook_14_G4_IAP_Spec.pdf",
+   "id": "LENTHINKBOOK14G4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 15 G4",
+   "year": 2022,
+   "screen": "15.6\"",
+   "cpu": [
+    "i3-1215U",
+    "i5-1235U",
+    "i5-1240P",
+    "i7-1255U",
+    "i7-1260P",
+    "Ryzen 3 5425U",
+    "Ryzen 5 5625U",
+    "Ryzen 7 5825U"
+   ],
+   "ram": [
+    "8GB",
+    "12GB",
+    "16GB",
+    "24GB",
+    "40GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "adl+r5000",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_15_G4_IAP/ThinkBook_15_G4_IAP_Spec.pdf",
+   "id": "LENTHINKBOOK15G4"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G5",
+   "year": 2023,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1335U",
+    "i5-1340P",
+    "i7-1355U",
+    "i7-1360P",
+    "Ryzen 3 7330U",
+    "Ryzen 5 7530U",
+    "Ryzen 7 7730U"
+   ],
+   "ram": [
+    "8GB",
+    "12GB",
+    "16GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7030",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_G5_IRL/ThinkBook_14_G5_IRL_Spec.pdf",
+   "id": "LENTHINKBOOK14G5"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 14 G6",
+   "year": 2024,
+   "screen": "14\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1334U",
+    "i5-1335U",
+    "i5-1340P",
+    "i5-13420H",
+    "i5-13500H",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-13700H",
+    "Ryzen 3 7330U",
+    "Ryzen 5 7430U",
+    "Ryzen 5 7530U",
+    "Ryzen 7 7730U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7030",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_14_G6_IRL/ThinkBook_14_G6_IRL_Spec.pdf",
+   "id": "LENTHINKBOOK14G6"
+  },
+  {
+   "brand": "Lenovo",
+   "family": "ThinkBook",
+   "model": "ThinkBook 16 G6",
+   "year": 2024,
+   "screen": "16\"",
+   "cpu": [
+    "i3-1315U",
+    "i5-1334U",
+    "i5-1335U",
+    "i5-1340P",
+    "i5-13420H",
+    "i5-13500H",
+    "i7-1355U",
+    "i7-1360P",
+    "i7-13700H",
+    "Ryzen 3 7330U",
+    "Ryzen 5 7430U",
+    "Ryzen 5 7530U",
+    "Ryzen 7 7730U"
+   ],
+   "ram": [
+    "8GB",
+    "16GB",
+    "24GB",
+    "32GB",
+    "40GB",
+    "48GB",
+    "64GB"
+   ],
+   "storage": [
+    "256GB",
+    "512GB",
+    "1TB"
+   ],
+   "platform": "rpl+r7030",
+   "verified": "psref",
+   "source": "https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_16_G6_IRL/ThinkBook_16_G6_IRL_Spec.pdf",
+   "id": "LENTHINKBOOK16G6"
   }
  ]
 }

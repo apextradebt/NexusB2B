@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, AlertTriangle, Plus, Sparkles, Trash2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button, Select, StatusBadge } from "@/components/ui";
-import { byCapacity, CATALOG, getRef, KIND_LABEL, phoneStorage } from "@/lib/catalog";
+import { byCapacity, getRef, phoneStorage } from "@/lib/catalog";
+import { modelOptions, tm } from "@/lib/messages";
+import i18n from "@/i18n";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
-import { rematch } from "@/lib/match";
+import { ambiguousCpuTier, cpusOfTier, rematch } from "@/lib/match";
 import { mergeDuplicates } from "@/lib/group";
 import { sendFeedback } from "@/lib/feedback";
 import { AI_MIN_MS } from "@/lib/aiMatch";
@@ -14,14 +16,24 @@ import { GRADES } from "@/types";
 
 type Filter = "all" | MatchStatus;
 
-// Catalog as select options, grouped by category then brand.
-const MODEL_OPTIONS = [
-  { value: "", label: "— Non reconnu —" },
-  ...CATALOG.map((r) => ({ value: r.id, label: `${KIND_LABEL[r.category]} · ${r.brand} ${r.model}` })),
-];
+const FIELD_LABEL = { cpu: "CPU", ram: "RAM", storage: "Stockage" } as const;
+
+/** CPU options; when the supplier only gave a tier ("i5"), its candidates come first in their own group. */
+function cpuOptions(cpus: string[] | undefined, warnings: string[]) {
+  const tier = ambiguousCpuTier(warnings);
+  const same = tier ? cpusOfTier(cpus, tier) : [];
+  if (same.length < 2) return [{ value: "", label: "?" }, ...(cpus ?? []).map((c) => ({ value: c, label: c }))];
+  return [
+    { value: "", label: "?" },
+    ...same.map((c) => ({ value: c, label: c, group: `${tier} · ${same.length} options` })),
+    ...(cpus ?? []).filter((c) => !same.includes(c)).map((c) => ({ value: c, label: c, group: i18n.t("match.other_cpus") })),
+  ];
+}
 
 export default function MatchStep() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // Catalog as select options, grouped by category then brand.
+  const MODEL_OPTIONS = useMemo(() => modelOptions(t("match.no_model")), [t, i18n.language]);
   const { draft, setDraft, settings } = useStore();
   const [filter, setFilter] = useState<Filter>("all");
   const lines = draft.lines;
@@ -49,7 +61,13 @@ export default function MatchStep() {
     });
 
   const setVariant = (l: QuoteLine, field: "cpu" | "ram" | "storage", value: string) =>
-    update(l.key, (cur) => ({ ...cur, variant: { ...cur.variant, [field]: value || undefined }, edited: true }));
+    update(l.key, (cur) => ({
+      ...cur,
+      variant: { ...cur.variant, [field]: value || undefined },
+      // A picked value settles "CPU i5 ambigu" / "RAM non renseignée" for that field.
+      warnings: value ? cur.warnings.filter((w) => !(w.startsWith(`${FIELD_LABEL[field]} `) && /ambigu|non renseign/.test(w))) : cur.warnings,
+      edited: true,
+    }));
 
   const visible = filter === "all" ? lines : lines.filter((l) => l.status === filter);
 
@@ -82,7 +100,7 @@ export default function MatchStep() {
           <Sparkles className="w-4 h-4" />
           {draft.ai.state === "done" && t("match.ai_done", { count: draft.ai.asked, changed: draft.ai.changed, rejected: draft.ai.rejected ?? 0, seconds: ((draft.ai.ms ?? 0) / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) })}
           {draft.ai.state === "done" && !!draft.ai.failed && <span className="text-warn">{t("match.ai_failed", { count: draft.ai.failed })}</span>}
-          {draft.ai.state === "error" && t("match.ai_error", { error: draft.ai.error })}
+          {draft.ai.state === "error" && t("match.ai_error", { error: tm(draft.ai.error) })}
         </p>
       )}
 
@@ -141,12 +159,12 @@ export default function MatchStep() {
                   <td className="p-3">
                     {ref?.category === "laptop" ? (
                       <div className="flex flex-wrap gap-2">
-                        <Select ariaLabel="CPU" value={l.variant.cpu || ""} onChange={(v) => setVariant(l, "cpu", v)} options={opt(ref.cpu)} className={!l.variant.cpu ? "text-warn" : ""} />
+                        <Select ariaLabel="CPU" value={l.variant.cpu || ""} onChange={(v) => setVariant(l, "cpu", v)} options={cpuOptions(ref.cpu, l.warnings)} className={!l.variant.cpu ? "text-warn" : ""} />
                         <Select ariaLabel="RAM" value={l.variant.ram || ""} onChange={(v) => setVariant(l, "ram", v)} options={opt(ramOptions)} className={!l.variant.ram ? "text-warn" : ""} />
                         <Select ariaLabel="Stockage" value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)} options={opt(ref.storage)} className={!l.variant.storage ? "text-warn" : ""} />
                       </div>
                     ) : byCapacity(ref?.category) ? (
-                      <Select ariaLabel="Capacité" value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)}
+                      <Select ariaLabel={t("add.capacity")}value={l.variant.storage || ""} onChange={(v) => setVariant(l, "storage", v)}
                         options={opt(phoneStorage(ref))} className={!l.variant.storage ? "text-warn" : ""} />
                     ) : (
                       <span className="text-muted text-xs">{t("match.not_priced")}</span>
@@ -154,7 +172,7 @@ export default function MatchStep() {
                     {l.warnings.length > 0 && (
                       <ul className="mt-2 flex flex-col gap-0.5">
                         {l.warnings.map((w) => (
-                          <li key={w} className="text-xs text-warn font-medium flex items-center gap-1.5"><AlertTriangle className="w-3 h-3 shrink-0" />{w}</li>
+                          <li key={w} className="text-xs text-warn font-medium flex items-center gap-1.5"><AlertTriangle className="w-3 h-3 shrink-0" />{tm(w)}</li>
                         ))}
                       </ul>
                     )}

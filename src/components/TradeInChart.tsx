@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { addMonths, money, latest, monthLabel, monthsBetween, priceAt, variantLabels, type TradeInVariant } from "@/lib/tradein";
 
 // Categorical slots (validated for this app's light and dark surfaces), in fixed order: a capacity
@@ -21,6 +22,7 @@ function niceTicks(max: number): number[] {
  * and a legend sits above. Labels only name what differs between the lines shown.
  */
 export default function TradeInChart({ variants }: { variants: TradeInVariant[] }) {
+  const { t } = useTranslation();
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(720);
   const [hover, setHover] = useState<number | null>(null);
@@ -102,7 +104,7 @@ export default function TradeInChart({ variants }: { variants: TradeInVariant[] 
 
   return (
     <div className="flex flex-col gap-3">
-      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted" aria-label="Légende">
+      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted" aria-label={t("history.tradein_legend")}>
         {series.map((s) => (
           <li key={s.label} className="inline-flex items-center gap-1.5">
             <span className="w-3 h-[3px] rounded-full" style={{ background: s.color }} />
@@ -111,7 +113,7 @@ export default function TradeInChart({ variants }: { variants: TradeInVariant[] 
         ))}
       </ul>
       <div ref={wrap} className="relative w-full">
-        <svg width={width} height={HEIGHT} role="img" aria-label="Évolution du prix de reprise par capacité" className="block overflow-visible">
+        <svg width={width} height={HEIGHT} role="img" aria-label={t("history.tradein_label")} className="block overflow-visible">
           {ticks.map((t) => (
             <g key={t}>
               <line x1={PAD.left} x2={PAD.left + plotW} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} />
@@ -134,7 +136,7 @@ export default function TradeInChart({ variants }: { variants: TradeInVariant[] 
           ))}
           <rect
             x={PAD.left} y={PAD.top} width={plotW} height={plotH} fill="transparent" tabIndex={0}
-            aria-label="Survolez ou utilisez les flèches pour lire les prix d'un mois"
+            aria-label={t("history.tradein_hint")}
             className="focus:outline-none focus-visible:stroke-[var(--primary)]"
             onPointerMove={onMove} onPointerLeave={() => setHover(null)} onKeyDown={onKey} onBlur={() => setHover(null)}
           />

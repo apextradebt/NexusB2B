@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, Download, FileDown, Laptop, List, Library, Pencil, Plus, Search, Smartphone, Tablet, Tag, Trash2, Upload, Watch } from "lucide-react";
+import { ChevronDown, Database, Download, FileDown, Laptop, List, Library, Pencil, Plus, Search, Smartphone, Tablet, Tag, Trash2, Upload, Watch } from "lucide-react";
 import { Button, Card, Chip, Input, PageHeader, Select } from "@/components/ui";
 import AddDeviceForm from "@/components/quote/AddDeviceForm";
 import PriceImport from "@/components/prices/PriceImport";
 import ModelPriceEditor from "@/components/prices/ModelPriceEditor";
 import { PRICE_CATALOG } from "@/lib/catalog";
 import { exportPriceList, downloadPriceTemplate } from "@/lib/export";
+import { demoEntries } from "@/lib/priceList";
 import { normalize } from "@/lib/match";
 import { eur } from "@/lib/pricing";
 import { parsePrice } from "@/lib/parse";
@@ -28,7 +29,7 @@ const PAGE = 60;
  */
 export default function PriceList() {
   const { t } = useTranslation();
-  const { priceList, updatePrice, deletePrice, clearPrices } = useStore();
+  const { priceList, addPrices, updatePrice, deletePrice, clearPrices } = useStore();
   const [view, setView] = useState<"mine" | "models">(priceList.length ? "mine" : "models");
   const [panel, setPanel] = useState<"none" | "add" | "import">("none");
   const [flash, setFlash] = useState<string | null>(null);
@@ -39,6 +40,12 @@ export default function PriceList() {
   const notify = (msg: string) => {
     setFlash(msg);
     setTimeout(() => setFlash(null), 3500);
+  };
+  const loadDemo = async () => {
+    const entries = await demoEntries(priceList);
+    addPrices(entries);
+    setView("mine");
+    notify(t("prices.demo_loaded", { count: entries.length }));
   };
   const edit = (e: PriceListEntry) => {
     setView("models");
@@ -54,6 +61,7 @@ export default function PriceList() {
         desc={t("prices.desc")}
         actions={
           <>
+            <Button variant="soft" onClick={loadDemo}><Database className="w-4 h-4" /> {t("prices.demo_load")}</Button>
             <Button variant={panel === "import" ? "primary" : "soft"} onClick={() => setPanel(panel === "import" ? "none" : "import")}><Upload className="w-4 h-4" /> {t("prices.import")}</Button>
             <Button variant={panel === "add" ? "primary" : "soft"} onClick={() => setPanel(panel === "add" ? "none" : "add")}><Plus className="w-4 h-4" /> {t("prices.add")}</Button>
           </>
