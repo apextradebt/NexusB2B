@@ -33,7 +33,6 @@ function RequireLogin({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isLoading && !isAuthenticated && !error) loginWithRedirect();
   }, [isLoading, isAuthenticated, error, loginWithRedirect]);
-  useEffect(() => () => setTokenGetter(null), []);
 
   if (error) return <p className="min-h-screen flex items-center justify-center text-warn font-semibold p-6">{error.message}</p>;
   if (!isAuthenticated) return <p className="min-h-screen flex items-center justify-center text-muted font-medium">{t("auth.signing_in")}</p>;

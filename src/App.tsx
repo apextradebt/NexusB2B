@@ -4,6 +4,9 @@ import { StoreProvider } from "@/lib/store";
 import Sidebar from "@/components/Sidebar";
 import NewQuote from "@/pages/NewQuote";
 import Quotes from "@/pages/Quotes";
+import AllQuotes from "@/pages/AllQuotes";
+import ShopPrices from "@/pages/ShopPrices";
+import Shipments from "@/pages/Shipments";
 import Reference from "@/pages/Reference";
 import SettingsPage from "@/pages/Settings";
 import PriceList from "@/pages/PriceList";
@@ -22,6 +25,9 @@ export default function App() {
                 <Route path="/" element={<NewQuote />} />
                 <Route path="/recherche" element={<QuickSearch />} />
                 <Route path="/devis" element={<Quotes />} />
+                <Route path="/tous-les-devis" element={<AllQuotes />} />
+                <Route path="/tarifs-boutiques" element={<ShopPrices />} />
+                <Route path="/expeditions" element={<Shipments />} />
                 <Route path="/prix" element={<PriceList />} />
                 <Route path="/historique" element={<TradeInHistory />} />
                 <Route path="/referentiel" element={<Reference />} />
